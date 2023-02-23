@@ -1,0 +1,15 @@
+\subsection{Ranged Polynomial Protocols and Polynomial Commitments}
+In order to prove the security of the SNARKs designed in this work we use a SNARK compiler inspired by the one provided in lemma 4.7 from 
+PLONK~\cite{plonk}. In more detail, for each of our three conditional NP relations we describe a ranged polynomial protocol and then we use our compiler to obtain three SNARKs 
+secure in the AGM. We remind the definition of ranged polynomial protocols in section~\ref{sec:poly_protocols_appendix} in the appendix. Moreover, we also make use of 
+KZG polynomial commitments \cite{KZG_10}, in particular their batched version and their security definitions as described in section 3 from PLONK. For brevity, 
+and since we do not make any alterations to the definition of batched KZG commitments, we do not repeat it in this initial version of our work but invite the reader 
+to review them, if necessary, by following the reference provided. 
+
+%In order to prove the security of the snarks designed in this work we use the snark compiler proposed in lemma 4.7 from 
+%PLONK~\cite{plonk}. In more detail, for each of our snarks, we describe an $H$-ranged polynomial protocol for a relation $\mathcal{R}_i$, 
+%where the relations $\mathcal{R}_i, i \in \{1,2,3\}$ are chosen to model certain statements we are interested in with respect to a set of 
+%BLS public keys and their simple aggregate. Each $H$-ranged polynomial protocol for a relation $\mathcal{R}_i$ follows the definitions 4.1 and 4.3 
+%with the additional clarifications given in the beginning of section 4.1 of PLONK. In our case, $H$ is an appropriately chosen multiplicative 
+%subgroup as defined in section \ref{sec:lagrange} such that the fast Fourier transforms (FFTs) performed by the snarks provers are efficient. \\
+

@@ -1,0 +1,54 @@
+ \subsection{Comparison between PLONK and our SNARKs}
+\label{sec:plonk_comparison}
+
+\noindent In the following, we briefly look at the differences between PLONK universal SNARK and the SNARKs designed in this work. We observe 
+that while the NP relation that defines PLONK is more general, the relations that define our SNARKs are bespoke as we are only interested in efficiently proving 
+public key aggregation. Because our relations are so bespoke, it turns out we do not require the full functionality that PLONK has to offer, and, in particular, our SNARKs  
+do not require any permutation argument. \\
+
+\noindent A second difference is that while PLONK's circuit is defined by a number of selector 
+polynomials (which are a type of pre-processed polynomials) and a PLONK verifier needs to perform 
+a one-time expensive computation of the polynomial commitments to those selector polynomials, our SNARK verifiers 
+are able to avoid such a pre-processing phase. Indeed, in the case of $\mathscr{P}^h_{\mathsf{a}}$ (which is the only one of 
+our three SNARKs that has a polynomial, namely $\mathit{aux}(X)$, that defines its circuit), our respective SNARK verifier does not need to compute a 
+commitment to its only ``selector polynomial'' as, due to its structure, $\mathit{aux}(X)$ can be directly and efficiently evaluated by our SNARK verifier itself. \\ 
+%Hence, in this case, we can use a simpler form of the corresponding linearisation polynomial which includes only the evaluation of 
+%$aux(X)$\footnote{In fact, we need an evaluation of $aux(\omega \cdot X)$.} instead of $aux(X)$ itself.  \\
+
+%\noindent A third difference is that PLONK relation (see section 8.2 in~\cite{plonk}) has a private witness while one of our three NP relations, 
+%i.e., $\mathcal{R}^{\mathit{incl}}_{\mathsf{la}}$, has only public inputs. \\
+
+%\noindent Another difference is that for all our three NP relations $\mathcal{R}^{\mathit{incl}}_{\mathsf{la}}$, $\mathcal{R}^{\mathit{incl}}_{\mathsf{a}}$ 
+%and $\mathcal{R}^{\mathit{incl}}_{\mathsf{vt}}$ the public input contains a vector which has essentially the same length $O(n)$ 
+%as the degree of the polynomials committed to by the SNARK prover. In particular this implies that after completing the first step of our compiler~\ref{sec_two_step_compiler} 
+%(which is equivalent to running the original PLONK compiler with its linearisation optimisation) the SNARK verifier ends up parsing an $O(n)$ long vector 
+%of public keys, computing the polynomials $pkx(X)$ and $pky(X)$ associated with the affine coordinates of the public keys and, finally, computing the 
+%polynomial commitments to these two polynomials. Since public inputs, in general, and the vector of public keys, in particular, may differ between different 
+%calls, the expensive computation described above cannot be reused by the SNARK verifier (as it is the case for the SNARK verifier in PLONK relative to the commitments to the 
+%pre-processed polynomials) and, thus, would render our SNARK verifier less practical. However, the second and third steps of our compiler take care of this aspect by offloading 
+%the expensive computation to a third trusted party. \\
+\noindent A third difference is that using our two-steps compiler, our SNARKs verifiers are able to efficiently handle input vectors of length $O(n)$, 
+where the degree of the polynomials committed to by our SNARK provers is also $O(n)$. Our SNARKs verifiers achieve efficiency by offloading the 
+expensive polynomial commitment computation involving the public inputs to a trusted third party. \\
+
+\noindent Moreover, while PLONK does not incorporate trusted inputs, one can easily apply the Step 2 of our compiler to PLONK. In particular, one could imagine a situation 
+where a PLONK verifier is relying on a trusted party to compute some or all of the polynomial commitments to the circuit's selector polynomials. This is equivalent to our hybrid 
+model SNARK definition applied to PLONK. The benefit is that by delegating such a computation, the PLONK verifier becomes more efficient. \\ %at the expense of relying on some trust assumptions. \\
+%\noindent Finally, PLONK system does not incorporate by default trusted inputs in the sense we have defined in section~\ref{sec_two_step_compiler} but it can 
+%be modified in a simple way to do that. For example, one could imagine a situation where a PLONK verifier is relying on a trusted party to compute some or all of 
+%the polynomial commitments to the circuit's selector polynomials. This is the equivalent to our hybrid model applied to PLONK and the benefit is that by delegating this 
+%computation the verifier becomes more efficient at the expense of relying on some trust assumptions.}
+%{\color{blue}TO DO: Summarise how we can get rid of trust assumptions as well, in our case. For example: In a real world implementation, the trust assumption can, in turn, 
+%be replaced by having, for example, the commitments signed by a set of parties whose public keys are known to the verifier and whom the verifier trusts that will not collude.}\\
+
+%{\color{blue} \noindent TO DO Once we have defined the Polkadot instantiation for our light client in section~\ref{sec:instantiation} 
+%and we have (an informal) sequential proof for soundness (for example), we can connect to that and mention that trusted inputs have even more of an efficiency 
+%impact in case of our SNARKs since they replace computation that should be otherwise performed by our SNARK verifier at every step, while, in case of PLONK, 
+%delegating the one-off computation of commitments to selector polynomials, even though beneficial as well, may not have had such an efficiency impact on the 
+%verifier for the long term.}
+
+\noindent Finally, looking ahead at our light client system instantiation in section~\ref{sec:LCinstantiation}, due to the inductive structure of the soundness proof (theorem~\ref{th:soundness}), 
+the efficiency of using a hybrid model SNARK has an even greater impact for the light client system verifier than that compared to verifying multiple instances of PLONK for the same circuit:
+while for the latter the PLONK verifier has to compute commitments to selector polynomial only once anyway, in the case of the former, the commitments to public inputs may differ at very step hence a trusted third party relives a higher computation burden from the light client verifier overall. 
+
+

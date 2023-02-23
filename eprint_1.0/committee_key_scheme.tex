@@ -1,0 +1,103 @@
+\subsection{Committee Key Scheme for Aggregatable Signatures}
+\label{sec:committee_key}
+
+Bellow we introduce the notion of committee key scheme for aggregatable signatures. This generalises the notion of aggregatable signature scheme. 
+We will use the notion of committee key scheme and its instantiation presented in section~\ref{sec:inst_committee_key} in order to design, instantiate 
+and prove our accountable light client schemes in section~\ref{new_light_client}.
+
+\begin{dfn}
+\label{def: committee_key} (Committee Key Scheme for Aggregatable Signatures) Let $\mathit{AS}$ be an aggregatable signature scheme that fulfils 
+definition~\ref{def:aggregate_signatures}.  A committee key scheme for aggregatable signatures consists of the following tuple of algorithms 
+($\mathit{CKS.Setup}$, $\mathit{CKS.GenerateCommitteeKey}$, $\mathit{CKS.Prove}$, $\mathit{CKS.Verify}$) 
+such that for implicit security parameter $\lambda$: 
+
+\begin{itemize}
+\item $(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{rs}_{\mathit{pk}}) \leftarrow \mathit{CKS.Setup}(v)$: a setup algorithm that, 
+given an upper bound $v \in \mathbb{N}$, $v = \mathsf{poly}(\lambda)$ outputs some public parameters $\mathit{pp}$ and 
+proving and verification keys $\mathit{rs}_{\mathit{pk}}$ and $\mathit{rs}_{\mathit{vk}}$, respectively,  where $\mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}})$, for some 
+$\mathit{aux_{\mathit{AS}}}$ chosen by the aggregated signature $\mathit{AS}$.
+
+\item $\mathit{ck} \leftarrow \mathit{CKS.GenerateCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^u)$: a committee key generation algorithm that, 
+given a proving key $\mathit{rs}_{\mathit{pk}}$ and a list of public keys, 
+outputs a committee key $\mathit{ck}$, where $u \leq v$.
+
+\item $\pi \leftarrow \mathit{CKS.Prove}(\mathit{rs}_{\mathit{pk}}, \mathit{ck}, (\mathit{pk_i})_{i=1}^u, (\mathit{bit_i})_{i=1}^u)$: a proving algorithm that, 
+given a proving key $\mathit{rs}_{\mathit{pk}}$, a committee key $\mathit{ck}$, a list of public keys and a bitvector $(\mathit{bit_i})_{i=1}^u \in \{0,1\}^u$,  
+outputs a proof $\pi$, where $u \leq v$.
+ 
+\item $0/1 \leftarrow \mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m, \mathit{asig}, \pi, \mathbf{bitvector})$: a verification algorithm that, 
+given public parameters $\mathit{pp}$, a verification key $\mathit{rs}_{\mathit{vk}}$, a committee key $\mathit{ck}$, a message $m$, a 
+signature $\mathit{asig}$, a proof $\pi$ and a vector $\mathbf{bitvector} \in \{0,1\}^*$, 
+outputs $1$ if the verification succeeds and $0$ otherwise. 
+\end{itemize}
+
+\noindent We say ($\mathit{CKS.Setup}$, $\mathit{CKS.GenerateCommitteeKey}$, $\mathit{CKS.Prove}$, $\mathit{CKS.Verify}$) 
+is a committee key scheme for aggregatable signatures if it satisfies \emph{perfect completeness} and 
+\emph{soundness} as defined below.
+\end{dfn}
+
+\noindent \textbf{Perfect Completeness} A committee key scheme for aggregatable signatures 
+($\mathit{CKS.Setup}$, \\ $\mathit{CKS.GenerateCommitteeKey}$, $\mathit{CKS.Prove}$, $\mathit{CKS.Verify}$)
+has perfect completeness if for any message $m \in \{0,1\}^*$, 
+for any vector of public keys $(\mathit{pk_i})_{i=1}^{u}$ generated using $\mathit{AS.GenerateKeypair}(\mathit{pp})$, 
+for any bitmask $(\mathit{bit_i})_{i=1}^{u} \in \{0,1\}^u$,  for any aggregated signature $\mathit{asig}$, 
+it holds that: 
+\begin{align*}
+\mathit{Pr}[\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 & \implies \mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m, \mathit{asig}, \pi, (\mathit{bit}_{i})_{i=1}^u) =1 | \\
+& \ (\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{rs}_{\mathit{pk}}) \leftarrow \mathit{CKS.Setup}(v), \\
+& \mathit{ck} \leftarrow \mathit{CKS.GenerateCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk}_{i})_{i=1}^u)), \\
+& \pi \leftarrow \mathit{CKS.Prove}(\mathit{rs}_{\mathit{pk}}, \mathit{ck}, (\mathit{pk}_{i})_{i=1}^u, (\mathit{bit_i})_{i=1}^u), \\
+& \mathit{apk} \leftarrow \mathit{AS.AggregateKeys}(\mathit{pp}, (\mathit{pk}_{i})_{i:\mathit{bit_i}=1})]=1
+\end{align*}
+
+\noindent \textbf{Soundness} A committee key scheme for aggregatable signatures 
+($\mathit{CKS.Setup}$, $\mathit{CKS.GenerateCommitteeKey}$, $\mathit{CKS.Prove}$, $\mathit{CKS.Verify}$)
+has soundness if for every efficient adversary $\mathcal{A}$ it holds that: 
+\begin{align*}
+\mathit{Pr}[\mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m, & \mathit{asig}, \pi, (\mathit{bit}_{i})_{i=1}^u) =1 
+ \implies \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1  |  \\
+& \ (\mathit{pp}, \mathit{rs}_{\mathit{vk}},\mathit{rs}_{\mathit{pk}}) \leftarrow \mathit{CKS.Setup}(v), \\ 
+& (\mathit{pk}_{i})_{i=1}^u, (\mathit{bit}_{i})_{i=1}^u, \mathit{asig}, \pi, m  \leftarrow \mathcal{A}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{rs}_{\mathit{pk}}), \\
+& \mathit{ck} \leftarrow \mathit{CKS.GenerateCommitteKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk}_{i})_{i=1}^u), \\
+& \mathit{apk} \leftarrow \mathit{AS.AggregateKeys}( \mathit{pp},( \mathit{pk}_{i})_{i:\mathit{bit_i}=1})] = 1 - \negl(\lambda)
+\end{align*}
+
+\noindent  Next, we define an additional security property for a committee key scheme for aggregatable signatures, 
+namely unforgeability.
+
+ \noindent \textbf{Unforgeability}  For a committee key scheme for aggregatable signatures 
+($\mathit{CKS.Setup}$, \\ $\mathit{CKS.GenerateCommitteeKey}$, $\mathit{CKS.Prove}$, $\mathit{CKS.Verify}$) the advantage of an 
+adversary $\mathcal{A}$ against unforgeability is defined by 
+$\mathit{Adv}_{\mathcal{A}}^{\mathit{forgecomkey}}(\lambda) = \Pr[\mathit{Game}^{\mathit{forgecomkey}}_{\mathcal{A}}(\lambda) = 1]$, 
+where
+\begin{align*}
+&\mathit{Game}^{\mathit{forgecomkey}}_{\mathcal{A}}({\lambda}): \\
+%& \mathit{pp} \leftarrow \mathit{AS.Setup}(\lambda) \\
+& (\mathit{pp}, \mathit{rs}_{\mathit{vk}},\mathit{rs}_{\mathit{pk}}) \leftarrow \mathit{CKS.Setup}(v) \\
+& ((\mathit{pk}^*,\pi^*_{\mathit{PoP}}), \mathit{sk}^*) \leftarrow \mathit{AS.GenerateKeypair}(\mathit{pp})\\
+& Q \leftarrow \emptyset \\
+& ((\mathit{pk_i}, \pi_{\mathit{PoP},i})_{i=1}^{u}, (\mathit{bit_i})_{i=1}^u, \mathit{asig}, \pi, m) \leftarrow \mathcal{A}^{\mathit{OSign}}(\mathit{pp},\mathit{rs}_{\mathit{vk}},\mathit{rs}_{\mathit{pk}}, (\mathit{pk^*},\pi^*_{\mathit{PoP}})) \\
+& \textit{If } (\forall i: \mathit{pk}^* \neq \mathit{pk_i} \wedge \mathit{bit_i}=0) \vee m \in Q, \textit{ then return } 0 \\
+& \textit{For } i \in [u] \\
+& \ \ \ \ \ \textit{ If } \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i}, \pi_{\mathit{PoP,i}})=0  \textit{ return } 0 \\
+& \mathit{ck} \leftarrow \mathit{CKS.GenerateCommitteKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^u) \\
+& \textit{Return } \mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}},  \mathit{ck}, m, \mathit{asig}, \pi, (\mathit{bit_i})_{i=1}^u)
+\end{align*}
+We say a committee key scheme for aggregatable signatures is unforgeable if for all efficient adversaries $\mathcal{A}$ it holds that 
+$\mathit{Adv}_{\mathcal{A}}^{\mathit{forgecomkey}}(\lambda) \leq \negl(\lambda)$.
+
+\begin{corollary} Let $\mathit{AS}$ be an aggregatable signature scheme that fulfils  
+definition~\ref{def:aggregate_signatures}. If $\mathit{CKS}$ is a committee key scheme for aggregatable signatures that fulfils definition~\ref{def: committee_key}, 
+then $\mathit{CKS}$ is unforgeable, as defined above.  
+\end{corollary}
+
+ \begin{proof} Assume by contradiction there exists an efficient adversary $\mathcal{A}$ such that 
+$\mathit{Adv}_{\mathcal{A}}^{\mathit{forgecomkey}}(\lambda)$ is non-negligible. Using $\mathcal{A}$ and the 
+soundness property of a committee key scheme, one can construct in a straightforward manner an efficient 
+adversary $\mathcal{A'}$ such that $$ \mathit{Adv}_{\mathcal{A'}}^{\mathit{forge}}(\lambda) \geq \mathit{Adv}_{\mathcal{A}}^{\mathit{forgecomkey}}(\lambda)  - \mathit{negl}(\lambda).$$ 
+This, in turn, implies that $\mathit{Adv}_{\mathcal{A'}}^{\mathit{forge}}$ is non-negligible which contradicts the unforgeability property of aggregatable 
+signature scheme $\mathit{AS}$. Thus, our assumption is false and our statement holds.
+\end{proof}
+
+
+

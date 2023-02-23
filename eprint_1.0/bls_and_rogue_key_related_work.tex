@@ -1,0 +1,18 @@
+\noindent {\color{red} We implement and use an efficient BLS multisignature scheme that has both efficient 
+verification and efficient key aggregation (for more details, see section~\ref{sec:bls}). 
+In general, multisignatures are susceptible to so-called ``rogue-key attacks'' which can be 
+mounted whenever the adversary is allowed to choose his public keys arbitrarily. 
+In a typical rogue-key attack, the adversary uses a public key that is a function of an 
+honest user's key and this allows him to produce forgeries easily. The BLS multisignatures that we define and use 
+in this work make no exception. So, in order to protect against rogue-key attacks, 
+we enhance them with proofs-of-posession as defined in~\cite{proofs_of_posession}.} \\
+
+\noindent {\color{red}Alternative constructions for BLS multisignatures as well as other defence mechanisms against rogue key attacks exist and 
+we briefly review both below. First, a more general case to BLS mltisignatures exists, namely aggregating BLS signatures for different messages 
+(e.g., ~\cite{aggregate_BLS_signatures}). In this case, the rouge-key attacks are not a threat anymore, but multisignature verification 
+is computationally more expensive than in our case, requiring $O(n)$ parings for $n$ different messages. Second, alternative 
+BLS multisignatures exist (e.g.,~\cite{boneh_compact_multisig}) where both the aggregated public key have their size independent 
+of the number of signers and the multisignature verification is as fast as in our variant. However, for our application we prefer the scheme 
+detailed in section~\ref{sec:bls}: in spite of requiring a one-time verification of proofs-of-posession, its corresponding aggregate key is a 
+simple sum of the individual signers' public keys, while, in ~\cite{boneh_compact_multisig} the key aggregation operation involves more 
+expensive scalar multiplications every time the key aggregation is performed.}

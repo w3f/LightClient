@@ -1,0 +1,246 @@
+\documentclass[10pt]{article} 
+\usepackage[
+    type={CC},
+    modifier={by-nc-sa},
+    version={3.0},
+]{doclicense}
+
+\usepackage{authblk}
+\usepackage[toc,page]{appendix}
+\usepackage[utf8]{inputenc}     
+     
+%%% page dimensions
+\usepackage{geometry} 
+\geometry{margin=1.08in} 
+%\usepackage{numdef}
+   
+\usepackage{url}   
+%\usepackage[hyphen]{url}
+\usepackage{graphicx} 
+\usepackage{amsmath,amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb} %\therefore
+\usepackage{hyperref}
+\usepackage{cryptocode}
+\usepackage{framed} 
+% \usepackage[parfill]{parskip} % activate to begin paragraphs with an empty line rather than an indent
+    
+ %%% packages
+\usepackage{booktabs} 
+\usepackage{array} 
+\usepackage{paralist} 
+\usepackage{verbatim} 
+\usepackage{subfig}     
+\usepackage{mathrsfs}
+\usepackage[normalem]{ulem}
+\usepackage{soul}
+
+%%% headers & footers
+\newcommand{\prove}{\ensuremath{\mathsf{Prove}}\xspace}
+\newcommand{\group}{\ensuremath{\mathsf{group}}\xspace}
+\newcommand{\ck}{\ensuremath{\mathsf{ck}}\xspace}
+\newcommand{\key}[1]{\ensuremath{\mathsf{ck}_{#1}}\xspace}
+\newcommand{\konefirst}{\ensuremath{\key{1,[:m']}}\xspace}
+\newcommand{\konesecond}{\ensuremath{\key{1,[m':]}}\xspace}
+\newcommand{\ktwofirst}{\ensuremath{\key{2,[:m']}}\xspace}
+\newcommand{\ktwosecond}{\ensuremath{\key{2,[m':]}}\xspace}
+\newcommand{\avec}{\ensuremath{\mathbf{\mathsf{a}}}\xspace}
+\newcommand{\vvec}{\ensuremath{\mathbf{v}}\xspace}
+
+\newcommand{\Avec}{\ensuremath{\mathbf{A}}\xspace}
+
+\newcommand{\bvec}{\ensuremath{\mathbf{\mathsf{b}}}\xspace}
+\newcommand{\zL}{\ensuremath{\mathit{z_L}}\xspace}
+\newcommand{\zR}{\ensuremath{\mathit{z_R}}\xspace}
+
+\newcommand{\afirst}{\ensuremath{\avec_{[:m']}}\xspace}
+\newcommand{\asecond}{\ensuremath{\avec_{[m':]}}\xspace}
+\newcommand{\Afirst}{\ensuremath{\Avec_{[:m']}}\xspace}
+\newcommand{\Asecond}{\ensuremath{\Avec_{[m':]}}\xspace}
+
+\newcommand{\vfirst}{\ensuremath{\vvec_{[:m']}}\xspace}
+\newcommand{\vsecond}{\ensuremath{\vvec_{[m':]}}\xspace}
+\newcommand{\bfirst}{\ensuremath{\bvec_{[:m']}}\xspace}
+\newcommand{\bsecond}{\ensuremath{\bvec_{[m':]}}\xspace}
+
+\newcommand{\CL}{\ensuremath{\mathit{C_L}}\xspace}
+\newcommand{\CR}{\ensuremath{\mathit{C_R}}\xspace}
+\newcommand{\TL}{\ensuremath{\mathit{T_L}}\xspace}
+\newcommand{\TR}{\ensuremath{\mathit{T_R}}\xspace}
+
+\newcommand{\negl}{\ensuremath{\mathit{negl}}\xspace}
+%\newcommand{\key}[1]{\ensuremath{\mathsf{ck}_{#1}}\xspace}
+\newcommand{\einn}{\ensuremath{\mathit{E}_{\mathit{inn}}}\xspace}
+\newcommand{\eout}{\ensuremath{\mathit{E}_{\mathit{out}}}\xspace}
+\newcommand{\ginn}[1]{\ensuremath{\mathbb{G}_{\mathit{#1,inn}}}\xspace}
+\newcommand{\gout}[1]{\ensuremath{\mathbb{G}_{\mathit{#1,out}}}\xspace}
+\newcommand{\gtinn}{\ensuremath{\mathbb{G}_{\mathit{T,inn}}}\xspace}
+\newcommand{\gtout}{\ensuremath{\mathbb{G}_{\mathit{T,out}}}\xspace}
+\newcommand{\sginn}[1]{\ensuremath{g_{\mathit{#1,inn}}}\xspace}
+\newcommand{\sgout}[1]{\ensuremath{g_{\mathit{#1,out}}}\xspace}
+\newcommand{\sgtinn}{\ensuremath{g_{\mathit{T,inn}}}\xspace}
+\newcommand{\sgtout}{\ensuremath{g_{\mathit{T,out}}}\xspace}
+
+\newcommand{\indexoneinn}{\ensuremath{\mathit{1,inn}}\xspace}
+\newcommand{\indextwoinn}{\ensuremath{\mathit{2,inn}}\xspace}
+
+\newcommand{\indexoneout}{\ensuremath{\mathit{1,out}}\xspace}
+\newcommand{\indextwoout}{\ensuremath{\mathit{2,out}}\xspace}
+
+
+\newcommand{\epinn}{\ensuremath{\mathit{e}_{\mathit{inn}}}\xspace}
+\newcommand{\epout}{\ensuremath{\mathit{e}_{\mathit{out}}}\xspace}
+\newcommand{\block}{\ensuremath{\mathsf{block}}\xspace}
+\newcommand{\LCseed}{\ensuremath{\mathit{LC.seed}}\xspace}
+
+\usepackage{fancyhdr} % this should be set after setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} 
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+    
+%%% section title appearance
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} 
+  
+%%% toc (table of contents) appearance
+\usepackage[nottoc,notlof,notlot]{tocbibind} % put the bibliography in the toc
+\usepackage[titles,subfigure]{tocloft} % alter the style of the table of contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % no bold!
+
+%%% end article customizations
+ \newcommand{\code}[1]{\texttt{#1}}
+\newcommand\tstrut{\rule{0pt}{2.6ex}}         % = `top' strut
+\newcommand\bstrut{\rule[-0.9ex]{0pt}{0pt}}   % = `bottom' strut
+\newcommand{\bgamma}{\boldsymbol{\gamma}}
+\newcommand{\bsigma}{\boldsymbol{\sigma}}
+
+\newcommand{\al}[2]{{\uline{#1}}\textcolor{cyan}{(#2)}}
+\newcommand{\sergey}[2]{{\uline{#1}}\textcolor{magenta}{(#2)}}
+
+\newcommand{\GoneBLS}{\mathbb{G}_{1, \mathit{BLS}}\xspace}
+\newcommand{\GtwoBLS}{\mathbb{G}_{2, \mathit{BLS}}\xspace}
+\newcommand{\GTBLS}{\mathbb{G}_{T, \mathit{BLS}}\xspace}
+
+\newcommand{\goneBLS}{\mathit{g}_{1, \mathit{BLS}}\xspace}
+\newcommand{\gtwoBLS}{\mathit{g}_{2, \mathit{BLS}}\xspace}
+\newcommand{\gTBLS}{\mathit{g}_{T, \mathit{BLS}}\xspace}
+
+\newcommand{\eBLS}{\mathit{e}_{\mathit{BLS}}\xspace}
+\newcommand{\HBLS}{\mathit{H}_{\mathit{BLS}}\xspace}
+\newcommand{\HPoP}{\mathit{H}_{\mathit{PoP}}\xspace}
+\newcommand{\Hinn}{\mathit{H}_{\mathit{inn}}\xspace}
+\newcommand{\piinn}{\pi_{\mathit{inn}}\xspace}
+\newcommand{\PoP}{\mathit{inn}\xspace}
+
+\newcommand{\Rla}{\mathcal{R}^{\mathit{incl}}_{\mathsf{ba}}\xspace}
+\newcommand{\Ra}{\mathcal{R}^{\mathit{incl}}_{\mathsf{pa}}\xspace}
+\newcommand{\Rvt}{\mathcal{R}^{\mathit{incl}}_{\mathsf{c}}\xspace}
+
+\newcommand{\Rlacom}{\mathcal{R}^{\mathit{incl}}_{\mathsf{ba},\mathit{com}}\xspace}
+\newcommand{\Racom}{\mathcal{R}^{\mathit{incl}}_{\mathsf{pa},\mathit{com}}\xspace}
+\newcommand{\Rvtcom}{\mathcal{R}^{\mathit{incl}}_{\mathsf{c},\mathit{com}}\xspace}
+
+
+\newcommand{\Pla}{\mathscr{P}_{\mathsf{ba}}\xspace}
+\newcommand{\Pa}{\mathscr{P}_{\mathsf{pa}}\xspace}
+\newcommand{\Pvt}{\mathscr{P}_{\mathsf{c}}\xspace}
+
+\newcommand{\Plastar}{\mathscr{P}_{\mathsf{ba}}^{\ast}\xspace}
+\newcommand{\Pastar}{\mathscr{P}_{\mathsf{pa}}^{\ast}\xspace}
+\newcommand{\Pvtstar}{\mathscr{P}_{\mathsf{c}}^{\ast}\xspace}
+
+\newcommand{\Plah}{\mathscr{P}_{\mathsf{ba}}^{h}\xspace}
+\newcommand{\Pah}{\mathscr{P}_{\mathsf{pa}}^{h}\xspace}
+\newcommand{\Pvth}{\mathscr{P}_{\mathsf{c}}^{h}\xspace}
+
+
+\title{Accountable Light Client Systems for PoS Blockchains} 
+%%\author{Web3 Foundation Researchers} 
+\author[1]{Oana Ciobotaru}
+\author[2]{Fatemeh Shirazi}
+\author[1]{Alistair Stewart}
+\author[1]{Sergey Vasilyev}
+\affil[1]{Web3 Foundation}
+\affil[2]{Heliax AG}
+%\date{ \today} % activate to display a given date or no date (if empty), otherwise the current date is printed 
+\date{}
+
+\usepackage{dashrule}
+
+\newcommand{\kate}{\ensuremath{\mathsf{KZG}}\xspace}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}[lemma]{Theorem}
+\newtheorem{dfn}[lemma]{Definition}
+\newtheorem{claim}[lemma]{Claim}
+\newtheorem{corollary}[lemma]{Corollary}
+\newtheorem{remark}[lemma]{Remark}
+\newtheorem{construction}[lemma]{Instantiation}
+\newtheorem{assumption}[lemma]{Assumption}
+\newtheorem{proposition}[lemma]{Proposition}
+
+
+\newcommand{\ewnp}{e.w.n.p.\ }
+
+\begin{document}
+    \maketitle
+
+\abstract{A major challenge for blockchain interoperability is having an on-chain light client protocol that is both efficient and secure. We present a protocol that provides short proofs about the state of a decentralised consensus protocol while being able to detect misbehaving parties. 
+To do this naively, a verifier would need to maintain an updated list of all participants' public keys which makes the corresponding proofs long. 
+In general, existing solutions either lack accountability or are not efficient. We define and design a committee key scheme with short proofs 
+that do not include any of the individual participants' public keys in plain. Our committee key scheme, in turn, uses a custom designed SNARK 
+which has a fast prover time. Moreover, using our committee key scheme, we define and design an accountable light client system as the main 
+cryptographic core for building bridges between proof of stake blockchains. 
+Finally, we implement a prototype of our custom SNARK for which we provide benchmarks.}
+     
+%\abstract{We introduce a class of light client design that is compatible with Polkadot. 
+%This class of light client designs has custom SNARKs with a universal srs at its core and, 
+%in addition to previous light clients, it ensures accountability. More concretely, we define, 
+%implement and evaluate three instantiations for our light client: linear accountable, accountable 
+%and variable threshold depending on the method and efficiency for ensuring validator public 
+%key inclusion in the final aggregated public key used for each epoch's multisignature.} 
+%The second class of light client design is centred around a new instantiation 
+%of inner pairing product arguments that efficiently combines $\mathsf{MIPP_{u}}$ and $\mathsf{MIPP_{k}}$.}
+
+\section{Introduction} \label{sec_intro}
+\input{intro.tex}
+%\section{Placeholder Introduction}
+%\input{summary.tex}
+
+\section{Preliminaries} \label{sec_prelims}
+\input{preliminaries}
+\input{elliptic_curves_and_pairings.tex}
+\input{multisignatures_def.tex}
+\input{committee_key_scheme.tex}
+\input{conditional_NP_relations.tex}
+\input{snarks_def.tex}
+\input{poly_proto_poly_comm.tex}
+\input{lagrange_bases.tex}
+
+\section{Custom SNARKs for Public Keys Aggregation Proofs} \label{sec_apk_proofs}
+\input{no_witness_relations.tex}
+
+\section{An Accountable Light Client System}
+ \label{sec_light_client_model}
+%\input{new_light_client_model}
+\input{new_light_client_model_updated}
+\input{light_client_instantiation}
+
+\section{Implementation} \label{sec_implementation}
+\input{implementation}
+\input{acknowledgements}
+\bibliography{bibliography} 
+
+\bibliographystyle{ieeetr}
+\appendix
+
+%\input{appendix_hybrid_model_knowledge_soundness.tex}
+\input{appendix_ranged_polynomial_protocols.tex}
+%\input{appendix_special_case_source_group.tex}
+\input{appendix_full_accountable.tex}
+\input{appendix_CKS_proof.tex} 
+\input{appendix_soundness_proof}
+
+\end{document}        

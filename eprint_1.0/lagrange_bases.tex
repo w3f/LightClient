@@ -1,0 +1,18 @@
+\subsection{Lagrange Bases}
+\label{sec:lagrange}
+
+In order to design the SNARKs presented in this work, it is more convenient to represent the polynomials 
+we work with over the Lagrange base rather than the monomial base. Formally, for the finite field $\mathbb{F}$ defined in section~\ref{sec:pairings} 
+we denote by $H$ a subgroup of the multiplicative group of $\mathbb{F}$ such that $n = |H|$ is a large power of 2. Let $\omega$ be an $n$-th 
+root of unity in $\mathbb{F}$ such that $\omega$ is a generator of $H$. Then, we call the following polynomial base $\{L_i(X)\} _{0 \leq i\leq n-1}$ 
+a Lagrange base, where $\forall i, 0 \leq i \leq n-1$, $L_i(X)$ is the unique polynomial in $\mathbb{F}_{<n}[X]$ such that 
+$L_i(\omega^i) =1$ and $L_i(\omega^j) = 0, \forall j \neq i$.\\
+
+\noindent Independent of the notion of Lagrange bases, but related to $n$ we define $\block$ also a power of 2 such that $\block < n$. 
+We use $\block$ when defining one of our conditional NP relations in section \ref{sec:snarks}. In the following we assume 
+$n = \mathsf{poly} (\lambda)$ and $\block = \Theta(\lambda)$ and $|\mathbb{F}|= 2^{\Theta(\lambda)}$.%, i.e., $|\mathbb{F}|$ is exponential in $\lambda$.}
+
+ 
+%{\color{blue} TO DO: Make the statement about $|\mathbb{F}|$ stronger. In the following we assume 
+%$n= \mathsf{poly} (\lambda)$ and $|\mathbb{F}|= \lambda^{\omega(1)}$, i.e., $|\mathbb{F}|$ is super-polynomial in $\lambda$. Also, is $\block$ a constant or is $\mathsf{poly} (\lambda)$? }
+

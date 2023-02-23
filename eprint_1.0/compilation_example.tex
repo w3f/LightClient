@@ -1,0 +1,63 @@
+\subsection{Applying Our Three-step PLONK-based Compiler to $\mathscr{P}_{\mathsf{a}}$: the Missing Details}
+\label{sec_two_step_example}
+
+\noindent Next we show in more detail how to apply the three-step compiler described in section \ref{sec_two_step_compiler} 
+to $\mathscr{P}_{\mathsf{a}}$. \\
+
+\noindent \textbf{Step 1} \\
+\label{example_step_1}
+
+\noindent We expand more on linearisation. If we follow the PLONK notation, then we have $t^*=2$ where $v_1(X)$  is the ``identity'' $X$ and 
+$v_2(X)$ is the ``one-step right shift'' $\omega \cdot X$. Hence, we have a partition into two sets $S_1$ and $S_2$ of all the polynomials 
+that define the polynomial identities checked in $\mathscr{P}_{\mathsf{a}}$. In particular, 
+$$S_1= \{b(X), pkx(X), pky(X), kaccx(X), kaccy(X), c(X), acc(X), t(X), L_0(X), L_{n-1}(X), X^n -1, X - \omega^{n-1} \}$$ and 
+$$S_2 = \{ kaccx(\omega \cdot X), kaccy(\omega \cdot X), c(\omega \cdot X), aux (\omega \cdot X), acc(\omega \cdot X)\}.$$ 
+However, the polynomials used in $\mathscr{P}_{\mathsf{a}}$ are the same as those used in $\mathscr{P}^*_{\mathsf{a}}$. 
+From the perspective of $\mathscr{P}^*_{\mathsf{a}}$, $S_1$ contains the polynomials for which if evaluation during the SNARK proof is necessary, 
+then the evaluation challenge will be the same randomly chosen scalar $\zeta$ for all polynomials; $S_2$ contains the polynomials for which if 
+evaluation is necessary, then the evaluation challenge will be the ``one-step right shift'' $\omega\cdot \zeta$ for all polynomials. 
+For $\mathscr{P}^*_{\mathsf{a}}$, the set $S$ (whose cardinal number equals the number of field elements in the SNARK proof minus one) is 
+$S_1$ minus its subset containing all polynomials that can be evaluated succinctly\footnote{See succinctness definition in section \ref{sec:snarks}.} by 
+the verifier minus polynomial $t(X)$ whose evaluation can be computed efficiently by the verifier if enough evaluations of the other polynomials are 
+already known by the verifier. For $\mathscr{P}^*_{\mathsf{a}}$, the subset of polynomials that can be evaluated succinctly equals 
+$\{ L_0(X), L_{n-1}(X), X^n-1, X - \omega^{n-1} \}$. The one additional field element that is part of the SNARK proof is the evaluation at 
+$\omega \cdot \zeta$ of the linearisation polynomial. In turn, the linearisation polynomial is computed by replacing in the polynomial identity 
+(that is being checked in the information theoretical model of $\mathscr{P}_{\mathsf{a}}$) all polynomials in $S_1$ with their evaluation at $\zeta$. \\
+
+%\noindent Expanding more on linearisation, for each of our relations $\mathcal{R}^{\mathit{incl}}_{\mathsf{la}}$, $\mathcal{R}^{\mathit{incl}}_{\mathsf{a}}$ and 
+%$\mathcal{R}^{\mathit{incl}}_{\mathsf{vt}}$, if we follow the PLONK notation, then we have $t^*=2$ where $v_1(X)$  is the ``identity'' $X$ and 
+%$v_2(X)$ is the ``one-step right shift'' $\omega \cdot X$. Hence, we have a partition into two sets $S_1$ and $S_2$ of all the polynomials 
+%that define the polynomial identities checked in $\mathscr{P}_{\mathsf{la}}$. (Analogously for $\mathscr{P}_{\mathsf{a}}$ and 
+%$\mathscr{P}_{\mathsf{vt}}$, respectively.) However, the polynomials used in $\mathscr{P}_{\mathsf{la}}$ are the same as those used 
+%in $\mathscr{P}^*_{\mathsf{la}}$. (Analogously for the pairs ($\mathscr{P}_{\mathsf{a}}, \mathscr{P}^*_{\mathsf{a}}$) and 
+%($\mathscr{P}_{\mathsf{vt}}, \mathscr{P}^*_{\mathsf{vt}}$.)). From the perspective of $\mathscr{P}^*_{\mathsf{la}}$, 
+%$S_1$ contains the polynomials for which if evaluation during the snark proof is necessary, then the evaluation challenge will be the same 
+%randomly chosen scalar $\zeta$ for all polynomials; $S_2$ contains the polynomials for which if evaluation is necessary, 
+%then the evaluation challenge will be the ``one-step right shift'' $\omega \cdot \zeta$ for all polynomials. (Again, analogously for 
+%$\mathscr{P}_{\mathsf{a}}$ and $\mathscr{P}_{\mathsf{vt}}$, respectively.) For each of $\mathscr{P}^*_{\mathsf{la}}$, 
+%$\mathscr{P}^*_{\mathsf{a}}$, $\mathscr{P}^*_{\mathsf{vt}}$, the set $S$ (whose cardinal number equals the number of field elements in 
+%the snark proof minus one) is $S_1$ minus its subset containing all polynomials that can be evaluated 
+%succinctly\footnote{See succinctness definition in section \ref{sec:snarks}.} by the verifier.\footnote{Just as an example, 
+%in the case of $\mathscr{P}^*_{\mathsf{a}}$, this subset has as elements polynomials $L_0(X)$, $L_{n-1}(X)$, $aux(X)$ and $X^n-1$.} The one 
+%additional field element that is part of each of the snark proof is the evaluation at $\omega\cdot \zeta$ of the linearisation polynomial. In turn, the 
+%linearisation polynomial is computed by replacing in the polynomial identity (i.e., that is being checked in each of the in the information theoretical 
+%model of $\mathscr{P}_{\mathsf{la}}$, $\mathscr{P}_{\mathsf{a}}$ and $\mathscr{P}_{\mathsf{vt}}$ respectively) all polynomials in 
+%$S_1$ with their evaluation at $\zeta$. \\
+
+\noindent \textbf{Step 2} \\
+\label{example_step_2}
+
+\noindent In order to reduce the amount of computation it needs to perform, the verifier associated with $\mathscr{P}^{h}_{\mathsf{a}}$ 
+delegates the computation of the commitments associated with the public input vector $(pk_0, \ldots, pk_{n-1})$ to the trusted party $\mathcal{T}$. 
+In more detail, the verifier associated with $\mathscr{P}^{h}_{\mathsf{a}}$ performs the same steps as that associated with 
+$\mathscr{P}^{*}_{\mathsf{a}}$ with one important difference. On one hand, the verifier associated with $\mathscr{P}^{*}_{\mathsf{a}}$ has to compute 
+the polynomials $pkx(X)$ and $pky(X)$ itself and, then, in turn, these polynomials are used by the same verifier to compute the corresponding 
+KZG commitments $[pkx]_{1}$ and $[pky]_{1}$. On the other hand, the verifier associated with $\mathscr{P}^{h}_{\mathsf{a}}$ 
+delegates the computation of the KZG commitments $[pkx]_{1}$ and $[pky]_{1}$ to $\mathcal{T}$ and receives the result of this computation 
+as a trusted input from $\mathcal{T}$.\\
+
+\noindent Since when it comes to the verifier's computation, the public input vector $(pk_0, \ldots, pk_{n-1})$ is only necessary to compute the 
+KZG commitments $[pkx]_{1}$ and $[pky]_{1}$ associated with $pkx(X)$ and $pky(X)$, by delegating their computation to $\mathcal{T}$ and using 
+the result of that computation as a trusted input for the rest of its computation, effectively the verifier defined by $\mathscr{P}^{h}_{\mathsf{a}}$ completes 
+its task but also manages to do that in a way that avoids parsing the more expensive part of the public inputs from the definition of the relation 
+$\mathcal{R}^{\mathit{incl}}_{\mathsf{a}}$. 
