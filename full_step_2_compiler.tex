@@ -1,0 +1,119 @@
+\noindent \textbf{(Mixed Vector and Commitments based NP Relations and Associated SNARKs)} \\
+
+\noindent The type of NP relations we have worked with so far as well as the more general PLONK NP relation 
+(\cite{plonk}, Section 8.2) have vector of field elements as public inputs. Next we show that SNARKs 
+compiled using Step 1 can become, under certain assumption, SNARKs for a new type of NP relation 
+that specifically contains polynomial commitments as part of the input. Interpreting 
+our already compiled SNARKs as SNARKs for this new type of NP relation is essential for designing 
+accountable light client systems via committee key schemes (see Instantiation~\ref{inst:cks} 
+in Section~\ref{sec:inst_committee_key}).  
+
+\noindent Let conditional NP relation $\mathcal{R}_{\mathit{vec}}^c$  be:
+\begin{align*}
+\mathcal{R}_{\mathit{vec}}^c = \{&(\mathbf{input_1} \in \mathbf{\mathcal{D}_1}, \mathbf{input_2} \in\mathbf{\mathcal{D}_2}; \mathbf{witness_1}): \\  
+&p_1(\mathbf{input_1}, \mathbf{input_2}, \mathbf{witness_1}) = 1 \ | \ c(\mathbf{input_1}) = 1 \ \wedge\ \\
+&\wedge \ p_2(\mathbf{input_1}, \mathbf{input_2}, \mathbf{witness_1}) = 1 \},
+\end{align*}
+\noindent where $\mathbf{input_1}$, $\mathbf{input_2}$ are two sets of public input vectors 
+belonging domains  $\mathcal{D}_1$, $\mathcal{D}_2$. $\mathbf{witness_1}$ is a set of witness vectors and $c$, $p_1$, $p_2$ are predicates. 
+Let $\mathscr{P}_{\mathit{vec}}$ be a ranged polynomial protocol for relation $\mathcal{R}_{\mathit{vec}}^c$. Note that since $c$ applies 
+only to a part of the public input for relation $\mathcal{R}_{\mathit{vec}}^c$ 
+(i.e., $\mathbf{input_1}$), we can apply Lemma~\ref{le:compilation_step_1} of Section~\ref{supplementary_poly_protocols_appendix} and Step 1 
+of our compiler to polynomial protocol $\mathscr{P}_{\mathit{vec}}$. \\
+
+\noindent We make the following hybrid model assumptions:
+\begin{itemize}
+\item (HMA.1.) $\mathcal{V}_{poly}$ in $\mathscr{P}_{\mathit{vec}}$ computes 
+$\mathit{Q_{1,\mathbf{input_1}}}(X), \ldots, \mathit{Q_{m, \mathbf{input_1}}}(X)$ which depend deterministically on $\mathbf{input_1}$ and sends them to $\mathcal{I}$. 
+\item (HMA.2.) $\mathcal{V}_{poly}$ in $\mathscr{P}_{\mathit{vec}}$ does not use $\mathbf{input_1}$ in any further computation of 
+any other polynomials or values its sends to $\mathcal{I}$.
+\item (HMA.3.) By evaluating $\mathit{Q_{1,\mathbf{input_1}}}(X), \ldots, \mathit{Q_{m, \mathbf{input_1}}}(X)$ over the range on which 
+$\mathscr{P}_{\mathit{vec}}$ is defined one obtains (using some efficiently computable and deterministic transformations) the set of vectors $\mathbf{input_1}$. 
+\end{itemize} 
+We denote by $\mathscr{P}^*_{\mathit{vec}}$ the hybrid model SNARK obtained after compiling $\mathscr{P}_{\mathit{vec}}$ using compilation Step 1. 
+Due to (HMA.1.) and according to Step 1, the SNARK verifier in 
+$\mathscr{P}^*_{\mathit{vec}}$ computes $$\mathit{Com_1} = \mathit{Com}(\mathit{Q_{1,\mathbf{input_1}}}), \ldots, \mathit{Com_m} = \mathit{Com}(\mathit{Q_{m,\mathbf{input_1}}})$$ 
+which are KZG poly commitments to $\mathit{Q_{1,\mathbf{input_1}}}(X), \ldots, \mathit{Q_{m, \mathbf{input_1}}}(X)$. We denote vector
+$(\mathit{Com_1}, \ldots, \mathit{Com_m})$ by $\mathbf{Com}(\mathbf{input_1})$ and we denote 
+by $\mathcal{C}$ the set of all $\mathit{KZG}$ poly commitments or vectors of such poly commitments. We also define the relation: 
+\begin{align*}
+\mathcal{R}_{\mathit{vec}, \mathit{com}}^c = \{& \mathbf{C} \in \mathcal{C}, \mathbf{input_2} \in \mathbf{\mathcal{D}_2}; \mathbf{witness_1}, \mathbf{witness_2}):  \\
+& p_1(\mathbf{witness_2}, \mathbf{input_2}, \mathbf{witness_1}) =1  \ |\ c(\mathbf{witness_2}) = 1  \ \wedge\  \\
+& \wedge\ p_2(\mathbf{witness_2}, \mathbf{input_2}, \mathbf{witness_1}) = 1\ \wedge \\
+& \wedge\ \mathbf{C} = \mathbf{Com}(\mathbf{witness_2})\}
+\end{align*}
+\noindent Finally, for $\mathbf{input_1}$ part of $\mathit{state_1}$, we define $\mathit{SNARK.PartInput}$:
+\begin{align*} 
+&\mathit{SNARK.PartInput}(\mathit{srs}, \mathit{state_1},\mathcal{R}_{\mathit{vec}, \mathit{com}}^c) \\  
+& \mathit{If \ }  c(\mathbf{input_1}) = 0 \textit{ then} \ \mathit{Return} \\
+& \mathit{Else} \\
+& \ \ \ \ \textit{Compute via interpolation on } \mathscr{P}_{\mathit{vec}}  \textit{ range } 
+\mathit{Q_{1,\mathbf{input_1}}}(X), \ldots, \mathit{Q_{m, \mathbf{input_1}}}(X).\\
+& \ \ \ \ \mathbf{C} = (\mathit{Com}(Q_{1,\mathbf{input_1}}(X)), \ldots, \mathit{Com}(Q_{m,\mathbf{input_1}}(X))) \\
+& \ \ \ \ \mathit{state_2} =  \mathit{state_1} \cup \{ \mathbf{C} \} \textit{ then} \ \mathit{Return} (\mathit{state_2,  \mathbf{C}})
+\end{align*}
+
+\noindent With the above notation, \textbf{our compiler's Step 2 is:} \\
+\noindent The alleged hybrid model SNARK $\mathscr{P}_{\mathit{vec}}^{h}$ for relation $\mathcal{R}_{\mathit{vec}, \mathit{com}}^c$ is:
+\begin{itemize}
+\item $\mathit{SNARK.Setup}$ and $\mathit{SNARK.KeyGen}$ are as for relation $\mathcal{R}^{c}_{\mathit{vec}}$.
+\item $\mathit{SNARK.PartInput}$ for relation $\mathcal{R}^{c}_{\mathit{vec}}$ 
+(see Lemma~\ref{le:compilation_step_1} in Section~\ref{supplementary_poly_protocols_appendix}) 
+is replaced with $\mathit{SNARK.PartInput}$ for relation $\mathcal{R}_{\mathit{vec}, \mathit{com}}^c$.
+\item $\mathit{SNARK.Prover}$ for relation $\mathcal{R}_{\mathit{vec}, \mathit{com}}^c$ is identical with 
+$\mathit{SNARK.Prover}$ for relation $\mathcal{R}^{c}_{\mathit{vec}}$ (as compiled using Step 1) with the appropriate 
+re-interpretation of the public inputs and witness.
+\item $\mathit{SNARK.Verifier}$ for relation $\mathcal{R}_{\mathit{vec}, \mathit{com}}^c$ is identical with 
+$\mathit{SNARK.Verifier}$ for relation $\mathcal{R}^{c}_{\mathit{vec}}$ (as compiled using Step 1) with the appropriate 
+re-interpretation of the public inputs and such that $\mathit{SNARK.Verifier}$ for $\mathcal{R}_{\mathit{vec}, \mathit{com}}^c$ does
+not compute the polynomial commitments to the polynomials defined by assumption (HMA.1.).
+\end{itemize}
+%\vspace{-0.2in}
+\noindent \begin{lemma} 
+\label{sergey_type_relations} 
+Let $\mathscr{P}_{\mathit{vec}}$ be a ranged polynomial protocol for relation $\mathcal{R}^c_{\mathit{vec}}$ defined above and let 
+$\mathscr{P}_{\mathit{vec}}^{*}$ be the hybrid model SNARK for relation $\mathcal{R}^c_{\mathit{vec}}$ secure in the AGM obtained 
+by compiling $\mathscr{P}_{\mathit{vec}}$ using our compiler's Step 1. If the hybrid model assumptions (HMA.1.) - (HMA.3.) hold w.r.t. 
+protocol $\mathscr{P}_{\mathit{vec}}$ and $\mathit{State}_{\mathcal{R}_{\mathit{vec}, \mathit{com}}} \neq \emptyset $ then 
+$\mathscr{P}_{\mathit{vec}}^{h}$ as compiled using our compiler's Step 2 is a hybrid model SNARK for relation 
+$\mathcal{R}_{\mathit{vec}, \mathit{com}}^c$ secure also in the AGM.
+\end{lemma}
+
+\begin{proof} Let $\mathcal{E}_{\mathit{KZG}}$ and $\mathcal{E}$ be the extractors from the knowledge-soundness definitions for the 
+$\mathit{KZG}$ batch polynomial commitment scheme (as in Definition 3.1, Section 3 in~\cite{plonk}) and the hybrid model 
+SNARK $\mathscr{P}^*_{\mathcal{R}}$ for relation $\mathcal{R}^c_{\mathit{vec}}$ (as per Definition~\ref{dfn_snark}), respectively. 
+Let $\mathcal{A}$ be an adversary against knowledge soundness in the hybrid model w.r.t. 
+$\mathscr{P}_{\mathit{vec}}^{h}$ and relation $\mathcal{R}_{\mathit{vec}, \mathit{com}}^c$ and let $\mathit{aux}_{\mathit{SNARK}} \in \mathcal{D}$ 
+and let $\mathit{state_1} \in \mathit{State}_{\mathcal{R}_{\mathit{vec}, \mathit{com}}}$; let 
+$(\mathbf{C},\mathit{state_2}) = \mathit{SNARK.PartInput}(\mathit{srs}, \mathit{state_1}, \mathcal{R}_{\mathit{vec}, \mathit{com}}^c)$. 
+By the definition of $\mathit{SNARK.PartInput}$ for $\mathscr{P}_{\mathit{vec}}^{h}$, there exists 
+$\mathbf{input_1}$ such that $\mathbf{C} = \mathbf{Com}(\mathbf{input_1})$ and $c(\mathbf{input_1}) = 1$. 
+We denote by $(\mathbf{input_2}, \pi)$ the output of $\mathcal{A}(\mathit{srs}, \mathit{state_2},  \mathcal{R}_{\mathit{vec}, \mathit{com}}^c)$ 
+and let $\mathcal{A}_1$ be the part of $\mathcal{A}$ that sends openings and batched proofs for the polynomial commitments in 
+$\mathbf{C}$. \\
+
+\noindent On the one hand, if $\mathit{SNARK.Verifier}(\mathit{srs}_{\mathit{vk}}, (\mathbf{C},\mathbf{input_2}),\pi,\mathcal{R}_{\mathit{vec}, \mathit{com}}^c)$ 
+in $\mathscr{P}_{\mathit{vec}}^{h}$ accepts, then the $\mathit{KZG}$ verifier corresponding to 
+$\mathcal{A}_1$ also accepts. When such an event takes place, then, \ewnp $\mathcal{E}_{\mathit{KZG}}$ extracts polynomials 
+$Q'_1(X), \ldots, Q'_m(X)$ that represent witnesses for the vector $\mathbf{C}$ of commitments and the alleged openings of $\mathcal{A}_1$. 
+Because the $\mathit{KZG}$ polynomial commitment scheme is binding and by the definition of 
+$\mathit{SNARK.PartInput}$ for $\mathscr{P}_{\mathit{vec}}^{h}$, we obtain that $Q'_1(X) = Q_1(X), \ldots, Q'_m(X) = Q_m(X).$ 
+Since per (HMA.3.), the set $\{Q_1(X), \ldots, Q_m(X)\}$ evaluates to $\mathbf{input_1}$ over the range over which $\mathscr{P}_{\mathit{vec}}$ 
+was defined, \ewnp the witness polynomials extracted by $\mathcal{E}_{\mathit{KZG}}$ evaluate to $\mathbf{input_1}$. \\
+
+\noindent On the other hand, if $\mathit{SNARK.Verifier}(\mathit{srs}_{\mathit{vk}}, (\mathbf{C},\mathbf{input_2}),\pi,\mathcal{R}_{\mathit{vec}, \mathit{com}}^c)$ 
+in $\mathscr{P}_{\mathit{vec}}^{h}$ accepts, then \\
+$\mathit{SNARK.Verifier}(\mathit{srs}_{\mathit{vk}}, (\mathbf{input_1},\mathbf{input_2}),\pi,\mathcal{R}_{\mathit{vec}}^c)$ 
+in $\mathscr{P}_{\mathit{vec}}^{*}$ also accepts. In turn, this acceptance together with the fact that $\mathscr{P}_{\mathit{vec}}^{*}$ 
+has knowledge-soundness as per Definition~\ref{dfn_snark}, it implies $\mathcal{E}$ \ewnp extracts $\mathbf{witness_1}$ 
+such that $(\mathbf{input_1}, \mathbf{input_2}, \mathbf{witness_1}) \in \mathcal{R}_{\mathit{vec}}^{c} \ (\#).$ 
+
+\noindent By the definition of $\mathit{SNARK.PartInput}$ for $\mathscr{P}_{\mathit{vec}}^{h}$ and the way $\mathbf{input_1}$ was defined, 
+it holds that $c(\mathbf{input_1}) = 1$. Due to $(\#)$ and by the definition of relation $\mathcal{R}_{\mathit{vec}}^{c}$, 
+the predicates: $p_1$($\mathbf{input_1}$, $\mathbf{input_2}$, $\mathbf{witness_1}$) $= 1$ and 
+$p_2(\mathbf{input_1}, \mathbf{input_2}, \mathbf{witness_1}) = 1$ hold. If we let 
+$\mathbf{witness_2} = \mathbf{input_1}$, then 
+$(\mathbf{C} = \mathbf{Com}(\mathbf{input_1}), \mathbf{input_2}, \mathbf{witness_1}, \mathbf{input_1}) \in \mathcal{R}_{\mathit{vec}, \mathit{com}}^c,$ so 
+using $\mathcal{E}_{\mathit{KZG}}$ and $\mathcal{E}$ we can build an extractor for any knowledge-soundness adversary $\mathcal{A}$ for alleged 
+hybrid model SNARK $\mathscr{P}_{\mathit{vec}}^{h}$ for relation $\mathcal{R}_{\mathit{vec}, \mathit{com}}^c$, which concludes the proof.
+\end{proof}

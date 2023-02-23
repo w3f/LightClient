@@ -1,0 +1,31 @@
+\subsection{Conditional NP Relations}
+\label{sec:conditional_relations}
+%\vspace{-0.01in}
+\noindent By $\mathcal{R} =\{(x;w): p(x,w) = 1 \}$ we denote the binary relation such that $(x,w)$ 
+fulfil predicate $p(x,w) = 1$. We say $\mathcal{R}$ is an NP relation if predicate $p$ can be checked in polynomial 
+time in the length of both inputs $x$ and $w$ and $\mathcal{L}(\mathcal{R})= \{x \ | \ \exists w \textit{ s.t. } (x,w) \in \mathcal{R} \}$ 
+is an NP language w.r.t. predicate $p$. In such a case we call $x$ an \emph{instance} and $w$ a \emph{witness}.  \\
+
+%\vspace{-0.07in}
+\noindent  In order to model a specific property of our NP relations, we introduce further notation which we call \emph{conditional NP relation}, we denote it by 
+$$\mathcal{R}^c = \{(x;w) : (p_1(x,w) =1 \ | \ c(x,w) =1) \ \wedge \ p_2(x,w) = 1 \}$$ and we interpret it as the NP relation containing the pairs of inputs and witnesses 
+$(x,w)$ such that $c(x,w) =1$, $p_1(x,w) = 1$ and $p_2(x,w) =1$ hold. However, in order to prove that $(x,w) \in \mathcal{R}^c$ we assume/take it as a given that 
+$c(x,w) =1$ and we are left to prove only that $p_1(x,w) = 1$ and $p_2(x,w) =1$ hold. The reason we separate predicate $c(x,w)$ from predicate $p_1(x,w)$ in the definition 
+of $\mathcal{R}^c$ is that predicate $c(x,w)$ may be inefficient to prove inside a proof system (e.g., in our case, inside a SNARK); using the above separation, one can delegate 
+(in some particular situations) the verification of $c(x,w)$ to a trusted party outside the proof system.\\
+
+%\vspace{-0.07in}
+\noindent We explicitly include in the definition of any NP relation $\mathcal{R}$ or $\mathcal{R}^c$ the corresponding domain for each type 
+of public input. The interpretation of such domains is that each type of public input is parsed by the honest parties (e.g., a SNARK verifier for an NP relation 
+$\mathcal{R}$ or $\mathcal{R}^c$) as per the definition of the respective domain, without additional checks. We assume that all our relations have been 
+generated using implicit security parameter $\lambda$. Finally, when we make a statement about an NP relation we implicitly 
+mean the statement is about a conditional relation $\mathcal{R}^c$, where $c$ may be the predicate that always outputs $1$. 
+
+%\noindent {\color{red} In order to model a specific property of our NP relations, we introduce further notation which we call \emph{conditional NP relation} 
+%and we denote it by $\mathcal{R}^c = \{(x;w) \  | \ c(x,w): p(x,w) \}$ which means that $x$ and $w$ fulfil predicate $p$ as long as $x$ and $w$ fulfil additional 
+%predicate $c$. As a special case, we will encounter the situation that the witness for each public input is, in fact, the empty string; this is denoted by 
+%$\mathcal{R}^c= \{(x;) \ | \ c(x) : p(x)\}$. The reason we separate predicate $c(x,w)$ from predicate $p(x,w)$ in the definition of $\mathcal{R}^c$ 
+%is that predicate $c(x,w)$ may be expensive to prove and/or verify; by separating them, one can delegate the verification of $c(x,w)$ 
+%to a trusted party with enough computational power. In turn, such a trusted party can be implemented accordingly in a 
+%real-world system.}
+%\vspace{-0.09in}

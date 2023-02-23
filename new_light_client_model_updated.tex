@@ -1,0 +1,368 @@
+\label{new_light_client}
+In this section, we give a model for the consensus systems that our light client system can be applied to and we define security properties for light client systems,
+and, in particular accountable light client systems. Moreover, we present generic pseudocode for light client systems and prove that our implementation 
+fulfils the security properties that we define for this notion.  
+
+\subsection{Informal Model and Context}
+\label{sec:LCinformal_model}
+
+First, we informally describe our model, then we formalise it in \ref{sec:LCformal_model}.
+There is a consensus system which we assume is a blockchain protocol. 
+We consider consensus systems that make decisions based on signatures from a subset of validators, where the validator set may change periodically. 
+Our model has the following entities: 
+
+\paragraph{Full Nodes} - a full node maintains a view of the consensus decisions and stores the current state of the blockchain. 
+A full node obtains both by running the consensus protocol correctly starting from the genesis state of the blockchain.
+
+\paragraph{Validator} - a validator is a full node which the consensus protocol decides it belongs to a validator set. Once elected, 
+validators take part in the consensus protocol and, in turn, their signatures determine what the consensus decides upon. 
+
+\paragraph{Light Client Verifier} - a light client verifier is a node that does not keep the full state of the blockchain, but rather obtains (ideally short) proofs 
+of parts of the blockchain state they are interested in; light client verifiers do this by being in communication with e.g., full nodes. In the optimistic scenario, 
+where we have no adversary, the light client verifier can connect to a single full node and the full node should be able to convince the light client verifier of 
+anything that the latter is interested in and the consensus system has agreed upon.
+
+\paragraph{Adversary} The adversary controls a number of full nodes and validators. They are interested in convincing the light client verifier of things 
+that may be in contradiction to what other (honest) nodes see as decided. The adversary, via the parties it controls, can try to  
+double spend on the same blockchain or on another blockchain via a bridge. In the accountable case (which is the one we are interested in), 
+the adversarial parties would like to ensure that if an attack is discovered, the honest validators and not the adversarial ones are to be blamed and punished.
+In the pessimistic scenario, a light client verifier may only be connected to the adversary. In this scenario, we also assume that all full nodes, including honest 
+validators are only connected to the adversary.
+
+\paragraph{Validator Sets} As briefly mentioned above, the consensus protocol decides which entities are validators; the validators, in turn, agree on the consensus. 
+The consensus protocol designates the next validator set which, in turn, is represented by the set of the corresponding entities' public keys. 
+
+\subsubsection{Informal Security Properties}
+\noindent We next informally describe the security properties that our light client system should satisfy. \\
+
+\noindent {\bf Completeness}: If a full node sees that some fact was decided by the consensus, they can produce a proof that would convince a light client verifier of this fact.\\
+
+\noindent {\bf Soundness}:  If, from some honest full nodes point of view, at least 1/3 of the validators in the validator set at any time are honest, then the light client verifier 
+cannot be convinced of something incompatible with something the honest full node saw as decided. \\
+
+\noindent For short, completeness and soundness mean, respectively, that in the optimistic scenario, 
+a full node can always convince a light client verifier of some fact it sees as decided, and, in the pessimistic scenario, 
+the adversary cannot convince the light client verifier of something that was not decided. \\
+
+\noindent  Accountability means that if a light client verifier was convinced of an incorrect statement (in relation to what has been decided on the blockchain so far), 
+then one can detect the misbehaving validators that contributed to that. We can separate this into two properties: \\%, that we can blame some validators and that those validators actually misbehaved:
+
+\noindent {\bf Accountability Completeness}: If the light client verifier is convinced via a wrong proof of something which is incompatible 
+with something a full node sees as decided, and then the light client verifier forwards the wrong proof to the full node, that full node can detect that some validators misbehaved. \\
+
+\noindent {\bf Accountability Soundness}: If a full node is given a light client proof of something that is incompatible with something it sees as decided,
+ then, when the full node detects that some validators misbehaved, indeed none of those validators are honest. \\
+\vspace{-0.4cm}
+\subsubsection{Consensus System Model}
+
+\paragraph{Messages} For a full node to prove to a light client verifier that something has been decided, in the end it will prove that a {\it message} was signed by a quorum of validators from some {\it validator set}. 
+Typically this message will not directly include the information the full node wants to convince the light client that it has been decided (during consensus), 
+but the message will be a commitment to that information; hence, the full node can also include an opening of this commitment. \\
+ 
+\noindent Our formal model will not mention blockchains, but it is useful to remember that in blockchain based consensus systems, often the message is a blockhash, which is a binding commitment to multiple types of data: 
+
+\begin{enumerate}
+\item the block header
+\item all previous block headers, through parent hashes in block headers
+\item the blocks themselves (whose hash is in the header)
+%\item the state of a state machine, either because this is a function of the blocks or because a commitment, the state root, was explcitly included in a block header \cite{Ethereum_yellow_paper}.
+\end{enumerate}
+
+\noindent We define the {\it required data} of a message to be the data that the message is a binding commitment to 
+and which all full nodes should know. We assume that if a full node sees a message as decided, it must have 
+the corresponding required data. The required data of messages can overlap among each other and the full node 
+would not need to store them separately, e.g. two block hashes for blocks in the same chain may have required data 
+that overlap for a prefix of blocks in the chain, which may be many gigabytes of data.
+
+\paragraph{Consensus Decisions, Validator Sets, Epochs and Consensus Views}
+
+\noindent A message is decided if sufficient signatures corresponding to validators in the current validator set sign it. However the validator set may change. \\
+
+\noindent We define an {\it epoch} as a period of time in which the validator set cannot change. During each epoch, the consensus determines the validator set 
+for the next epoch. \\
+
+\noindent We assume that the validator set size is bounded by some known constant $v$. Some threshold $t$ of validators are required to sign a message such that it is considered 
+decided. $t$ may be a function of the size of the validator set of a given epoch, e.g. more than $2/3$ of the validators. We assume that the message itself indicates what epoch it belongs to, 
+and only signatures from validators chosen for that epoch count for whether a message has been decided or not. \\
+
+%When consensus works, full nodes would agree on things like what the validator set is for an epoch. However, sometimes we need to also consider the case when consensus fails and so these may be %subjective.
+
+\noindent Each full node maintains a {\it consensus view}, i.e., its view of the protocol. The consensus view records the view of the validator set for each epoch, 
+the messages that have been decided and the signatures on those messages. It also includes the required data for each decided message. \\
+
+\noindent A well-defined function of the consensus view defines its validity. Full nodes should maintain only a valid consensus view, and must not include in their consensus view 
+messages that would make the respective view invalid. 
+
+\paragraph{Incompatible Messages}
+\noindent There are some pairs of decisions that a consensus protocol cannot decide together without breaking validity. 
+If the protocol ensures that honest validators do not sign messages corresponding 
+to both decisions, then we can make signing such pairs of messages punishable. \\
+
+\noindent Unfortunately the messages themselves need not be enough to judge their incompatibility. 
+For example we would not want two block hashes to be decided if one is for a block of height 100 and the other is for a block of height 101, 
+and the block of height 100 was not the parent of the block of height 101. However, if incompatibility is a function of the required data of one or both messages, 
+then, because messages are binding commitments to their required data, this is still unambiguous for a pair of messages.
+
+\subsubsection{Network Model}
+
+\noindent When we need to assume a network model, the one we use is that all parties communicate only to the adversary, who may forward messages from one party to 
+another when the adversary wants or not at all. Both our assumptions and our soundness and accountability soundness security definitions assume this networking model. \\
+
+\noindent The proof of our security properties works in general for {\it asynchronously safe} protocols. These have a number of safety properties which hold with asynchronous networking. 
+Asynchronous networking means that the adversary decides when a message is delivered but must deliver all messages eventually. For safety properties, those which have a 
+statement that holds always or never, this is equivalent to our network model.
+
+\begin{comment}
+\subsection{Problem Description: an Informal Overview}
+
+\noindent In general terms, we are interested in formalising a model in which a prover is able 
+to convince a verifier that certain events happened in a consensus-based blockchain, while the verifier is minimally 
+connected to the blockchain. We call such a verifier \textit{the light client verifier} or, simply, \textit{the light client}. \\
+
+\noindent In more detail, the setting we consider is as follows. At any one time, there are at most some known maximum number of active 
+validators. We assume that at least some threshold $t'$ of these are honest and, hence, they are able to achieve consensus on a blockchain 
+using a Byzantine agreement protocol. However, the validator set is not fixed forever, but it changes regularly. 
+We call \textit{epochs} the periods where each validator set does not change. At the end of an epoch, the current validators 
+agree on the validator set for the next epoch. Depending on the exact details of the implementation, this operation may 
+include checking the identity of each validator in the validator set for the next epoch and also recording those identities to the blockchain. \\
+
+\noindent Given this setting, we are interested in a light client, an entity that is not part of the set of validators that allegedly work 
+towards consensus on the blockchain, and a prover, a potentially malicious process that may not be part of any set of validators, 
+but which listens to public messages sent by the validators. In order to model the bandwidth and/or CPU limitations of the 
+device on which the light client runs, we assume the light client, once initialised (e.g., with some credentials/messages/events 
+agreed upon by the first and publicly known validator set) is connected only to the prover and cannot listen to any 
+consensus messages agreed upon by the validators. Hence, the light client completely relies on the prover to convince them that 
+validators' consensus has been reached on a message or event that the light client is interested in. \\
+
+\noindent Depending on the time frame (e.g., current epoch vs.\ multiple hop epoch), we can define two related problems. In the one epoch light client 
+problem, the prover wants to convince the light client that the validator set in the current epoch agreed on something. In the multiple hop epoch light 
+client problem, the prover needs to convince the light client that validators in a later epoch agreed on something. \\
+
+\noindent Depending on the adversarial model, we have two cases as well. The first security model assumes that at least $t'$ validators 
+in each validator set are honest, hence there cannot be a collusion between the possibly malicious prover and the honest validators reaching 
+consensus on the blockchain. In turn, this implies that \textit{soundness} suffices as a security property, i.e., the prover should not be able to 
+wrongly convince the verifier that consensus has been reached on any event or message outside of some small probability. The second security 
+model strengthens the adversarial capability by not making any assumption regarding the fraction of honest validators in at least one of the validator 
+sets. Hence a stronger security property is needed. We call it \textit{accountability}. This captures the intuition that if the light client is convinced of 
+something that the blockchain did not achieve consensus on, and if the light client and prover's communication transcript is made public, then using 
+it and other public information, it should be possible to identify an epoch and a number of dishonest validators equal to at least the total number of validators in 
+that epoch minus $t'$.
+\end{comment}
+
+\subsection{A Formal Model for Consensus-based Accountable Light Client Design}
+\label{sec:LCformal_model}
+
+\noindent We need the following fundamental notions:
+
+\begin{itemize}
+\item some number $k$ of \textit{epochs} with ids $1,\dots, k$;
+\item for each epoch id $i$, $1 \leq i \leq k$, the validators on the blockchain may agree on a subset of the \textit{set of possible consensus messages} $M_i$;
+\item associated with each consensus message $m$ there may exist some \textit{required data} $d_{m} \in D$ for some set $D$; 
+when such a $d_m$ exists, $m$ is a binding commitment to $d_m$; 
+\item a secure aggregatable signature scheme $\mathit{AS}$ as defined in Section~\ref{sec:multisig}.
+\end{itemize}
+
+\noindent Building on the above notions, we also define \textit{a valid consensus view}. 
+
+\begin{definition}(Consensus View) A consensus view $C$ for a set of epochs with ids $i$, $\forall i \in [k]$, 
+for some $k$, contains for each epoch id $i$:
+\begin{itemize}
+\item a set $PK_i$ of public keys (we may also consider a list of public keys and weights, e.g. proportional to stake, but we focus here on  
+the equal weight case for simplicity). 
+\item a set $\{(m, \mathit{Signers}, \sigma) \ | \ m \in M_i, \mathit{Signers} \subseteq PK_i\}$ where 
+$\sigma$ is a signature (or an aggregatable signature) on $m$ and the public key(s) of the signer(s) are $\mathit{Signers}$. 
+\item some \textit{required data} $d_{m}$ associated with each message $m$, such that $m$ is a binding commitment to $d_{m}$. Note 
+that some required data associated with different messages may overlap. 
+\end{itemize}
+In addition to the components mentioned above, a consensus view $C$ contains also a \emph{genesis state} $\mathsf{genstate}$; as a concrete example,
+$\mathsf{genstate}$ may contain the set of public keys $\mathit{PK_1}$ for the first epoch and their proofs of possession. For each of the notions 
+contained in some epoch of $C$ as well as for $\mathsf{genstate}$, we say they belong to $C$ and we simply denote that by ``$\in C$''. 
+\end{definition}
+
+\noindent In the following, we assume that all algorithms processing messages use a common efficient representation that implicitly 
+includes for each of them an epoch id; this epoch id is retrieved using a function $\mathit{epoch}_{\mathit{id}}$. 
+
+\begin{definition}(Deciding a Consensus Message) 
+\label{def_decide}
+Given a consensus view $C$, we say a message $m \in M_i$ is \emph{decided in $C$} 
+if $C$ contains valid signatures from at least some threshold $t$ (e.g., more than 2/3) 
+signers corresponding to public keys in $PK_i$ or, equivalently, a valid aggregatable 
+signature of $t$ signers over $m$. Additionally, we denote by $(\mathit{m}, d_{\mathit{m}}) \in_{\mathit{decided}} C$ 
+the fact that $m \in C$, $ \exists \ d_m \in C \cap D$, $d_m$ is the associated required data of $m$ and $m$ has been decided in $C$.  
+\end{definition}
+
+\begin{definition}(Valid Consensus View)
+\label{def:valid_consensus}
+\noindent 
+We assume the following three \emph{functions used for validation} are efficiently computable and they are defined as: 
+
+\begin{itemize}
+\item $\mathit{VerifyData}: \cup_{i=1}^k M_i \times D \rightarrow \{1, 0\}$ such that it 
+checks the validity of $m$ given the required data $\mathit{d_{m}}$;
+\item $\mathit{HistoricVerifyData}: \{\mathsf{genstate}\} \times (\cup_{i=1}^k M_i \times D)^n \times (\cup_{i=1}^k \mathit{PK_i})^q \rightarrow \{1, 0\}$ 
+such that it checks the validity of $\mathsf{genstate}$, some set of $n$ consensus messages and their required data and some set of $q$ public keys;
+\item $\mathit{Incompatible}: \cup_{i=1}^k (M_i \times M_i) \times D \rightarrow \{0,1\}$ which 
+given messages $m_1$, $m_2$ and potential required data $d_{m_1}$ for $m_1$ checks the incompatibility.
+\end{itemize}
+
+\noindent Let $m_1,\ldots, m_n$ be all the distinct consensus messages contained in $C$. Let $\mathit{pk_1},\ldots, \mathit{pk_q}$ be all the 
+public keys, including repetitions, contained in $\mathit{PK_i}, \forall i \in[k]$.
+We say \emph{the consensus view $C$ is valid} if: 
+\begin{itemize}
+\item $\exists \ d_{m_i} \in D \cap C$ such that $\mathit{VerifyData}(m_i, d_{m_i}) = 1$, $\forall 1\leq i \leq n$. 
+\item $\mathit{HistoricVerifyData}(\mathsf{genstate}, m_1, d_{m_1}, \ldots, m_n, d_{m_n}, \mathit{pk_1},\ldots, \mathit{pk_q}) = 1$. 
+\item There exists no pair $(i,j)$, $1 \leq i,j \leq k$, $i \neq j$ such that $\mathit{Incompatible}(m_i, m_j, d_{m_i}) = 1$ 
+or $\mathit{Incompatible}(m_j, m_i, d_{m_j}) = 1$.
+\item We require that all consensus messages in $C$ are decided according to Definition~\ref{def_decide}.
+\end{itemize}
+\end{definition}
+
+\noindent We conclude this subsection by defining what we mean by honest validator.
+\begin{definition}(Honest Validator)
+\label{def:honest_validator}
+An honest full node of a blockchain is one that runs the protocol correctly starting from the genesis state of the blockchain. 
+It maintains a valid consensus view of the system. An honest full node is a validator if they produced a public key that is in the set 
+$\mathit{PK_i}$ in some epoch $i$ in some consensus view. An honest validator is an honest full node that is also a validator.
+\end{definition}
+ 
+\subsubsection{General Light Client Properties}
+
+\noindent Next we define a light client system. 
+\label{sec:soundness}
+  
+\begin{definition}(Light Client System)
+\label{scheme_light_client} Let $\mathcal{R}$ be a (conditional) NP relation. A \emph{light client system} involves 
+two parties - \emph{prover} and \emph{light client} (also called \emph{light client verifier}) - and it implements the following algorithms:
+\begin{itemize}
+\item $\mathit{pp_{\mathit{LC}}} \leftarrow \mathit{LC.Setup}(\mathcal{R})$: 
+a setup algorithm that takes the security parameter $\lambda$ and a (conditional) NP relation $\mathcal{R}$ 
+and outputs public parameters $\mathit{pp_{\mathit{LC}}}$.
+\item $\pi \leftarrow \mathit{LC.GenerateProof}(\mathit{pp_{\mathit{LC}}}, C, m, \mathcal{R})$: a proof 
+generation algorithm that takes a valid consensus view $C$, a message $m$ decided in consensus view $C$ 
+and a (conditional) NP relation $\mathcal{R}$ and generates a proof $\pi$.
+\item $\mathit{acc}/\mathit{rej}  \leftarrow  \mathit{LC.VerifyProof}(\mathit{pp_{\mathit{LC}}}, \LCseed, \pi, m, \mathcal{R})$: 
+a proof verification algorithm that takes as input a genesis summary $\LCseed$ (whose properties are detailed in 
+Definition~\ref{def:genesis_summary}), a light client proof $\pi$ and a message $m$ and returns $\mathit{acc}$ if $\pi$ is a valid 
+proof for $m$ and $\mathit{rej}$ otherwise.
+\end{itemize}
+
+\noindent We call the tuple ($\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$, 
+$\mathit{LC.VerifyProof}$) a light client system if it fulfils 
+perfect completeness and soundness as defined below. \\
+\noindent \textbf{Perfect Completeness} A light client system is perfectly complete if a full node sees that any message $m$ has been decided, it can produce a proof that will convince a light client verifier of it. 
+The full node should have a valid consensus view $C$ that decided $m$ which it can use as input in $\mathit{LC.GenerateProof}$ to obtain a proof $\pi$. The light client verifier will run 
+$\mathit{LC.VerifyProof}$ with input $\pi$ and this should always accept.
+Formally, we say ($\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$, $\mathit{LC.VerifyProof}$) has perfect completeness if 
+for any valid consensus view $C$ and for any consensus message $m$ decided in $C$ we have that 
+\begin{align*} 
+\mathit{Pr} [&\mathit{LC.VerifyProof}(\mathit{pp_{\mathit{LC}}}, \LCseed, \pi, m, \mathcal{R}) = \mathit{acc} \ | \ \mathit{pp_{\mathit{LC}}} \leftarrow \mathit{LC.Setup}(\mathcal{R}),  \\
+& \pi \leftarrow \mathit{LC.GenerateProof}(\mathit{pp_{\mathit{LC}}}, C, m, \mathcal{R})] = 1
+\end{align*}
+\noindent \textbf{Soundness} A light client protocol is sound if, under the assumption that $v-f$ validators in each epoch are honest, the light client cannot be convinced of a message $m$ unless $t-f$ honest validators have signed $m$. Here $f=v-t'$ is the a bound on the number of adversarial keys. Note that if $t-f$ honest validators sign $m$ and there are $f$ adversarial keys then additional signatures from these adversarial keys are enough to decide $m$. If the message $m$ belongs to epoch $k$, then we assume that there is a valid consensus view $C$ in which the validator sets for the first $k$ epochs have $t'$ honest validator's public keys. If this holds and less than $t-f$ honest validators signed $m$, then an adversary interacting with honest validators should not be able to generate a light client proof $\pi$ for $m$ that $LC.VerfifyProof$ accepts.
+
+We say ($\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$, $\mathit{LC.VerifyProof}$) has soundness if, 
+for every efficient malicious prover $\mathcal{A}$,  
+\begin{align*} 
+\mathit{Pr}[&\mathit{LC.VerifyProof}(\mathit{pp_{\mathit{LC}}}, \LCseed, \pi, m, \mathcal{R}) = \mathit{acc} \ | \ \mathit{pp_{\mathit{LC}}} \leftarrow \mathit{LC.Setup}( \mathcal{R}), \\
+& \mathit{pp} \leftarrow \mathit{Parse}(\mathit{pp_{LC}}), (\pi, m, C) \leftarrow \mathcal{A}^{\mathit{HonestValidator}}(\mathit{pp}, \mathcal{R}), \\
+& \mathit{CheckValidConsensus}(C) =1, \\ 
+& \mathit{NumberHonestSigners}(m,\mathit{OGenerateKeypair}) < t+t'-v \\
+& \mathit{HonestThreshold}(t', \mathit{OGenerateKeypair}, C) = 1] = \negl({\lambda}); 
+\end{align*}
+\noindent where 
+\begin{itemize}
+\item the predicate $\mathit{CheckValidConsensus}(C)$ checks if $C$ is valid 
+w.r.t.\ Definition~\ref{def:valid_consensus} and outputs $1$ in that case (and $0$ otherwise); 
+\item $\mathit{NumberHonestSigner}(m,\mathit{OGenerateKeypair})$ returns the number of public keys in $Q_{\mathit{pks}}$ from $\mathit{OGenerateKeypair}$ defined below.
+\item $\mathcal{A}^{\mathit{HonestValidator}}$ represents the adversary $A$ in communication with the honest validators.
+\item $\mathit{HonestThreshold}(t', \mathit{OGenerateKeypair}, C)$ checks 
+that at least $t'$ of the public keys in each $\mathit{PK_i}$ of $C$ (for every epoch $i$ in $C$), are part of $Q_{\mathit{pks}}$ and outputs $1$ in 
+that case (and $0$ otherwise). 
+\end{itemize}
+Finally, we assume that $\mathit{HonestValidator}$ (but not the adversary directly) makes oracles calls to $\mathit{OGenerateKeypair}(pp)$ (where $\mathit{pp}$ are the public parameters of aggregated signature scheme $\mathit{AS}$ are 
+part of $\mathit{pp_{\mathit{LC}}}$) defined as
+\begin{align*}
+&\mathit{OGenerateKeypair}(pp): \\
+& ((\mathit{pk}, \pi_{PoP}), \mathit{sk}) \leftarrow \mathit{AS.GenerateKeypair}(\mathit{pp}) \\
+& Q_{\mathit{keys}} \leftarrow Q_{\mathit{keys}} \cup \{((\mathit{pk}, \pi_{PoP}), \mathit{sk})\}, Q_{\mathit{pks}} \leftarrow Q_{\mathit{pks}} \cup \{\mathit{pk},\}  \\
+& \text{Output } ((\mathit{pk}, \pi_{PoP}), \mathit{sk}).
+\end{align*}
+\end{definition}
+
+\noindent Finally, we define the genesis summary and its properties with respect to a light client system. 
+
+\begin{definition}(Genesis Summary) 
+\label{def:genesis_summary} Light client verifiers have access to a genesis summary $\mathit{LC.seed}$, 
+which is a well defined deterministic function of the genesis state $\mathsf{genstate}$.
+%$\mathit{LC.seed}$ contains a well defined commitment or set of commitments to the set $\mathit{PK_1}$. 
+%We make the assumption that even if $\mathsf{genstate}$ has been generated by a potential adversary, 
+%this adversary outputs the same $\mathsf{genstate}$ to all honest validators and, moreover, the genesis 
+%summary $\mathit{LC.seed}$ equals the summary of this $\mathsf{genstate}$ given to honest validators. 
+\end{definition}
+
+\subsubsection{Accountable Light Client Properties}
+\label{sec:accountability}
+
+In the following, we extend our model above to include accountability. We provide the definition for an accountable light client system which subsumes the light client system definition given above.
+An accountable light client has the property that if a full node with a consensus view $C$ that decides $m$ is given a light client proof $\pi$ for a message $m'$ that is incompatible with $m$, then 
+it should be able to generate a proof that shows that some validators misbehaved. We need to add two more functions to our light client definition, the first one for detecting and generating proofs of 
+misbehaviour, the second one for verifying the proofs of misbehaviour.
+
+\begin{definition}(Accountable Light Client System)  
+\label{def:lc_accountable}
+Let $\mathcal{R}$ be a (conditional) NP relation. An accountable light client 
+system implements algorithms ($\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$, $\mathit{LC.VerifyProof}$, \\
+$\mathit{LC.DetectMisbehaviour}$, $\mathit{LC.VerifyMisbehaviour}$) where 
+$\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$ and \\ $\mathit{LC.VerifyProof}$ are 
+defined as in~\ref{scheme_light_client} and 
+$$(i, S, \mathbf{bit}, \sigma, m'', m') \leftarrow \mathit{LC.DetectMisbehaviour}(\mathit{pp_{\mathit{LC}}}, \pi, m, C,\mathcal{R})$$ 
+is an algorithm such that it takes a proof $\pi$ for message $m$, a consensus view $C$ and a (conditional) NP relation $\mathcal{R}$;
+it outputs an epoch id $i$, a subset of misbehaving signers $S \subseteq \mathit{PK_i}$ in the same epoch as messages $m''$ and $m'$, 
+with $m'$ decided in $C$ and $m''$ signed with signature $\sigma$ and using bitmask $\mathbf{bit}$ against the set $\mathit{PK_i}$ 
+and
+$$ \mathit{acc}/\mathit{rej} \leftarrow \mathit{LC.VerifyMisbehaviour}(\mathit{pp_{\mathit{LC}}}, i, S, \mathbf{bit}, \sigma, m'', m', C, \mathcal{R})$$ 
+is an algorithm which takes the input of $\mathit{LC.DetectMisbehaviour}$ together with a consensus view $C$ and a (conditional) NP relation $\mathcal{R}$ and 
+checks if indeed misbehaviour took place such that completeness, soundness, accountability and accountability soundness hold, where completeness and soundness 
+are identical to Definition~\ref{scheme_light_client} and accountability completeness and accountability soundness are defined below.
+\end{definition}
+
+\noindent \textbf{Accountability Completeness} A light client protocol has accountability completeness if a full node sees a light client proof for a message $m$ and it sees that a message $m'$ 
+has been decided that is incompatible with $m$, then it can identify and prove that a fraction of validators ($v+v'-t$ validators) have misbehaved.
+The full node is given a proof $\pi$ of $m$. It has  a consensus view $C$ that decides $m'$, from the same epoch as $m$ with required data $d_{m'}$ that has $\mathit{Incompatible}(m', m, d_{m'})=1$.
+Then it should be able to use $\mathit{LC.DetectMisbehaviour}$ to generate a proof that at least $v+v'-t$ validators misbehaved, that $\mathit{LC.VerifyMisbehaviour}$ will always accept.\\
+
+\noindent Formally, we say ($\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$, 
+$\mathit{LC.VerifyProof}$, \\ $\mathit{LC.DetectMisbehaviour}$, $\mathit{LC.VerifyMisbehaviour}$) 
+achieves accountability completeness if for every efficient adversary $\mathcal{A}$ it holds that:
+\begin{align*}
+\mathit{Pr}[& \mathit{LC.VerifyMisbehaviour}(\mathit{pp_{\mathit{LC}}}, \mathit{LC.DetectMisbehaviour}(\mathit{pp_{\mathit{LC}}}, \pi, m, C, \mathcal{R}), C, \mathcal{R}) = \mathit{acc} \ | \ \\
+& \mathit{pp_{\mathit{LC}}} \leftarrow \mathit{LC.Setup}( \mathcal{R}), (\pi, m, C) \leftarrow \mathcal{A}(\mathit{pp_{\mathit{LC}}}, \mathcal{R}), \\
+& \mathit{LC.VerifyProof}(\mathit{pp_{\mathit{LC}}}, \LCseed, \pi, m, \mathcal{R}) = \mathit{acc}, \mathit{CheckValidConsensus}(C) =1, \\
+& \exists \ (m', d_{m'}) \ \in_{\mathit{decided}} \ C, \mathit{Incompatible}(m', m, d_{m'})=1, \mathit{epoch}_{\mathit{id}}(m) = \mathit{epoch}_{\mathit{id}}(m')] = 1 - \negl(\lambda)
+\end{align*}
+
+\noindent \textbf{Accountability Soundness} A light client protocol has accountability soundness if an adversary interacting with 
+a single honest validator cannot prove that the honest validator misbehaved. This holds even if all other validators are dishonest and the adversary controls the honest validator's view of the network.\\
+
+\noindent Note that we assume that the adversary interacts with the honest validator, who generates their keys honestly in turn. The adversary can break accountability soundness if it can win the following game except with negligible probability. The adversary wins if they can produce an input $(i, S, \mathbf{bit}, \sigma, m'', m', C)$ to $\mathit{LC.VerifyMisbehaviour}$ such that $\mathit{LC.VerifyMisbehaviour}$ accepts, $C$ is a valid consensus view and $S$ contains a public key the honest validator generated.\\
+
+\noindent Formally, we say ($\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$, 
+$\mathit{LC.VerifyProof}$, \\ $\mathit{LC.DetectMisbehaviour}$, $\mathit{LC.VerifyMisbehaviour}$) 
+achieves accountability soundness if for every efficient adversary $\mathcal{A}$ it holds that:
+$$\mathit{Pr}[\mathit{Game}^{\mathit{accountability-soundness}}=1]=\negl(\lambda)$$
+where
+
+\begin{align*}
+& \mathit{Game}^{\mathit{accountability-soundness}}(\lambda, \mathcal{R}): \\
+&  Q_{\mathit{keys}} := \emptyset  \\ 
+& \mathit{pp_{\mathit{LC}}} \leftarrow \mathit{LC.Setup}( \mathcal{R}) \\
+& \mathit{pp} \leftarrow \mathit{Parse}(\mathit{pp_{\mathit{LC}}}) \\
+&  (i, S, \mathbf{bit}, \sigma, m'', m', C) \leftarrow \mathcal{A}^{\mathit{HonestValidator}^{\mathit{OGenerateKeypair}} \mathit{}}(\mathit{pp},\mathit{pp_{\mathit{LC}}})   \\
+& \text{If } \mathit{LC.VerifyMisbehaviour}(\mathit{pp_{\mathit{LC}}}, i, S, \mathbf{bit}, \sigma, m'', m', C, \mathcal{R}) = \mathit{rej} \text{ Return } 0 \\ 
+&  \text{If } \mathit{CheckValidConsensus}(C) =0 \text{ Return } 0 \\
+& \text{If } S \cap Q_{pks}=\emptyset \text{ Return } 0 \\
+& \text{Return } 1
+\end{align*}
+
+%\subsection{A Light Client Instantiation for Polkadot}
+%\label{sec:instantiation}

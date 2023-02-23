@@ -1,0 +1,64 @@
+\noindent \textbf{(PLONK Compiler - from Polynomial Protocols to SNARKs)} \\
+
+\noindent Our first step applies the PLONK compiler~\cite{plonk} (Lemma 4.7): we compile the information theoretical ranged polynomial protocols $\Pla$ and $\Pa$ 
+for relations $\Rla$ and $\Ra$, respectively (see sections \ref{sec_la} and \ref{sec_a}) into 
+(hybrid model) SNARKs $\Plastar$, and $\Pastar$, respectively. We can define this compilation step 
+for any ranged polynomial protocols for relations (as per Definition~\ref{supplementary_poly_protocols_appendix} in section~\ref{def_ranged_poly_protocol}). 
+\begin{comment}
+In order to do that we need: 
+\begin{itemize}
+\item  The batched version of KZG polynomial commitments~\cite{KZG_10} described in section 3 of PLONK~\cite{plonk}.\footnote{In fact, 
+one can replace the use of KZG polynomial commitments with any binding polynomial commitment that has knowledge-soundness, including non-homomorphic polynomial commitments, 
+such as FRI-based polynomial commitments (e.g., RedShift~\cite{redshift}). If the optimisation gained from PLONK linearisation technique is a goal, 
+then, with minimal changes one can use any homomorphic polynomial commitment, e.g., the discrete logarithm based polynomial commitment 
+from Halo~\cite{halo}.}
+\item A general compilation technique: such a technique has been already defined in Lemma 4.7 of PLONK; combined with Lemma 4.5 
+from PLONK this technique can be applied with minor adaptations (this includes the corresponding technical measures) to the notion of ranged 
+polynomial protocols.  
+\item So far, both the ranged polynomial protocols for relations and the protocols resulted after the first compilation step have been explicitly defined as interactive 
+protocols. In order to obtain the non-interactive version of the latter (essentially the N in SNARK) one has to apply the Fiat-Shamir 
+transform~\cite{FS_transform}, \cite{FS_transform_with_proof}, \cite{SE_plonk}.
+\end{itemize}
+
+\end{comment}
+%\begin{comment}
+\noindent Let $\mathcal{R}$ be a (conditional) NP relation, let $\mathscr{P}_{\mathcal{R}}$ be a ranged polynomial protocol for 
+relation $\mathcal{R}$ and let $\mathscr{P}^*_{\mathcal{R}}$ be the SNARK compiled from $\mathscr{P}_{\mathcal{R}}$ using the PLONK compiler.  
+The compilation technique requires the SNARK prover of  $\mathscr{P}^*_{\mathcal{R}}$ to compute 
+polynomial commitments to all polynomials that the prover $\mathcal{P}_{poly}$ in $\mathscr{P}_{\mathcal{R}}$ sent to the ideal party $\mathcal{I}$. Analogously, 
+it requires the SNARK verifier of $\mathscr{P}^*_{\mathcal{R}}$ to compute polynomial commitments to all pre-processed polynomials\footnote{This is a one-time computation that is 
+reused by the SNARK verifier for all SNARK proofs over the same circuit.} as well polynomial commitments to polynomials the verifier $\mathcal{V}_{poly}$ 
+in $\mathscr{P}_{\mathcal{R}}$ sent to the ideal party $\mathcal{I}$. Then, the SNARK prover sends the SNARK verifier openings to 
+all the polynomial commitments computed by him as well as the polynomial commitments computed by the SNARK verifier. The SNARK 
+prover additionally sends the corresponding batched proofs for polynomial commitment openings. In turn, the SNARK verifier accepts or rejects based 
+on the result of the verification of the batched polynomial commitment scheme. \\
+%\end{comment}
+
+%\noindent A more efficient compilation technique exists which reduces the number of polynomial commitments and alleged polynomial commitments openings 
+%(i.e., both group elements and field elements) sent by the SNARK prover to the SNARK verifier; this, in turn, reduces the size of the SNARK proof. 
+%This technique is called linearisation and is described, at a high level, after Lemma 4.7 in PLONK. The existing description however covers only the 
+%SNARK prover side and it does not detail the SNARK verifier side so in the following we cover that. \\
+\noindent PLONK proposes a more efficient compilation technique (i.e., linearisation, see explanation after Lemma 4.7 in PLONK) 
+which reduces the SNARK proof size. 
+%\noindent By functionality, the vectors that are handled by the the verifier $\mathcal{V}_{poly}$ are 
+%of two types: pre-processed vectors and public input vectors. These two types of vectors are used by $\mathcal{V}_{poly}$ 
+%to obtain, via interpolation over the range on which the respective range polynomial protocol is defined, pre-processed polynomials 
+%(as used in the definition 2 in section 2 of supplementary material, e.g., polynomial $aux(X)$ used in section~\ref{sec_a}) and 
+%public-inputs-derived polynomials (e.g., polynomials $pkx(X)$ and $pky(X)$ used in sections~\ref{sec_la} and ~\ref{sec_a} 
+%and polynomial $b(X)$ used in section~\ref{sec_la}). The efficient linearisation technique allows the SNARK verifier to reduce the 
+%number of polynomial commitments it has to compute compared to the general PLONK compiler in the following way. Instead of 
+%having to compute polynomial commitments to all polynomials $\mathcal{V}_{poly}$ sends to $\mathcal{I}$ (including any corresponding 
+%pre-processed polynomials), the SNARK verifier computes polynomial evaluations at one or multiple random points (as per the linearisation 
+%step specific requirements) for all the polynomials that are either easy to evaluate (e.g., polynomial $aux(X)$ used in section~\ref{sec_a}) or 
+%all the polynomials that are obtained from vectors that do not take up a large amount of memory (e.g., polynomial $b(X)$ used in section~\ref{sec_la}). 
+%For the rest of the polynomials (e.g., $\mathit{pkx}(X)$ and $\mathit{pky}(X)$), the SNARK verifier computes polynomial commitments as before.\\
+For our specific case, this allows the SNARK verifier to reduce the 
+number of polynomial commitments it has to compute compared to the general PLONK compiler by computing 
+polynomial evaluations at one or multiple random points (as per the linearisation step specific requirements) 
+for all the polynomials that are either easy to evaluate (e.g., polynomial $aux(X)$ used in section~\ref{sec_a} and $\Ra$) or 
+all the polynomials that are obtained from input vectors that do not take up a large amount of memory (e.g., polynomial $b(X)$ used in section~\ref{sec_la} and $\Rla$).
+%\noindent We note we can apply all the techniques mentioned above, including the combined prover-and-verifier-side linearisation 
+%to compile our ranged polynomial protocols $\Pla$ and $\Pa$ into the corresponding SNARKs $\Plastar$ and $\Pastar$, respectively.
+Finally, we state in Section~\ref{def_ranged_poly_protocol}, Lemma~\ref{le:compilation_step_1} under which conditions and how efficiently 
+one can compile ranged polynomial protocols for pure vector-based conditional NP relations 
+into hybrid model SNARKs using only the original PLONK compiler and we give a more in-depth explanation of this step in section~\ref{first_step_compiler}.\\

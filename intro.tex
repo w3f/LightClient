@@ -1,0 +1,381 @@
+Blockchain systems rely on consensus among a large number of participants. Having a large number of participants is important for 
+decentralisation, which, in turn is the foundation of security for blockchains. Following consensus of a blockchain can become expensive in 
+terms of networking bandwidth, storage and computation. Depending on the consensus type, these challenges can be aggravated when the 
+size of participants' set is large or when the participants' set changes frequently. Light clients (such as SPV clients in Bitcoin~\cite{bitcoin} or inter-blockchain 
+bridge components that support interoperability) are designed to allow resource constrained users to follow consensus of a blockchain with 
+minimal cost. We are interested in blockchains that use Byzantine agreement type consensus protocols, particularly proof of stake systems 
+like Polkadot~\cite{polkadot}, Ethereum 
+%~\cite{eth2} 
+or many other systems~\cite{dfinity,mina,celo,tendermint_paper,cosmos}. These protocols 
+may have a large number of consensus participants, from 1000s to 100000s, and in such PoS protocols, the set of participants may change regularly. \\
+
+\noindent Following the consensus protocols in the examples above entails proving that a large subset of a designated set of participants, 
+which are called validators, signed the same message (e.g. a block header). All existing approaches have limiting shortcomings as follows:
+1) verifying all signatures has a large communication overhead for large validator sets;
+2) verifying a single aggregatable signature, by computing an aggregate public key from the signer's public keys, has the shortcoming that any verifier still 
+needs to know the entire list of public keys and this, again, has expensive communication if the list changes frequently. 
+3) verifying a threshold signature has two shortcomings: first, such a signature does not reveal the set of signers impacting the 
+security of PoS systems; second, it requires an interactive setup which becomes expensive if the validator set is large or changes frequently.
+
+%\vspace{-0.2cm}
+\paragraph{Our Approach: Committee Key Schemes} We introduce a committee key scheme which allows to succinctly prove that a subset of signers 
+signed a message using a commitment to a list of all the signers' public keys. Our primitive is an extension of an aggregatable signature scheme and 
+it allows us to prove the desired statement, in turn, by proving the correctness of an aggregate public key for the subset of signers. 
+In more detail, the committee key scheme defines a committee key which is a commitment to all the signers' public keys. The committee 
+key scheme generates a succinct proof that a particular subset of the list of public keys signed a message. The proof can be verified using the committee key. 
+Because of the way the aggregatable signature scheme works, we need to specify the subset of signers; for this purpose we use a bitvector. 
+More precisely, if the owner of the $m$th public key in the list of public keys signed the message, then the $m$th bit of this bitvector is $1$ otherwise is $0$.
+Using the committee key, the proof and the bitvector, a light client can verify that the corresponding subset of validators to whom the 
+public keys belong (as per our use case) signed the message. Although the bitvector has length proportional to the number of validators, it is still orders of magnitude 
+more succinct than giving all the public keys or signatures. Public keys or signatures are usually 100s of bits long and as a result this scheme reduces the amount of 
+data required by a factor of 100 times or more. We could instantiate our committee key scheme using any universal SNARK scheme and suitable commitment scheme. 
+However, to avoid long prover times for large validator sets, we use custom SNARKs. We have implemented this scheme 
+(Section \ref{sec_implementation}) and it gives fast enough proving times for the use cases we consider: a prover with 
+commodity hardware can generate these custom SNARK proofs in real time, i.e. as fast as the consensus generates instances of this problem.
+
+%\vspace{-0.2cm}
+\paragraph{Application: Accountable Light Client Systems} %To understand when and how our scheme described above is useful and compare it to other approaches, we return to what a light client is used for. 
+Light clients allow resource constrained devices such as browsers or phones to follow a decentralised 
+consensus protocol. A blockchain is another resource constrained device which could benefit from a light client system In this case a light client verifier (think smart contracts on 
+Ethereum~\cite{ethereum}, for example) allows building trustless bridges protocols between blockchains. % \cite{BridgeSOK}. 
+Currently, computation and storage 
+costs on existing blockchains are much higher than those in a browser on a modern phone. If such a bridge is responsible for securing assets with high total value, 
+then the corresponding light client system which defines such a light client verifier must be secure as well as efficient. Using the primitives and techniques described in this work, 
+one can design a light client system with the following properties: accountability, asynchronous safety and incrementability.  
+
+\begin{itemize}
+\item Our light client system is accountable, i.e. if the light client verifier is misled and the transcript of its communication is given to the network then one can identify a large 
+number (e.g. 1/3) of misbehaving consensus participants (i.e., misbehaving validators in our specific case). On the one hand, identifying misbehaving consensus participants 
+is challenging in the light client system context when we want to send minimal data to the light client verifier. On the other hand, 
+identifying misbehaviour is necessary for any proof of stake protocols (including Polkadot and Ethereum) 
+whose security relies on identifying and punishing misbehaving consensus participants. 
+\item Our light client system is asynchronously safe i.e. under the consensus' honesty assumptions, our light client verifier cannot be misled even if it has a restricted view of the 
+network e.g. only connecting to one node, which may be malicious. This is because our light client system inherits the property of asynchronous safety from the Byzantine agreement 
+protocol of the blockchain. Such light client systems would not be possible for consensus based on longest chains.  
+\item Our light client system is incremental - i.e its succinct state is incrementally updated - it is optimised to make these updates efficiently, which is particularly relevant for the bridge 
+application, as opposed to trying to optimise verifying consensus decisions from the blockchain genesis.
+\end{itemize}
+
+%\vspace{-0.2cm}
+\paragraph{Bridge security} We note that \$1.2 billion has been stolen in attacks on insecure bridges during first 8 months of 2022 alone \cite{elliptic_harmony,elliptic_nomad}. 
+Of the top 10 crypto thefts of all times, \$1.6bn out of \$3.4bn come from bridge attacks \cite{elliptic_nomad}. Such bridges may be a weaker point, 
+compared to the security of the blockchains themselves and they carry a lot of economical value. It therefore makes sense to consider a security model for the 
+bridges that is as strong as that for the corresponding blockchains. For blockchains that have accountable safety for consensus, that means having accountable safety for bridges. 
+The most secure bridges use light client systems, e.g. Cosmos' IBC protocol \cite{IBC_paper}, but efficiency is still an 
+obstacle in using on-chain light client verifiers in bridges. Recently, zkBridge~\cite{zkBridge} proposed an ultra-light client for blockchains on which validators use 
+individual ed25519 signatures, as is the case for many Cosmos chains right now. However, the goal in~\cite{zkBridge} is to create a bridge that is compatible with 
+the already existing cryptography on these chains without altering their logic. This design choice hinders to some extent the corresponding provers' efficiency. 
+Our proposed light client system is easily implementable on top of existing blockchains that use BLS signatures, SNARK friendly cryptography and SNARK 
+friendly curves. Hence, our corresponding prover (which, in turn, builds upon a custom SNARK prover) is a lot more efficient; consequently, our light client system 
+can feasibly handle many more validators for the same computational cost and, at the same time, it achieves provable accountability. 
+
+%ZkBridge: they give an ultra-light client for blockchains which validators use individual ed25519 signatures, as is the case for many Cosmos chains right now. They assume they cannot change the chain logic.
+%We need to assume we can change the chain consensus, especially if the cvhain doesn't use BLS signatures. But our proving time is a lot faster and we can feasibly handle a lot more validators.
+
+%The following paragraph should be commented out and changed in case of a conference submission.
+\paragraph{Structure} The paper is organised as follows. In Section~\ref{sec:sketch}, we sketch our proposed protocol and compare it to existing work. 
+In Section \ref{sec_prelims}, we give cryptographic preliminaries necessary for later sections. In Section \ref{sec_apk_proofs}, we describe in detail our 
+custom SNARKs and our committee key scheme and prove their security. In Section \ref{sec_light_client_model}, we give a model for a light client system and 
+the consensus system it works with, we provide a light client system instantiation and prove it satisfies the security properties according to the newly 
+introduced definitions. In Section \ref{sec_implementation}, we describe and give benchmarks for our custom SNARKs implementations. We conclude in 
+Section~\ref{conclusions}. Our paper includes an extensive appendix as follows. In Section~\ref{supplementary_poly_protocols_appendix} 
+we remind and further refine the definition of ranged polynomial protocols for NP relations, in 
+Sections~\ref{supplementary_proof_sec_cks}, \ref{supplementary_proof_sec_soundness}, \ref{supplementary_proof_sec_accountability}, \ref{sec:missing_snark_proofs} 
+we include in detail all the postponed security proofs, in Section~\ref{suplementary_plonk_comparison} we give a detailed comparison between 
+PLONK universal SNARK and our custom designed SNARKs. Finally, Section~\ref{sec:rolled_out} contains, for the reader's benefit, 
+one of our full rolled out S(N)ARKs. 
+%\vspace{-0.25cm}
+\section{Our Solution} 
+\label{sec:sketch}
+%\vspace{-0.2cm}
+
+In this section we present a sketch of our solution for both the committee key scheme and the accountable light client system, 
+then describe the technical challenges and contributions and finish with an overview of related work.
+
+%\vspace{-0.3cm}
+\subsection{Sketch of Committee Key Scheme}
+%\vspace{-0.1cm}
+
+\noindent Suppose that a prover wants to prove to a verifier that a subset $S$ of some set $T$ of signers have signed a message. 
+One obvious approach would be using BLS aggregatable signatures with the following steps:
+
+\begin{itemize}
+\item[a.] Verifier knows all public keys $\{\mathit{pk}_i\}_{i \in T}$ of all signers in $T$.
+
+\item[b.] Prover sends the verifier an aggregatable signature $\sigma$ and a representation of the subset $S$.
+
+\item[c.] Verifier computes the aggregate public key $\mathit{apk}=\sum_{i \in S} \mathit{pk}_i$ of the public keys of signers in $S$. 
+Then it verifies the aggregatable signature $\sigma$ for the aggregate public key $\mathit{apk}$ and it accepts if the verification succeeds.
+\end{itemize}
+
+\noindent However, we can represent a subset $S$ of a list of signers compactly using a bitvector $b$: 
+the $i$th signer in the list is in $S$ if and only if the $i$th bit of $b$ is $1$. Our committee key scheme describes an alternative approach:
+
+\begin{itemize}
+\item[a'.] Verifier knows a commitment $C$ to the list of public keys $(pk_i)_{i \in T}$.
+
+\item[b'.] Prover sends the verifier an aggregatable signature $\sigma$, a bitvector $b$ representing $S$, an aggregate public key 
+$\mathit{apk}$ and $\pi$, a succinct proof that $\mathit{apk}=\sum_i b_i \mathit{pk}_i$ i.e. 
+that $\mathit{apk}$ is the aggregate public key for the subset of signers in $S$ given by the bitvector $b$; all of the public keys in $S$ are a subset 
+of the list of public keys committed to using $C$.
+
+\item[c'.] The verifier using $C$, $\mathit{apk}$ and the bitvector $b$ checks if $\pi$ is valid. 
+It then verifies $\sigma$ against $\mathit{apk}$ and accepts if both steps succeed.
+\end{itemize}
+
+\noindent With the above committee key scheme, if $C$ and $\pi$ are constant size, 
+the communication cost becomes $O(1)+|T|$ bits instead of $|T|$ public keys.
+
+%\vspace{-0.2cm}
+\subsection{Light Client Verifier Using Our Committee Key Scheme}\label{ssec:lcsketch}
+%\vspace{-0.1cm}
+
+\noindent Below we sketch how a light client verifier uses our committee key scheme. Beforehand, to provide context, 
+we describe how a general light client verifier works for the type of consensus systems we are interested in. \\
+
+%\vspace{-0.2cm}
+\noindent Suppose that a light client verifier wants to know some information $\mathit{info}_n$ 
+about the state of a blockchain at block number $n$ without having to download the entire blockchain. 
+Another entity, a full node, who knows all the data of the blockchain and is following the consensus, should be able to convince 
+the light client verifier using a computational proof that $\mathit{info}_n$ was indeed decided. Assume that $\mathit{info}_n$ 
+can be proven from a commitment $C_n$ to the state at block number $n$, e.g. $C_n$ could be a block hash. 
+To convince the light client verifier that $C_n$ (and, implicitly, $\mathit{info}_n$) was decided, 
+the full node needs to convince the light client verifier that a threshold number $t$ of 
+validators from the current validator set signed $C_n$, where $t$ depends on the type of consensus. 
+Byzantine fault tolerant based consensus often use $t$ to be over $2/3$ of the total number of validators. 
+If the light client verifier does not know the current validator set, but knows the initial validator set of the blockchain, 
+it needs to be convinced iteratively of each validator set change. This means that the light client verifier needs to be convinced 
+that a threshold of each validator set signed a message that commits to the next validator set; and this iterative chain of proofs starts 
+from the initial validator set and ends with the current validator set. \\
+
+%\vspace{-0.2cm}
+\noindent If one follows the obvious approach described above using BLS aggregation and aims to convince the light client verifier 
+that $\mathit{info}_n$ is decided, then one needs to send $O(v)$ public keys for each validator set change, where $v$ is the upper bound 
+on the size of the validator set.
+%Using the obvious approach using BLS aggregation described above, to convince the light client that $\mathit{info}_n$ is decided, 
+%it is necessary to send $O(v)$ public keys for each validator set change, where $v$ is the size of the validator set.
+Using our succinct committee key scheme however, one requires only a constant size proof and $O(v)$ bits for each validator set change to convince 
+the light client verifier that $\mathit{info}_n$ was decided. Since a public key or signature typically takes 100s of bits, our approach 
+achieves much smaller proof sizes. More details our achieved efficiency are available in Section~\ref{sec_implementation}.
+
+%\vspace{-0.2cm}
+\subsection{Our Custom SNARKs}
+%\vspace{-0.1cm}
+
+%\noindent In the following we discuss how we use custom SNARKs with efficient prover time to implement the committee key scheme. 
+%While we achieved very fast proving times in our implementation, it came at the cost of not using a general purpose SNARK protocol, 
+%leading to a more involved security model and the necessity of additional security proofs. \\
+\noindent Here we discuss how we use custom SNARKs with efficient prover time to implement our committee key scheme. 
+While we achieved very fast proving time in our SNARKs implementation, this came at the cost of not using a general purpose SNARK 
+protocol, in turn leading to a more involved security model and the necessity of additional security proofs.  \\
+
+%\vspace{-0.2cm}
+%\noindent Our SNARKs have inputs an aggregate public key $\mathit{apk}$, a commitment $C$ to a list of public keys $(pk_i)$, and a bitvector $(b_i)$. 
+%It needs to be a proof that  $apk=\sum_i b_i pk_i$. The SNARK verifies witnesses to the partial sums $kacc_j = h + \sum_{i=0}^j b_i pk_i$ 
+%where $h$ is chosen to avoid the incompleteness of the addition formulae we use.} We list two of the optimisations we used for our custom SNARK below. 
+\noindent The public inputs for our SNARKs are: an aggregate public key $\mathit{apk}$, a commitment $C$ to the list of 
+public keys $(pk_i)_{i \in T}$ and a bitvector $(b_i)_{i \in T}$ succinctly representing a subset $S$ of public keys. 
+Our SNARKs provers' output a proof that $apk=\sum_{i \in T} b_i pk_i$ and that $C$ is the commitment to the list of public keys 
+$(pk_i)_{i \in T}$; however the list itself is a witness for the relations defining our SNARKs and, hence, the verifiers do not have access to it. 
+This, in turn, ensures that our SNARKs verifiers do not have to parse or check anything based on such a possibly long list which is 
+an important step towards our SNARKs verifiers' efficiency. Moreover, we detail below two further optimisations of our custom SNARKs.
+
+\begin{itemize}
+%\item Our scheme is an instance of commit and prove SNARKs (see section~\ref{sec:commit_prove} for more details) that works as follows. 
+%The verifier takes only a commitment to part of the input of the SNARK, for us $C$ is a commitment to the list of public keys, and the list public 
+%keys themselves are not used by the verifier. We use the same polynomial commitment scheme for this purpose as is used in th SNARK itself. 
+%Hence, we do not need to add the decommitment of $C$ to the SNARK constraint system. Since our constraint system is simple adding a decommitment 
+%to use, e.g. a hash for the commitment, would increase the size of the constraint system and lead to several orders of magnitude increase in prover time. 
+%The tradeoff is that we cannot use an existing SNARK system or polynomial constraint compiler as a black box, making the proofs in this paper more complicated.}
+\item Our SNARKs are an instance of commit and prove SNARKs (see ection~\ref{sec:commit_prove} for more details); they work as follows. 
+The underlying commitment scheme used for computing the public input commitment $C$ mentioned above is the 
+same as the (polynomial) commitment scheme used in the rest of our SNARK(s). Hence, we do not need to add a witness for $C$ 
+to the SNARK constraint system in the same way we would have to if our commitment scheme were, for example, to use a hash function.
+If adding such a witness were required, and implicitly, the respective constraints for checking a hash inside our custom SNARKs, 
+that would have increased the size of the constraint system and would have lead to several orders of magnitude increase in our prover time. 
+The tradeoff for our SNARKs design (i.e., with a commitment as part of the public input) is that we cannot use an existing SNARK compiler as a black box.  
+Hence, our SNARKs require us to extend the existing security models and, also, they require specialised security proofs. 
+
+%\item Our constraint system is of a form where the wiring together of different constraints is trivial enough that we can avoid doing a permutation argument 
+%or sparse matrix vector product that general proving systems would use to wire together gates. This reduces the proof size and proving time.}
+\item Our constraint system is simple enough such that our custom SNARKs do not require a permutation argument or a lincheck argument 
+which general proving systems need to bind together gates. In fact, the underlying circuit for our SNARKs can be described as an affine addition 
+gate with a couple of constraints added in order to avoid the incompleteness of our addition formulae. Overall, the simplicity of our circuit and our 
+set of constraints implies smaller proof sizes for our SNARKs and, respectively, faster proving times.
+\end{itemize}
+
+%\vspace{-0.2cm}
+\subsubsection{Technical Challenges and Contributions Regarding our Custom SNARKs} 
+\label{sec:technical_challenges}
+%\vspace{-0.1cm}
+
+In order to define and implement our committee key scheme accountable light client systems and in order to design the custom SNARKs that support our efficiency results, 
+we had to tackle some technical challenges and make additional contributions as summarised below.
+
+%\vspace{-0.2cm}
+\paragraph{Extending PLONK Compiler to NP Relations with both Commitments and Vectors} Firstly, our custom SNARKs takes inspiration from PLONK \cite{plonk} in terms design of the proof system used, 
+and of the circuits and gates. However, our SNARKs also have differences compared to PLONK. PLONK applies to NP relations  that use  vectors of field elements for 
+public inputs and witnesses.  However we need SNARKs whose defining NP relations also have  polynomial commitments (in our case, the committee key $C$) 
+as part of their public inputs. Hence, the original PLONK compiler does not suffice; we extend it with a second step in which we show that under certain 
+conditions which our protocol fulfils, the SNARKs obtained using the original PLONK compiler are also SNARKs for a mixed type of NP relation 
+containing both vectors and polynomial commitments. The full details and proofs can be found in Section~\ref{sec_two_step_compiler} 
+and we believe this compiler extension to be of independent interest. 
+
+%\vspace{-0.2cm}
+\paragraph{Conditional NP Relations for Efficiency} Secondly, we also require NP relations that have a well-defined subpredicate which is verified outside the SNARKs. 
+In a blockchain instantiation, any current validator set has to come to a consensus, among other things, on the next validator set, represented by a set of public keys. 
+The validator set computes and signs a pair of polynomial commitments to the next set of validators' public keys\footnote{In fact, the pair of commitments are 
+polynomial commitments to the interpolation polynomials (over an appropriately chosen cyclic subgroup) to the $x$ and, respectively, to the $y$ coordinates of the validators' public keys. 
+In turn, as detailed in Section~\ref{sec:snarks}, these polynomials are needed to efficiently arithmetise the incomplete addition formula for elliptic curve points and, thus, efficiently aggregate the public keys 
+of the validators who sign consensus messages in each epoch.}. Before including a public key in the set, 
+the validators perform several checks on the proposed public key, such as being in a particular subgroup of the elliptic curve. This check is not performed by the SNARKs' constraint 
+system, but is required for the correctness of the statement the SNARKs prove. This design decision makes our SNARKs more efficient, but it also means we have to extend the 
+usual definition of NP relations to conditional NP relations, where in fact, one of the subpredicates that define the conditional relation is checked outside the SNARKs 
+or ensured due to a well-defined assumption. We introduce the general notion of conditional NP relation in Section~\ref{sec:conditional_relations} and describe our 
+concrete conditional NP relations in Section~\ref{sec:snarks}.   
+
+%\vspace{-0.2cm}
+\paragraph{Hybrid Model SNARKs} In line with the two above technical challenges and the solutions we came up with, we extend the existing definitions 
+related to SNARKs~\cite{groth16,plonk} by introducing an algorithm which we call $\mathit{PartInput}$. For our use case, this allows us to separate the public input for the NP relations that define our custom SNARKs in two: a part 
+that is computed by the current set of validators on the blockchain in question and the rest of the public input plus the corresponding SNARK proof are 
+computed by a (possibly malicious) prover interacting with the light client verifier. Our newly introduced notion of hybrid model SNARK (see Section~\ref{sec:snarks_defs}) 
+generalises this public input separation concept and its definition is used to prove the security of our custom SNARKs in Section~\ref{sec_two_step_compiler}.
+
+%\vspace{-0.2cm}
+\subsection{Related work}
+
+\subsubsection{Naive Approaches and Their Use in Blockchains}
+
+There are a number of approaches commonly used in practice to verifying that a subset of a large set signed a message. 
+%However, among these, the approaches that have slow verification limit the size of the validators' set, which in turn limits decentralisation. 
+
+%\vspace{-0.2cm}
+\paragraph{Verify All Signatures}  One could verify a signature for each signing validator. This is what participants  do in protocols like Polkadot~\cite{polkadot}, with 297 validators
+% \cite{PolkaExplorer} 
+(or Kusama with 1000 validators) %\cite{PolkaExplorer}
+and Tendermint~\cite{tendermint_paper}, which is frequently used with 100 validators). %\cite{CosmosExplorer}). 
+The Tendermint light client system, which is accountable and uses the verification of all individual signatures approach, 
+is used in bridges in the IBC protocol\cite{IBC_paper}. However this approach becomes prohibitively expensive for a light client verifier when there are 1000s or 1,000,000s of signatures. 
+
+%\vspace{-0.2cm}
+\paragraph{Aggregatable Signatures} One could use an aggregatable signature scheme like BLS~\cite{BLS_signatures,boneh_compact_multisig}  and reduce this to verifying one signature, but that requires calculating an aggregate public key. This aggregate key is different for every subset of signers and needs to be calculated from the public keys. This is what Ethereum 
+%~\cite{eth2} 
+does, which currently has 415,278 validators. %\cite{EthExplorer}. 
+However for a light client verifier, it is expensive to keep a list of 100,000s of public keys updated. As such only full nodes of Ethereum use this approach and instead light clients verifiers of Ethereum~\cite{sync_committee} follow signatures of randomly selected subsets of validators of size 512. This means that the resulting light client system is not accountable because these 512 validators are only backed by a small fraction of the total stake.
+
+%\vspace{-0.2cm}
+\paragraph{Threshold Signatures} Alternatively a threshold signature scheme may be used, with one public key for the entire set of validators. This approach was adopted by Dfinity~\cite{GrothDKG}. Threshold signature schemes used in practice use secret sharing for the secret key corresponding to the single public key. This gives the schemes two downsides. Firstly, they require a communication-heavy distributed key generation protocol for the setup which is difficult to scale to large numbers of validators. Indeed, despite recent progress~\cite{AggregatableDKG,GrothDKG,LWEDKG}, it is still challenging to implement setup schemes for threshold signatures across a peer-to-peer network with a large number of participants, which is what many blockchain related use cases require. Moreover, such a setup may need repeating whenever the signer set changes. Secondly, for secret sharing based threshold signature schemes, the signature does not depend on the set of signers and so we cannot tell which subset of the validators signed a signature i.e. they are not accountable. Dfinity~\cite{GrothDKG} uses a re-shareable BLS threshold signature, where the threshold public key remains the same even when the validator set changes. Such a signature scheme 
+provides the light client verifier with a constant size proof, even over many validator set changes, but means that the proof not only does not identify which of a particular set of validators are misbehaving, but also we cannot say when this misbehaviour happened i.e. which validator set misbehaved. This is because the signature would be the same for any threshold subset of any validator set.
+
+%\vspace{-0.2cm}
+\noindent It is worth noting that if a protocol has already implemented aggregatable BLS signatures, our committee key scheme can be used without altering the consensus layer. Indeed it may be easier to alter a protocol that uses individual 
+signatures to use aggregatable BLS signatures than to implement threshold signatures from scratch because the latter requires waiting for an interactive setup before making validator set changes.
+
+%\vspace{-0.2cm}
+\subsubsection{Using SNARKs to Roll up Consensus}
+%\vspace{-0.1cm}
+
+\noindent{Celo~\cite{celo} and Mina~\cite{mina} blockchains have associated light client verifiers which allow their resource constrained users 
+to efficiently and securely sync from the beginning of the blockchain to the latest block.}
+
+%\vspace{-0.2cm}
+\paragraph{Plumo~\cite{plumo}} is the most relevant comparison to our scheme. It also tackles the problem we consider, i.e., that of 
+proving validator set changes. In more detail, Plumo uses a Groth16 SNARK~\cite{groth16} to prove that enough validators signed 
+a statement using BLS signatures from a set of the public keys. In Celo~\cite{celo}, the blockchain that designed and plans to use 
+Plumo, validators may change every epoch which is about a day long and the Plumo's SNARK iteratively proves 120 epochs worth of 
+validator set changes. Since in Celo there are no more than 100 validators in a validator set at any one time, the respective public 
+keys are used in plain as public input for Plumo's SNARK, as opposed to a succinct polynomial commitment in the case of our custom SNARKs. 
+All of the above increase the size of Plumo's prover circuit. Since Plumo is designed to help resource constrained light clients sync from scratch, 
+it is not an impediment that the Plumo SNARK cannot be efficiently generated, i.e., in real time. In the case of a light client verifier for bridges 
+(i.e., the most resource constrained application), we expect it to be in sync at all times and, by design, we care only about one validator 
+set change at a time. Our slimmed down and custom SNARK not only can be generated in real time, but, also due to the use of specialised 
+commitments schemes for public keys, our validator sets can scale up to much larger sizes as well without impacting the efficiency of our system. 
+
+\begin{comment}
+\paragraph{Mina} achieves light clients with $O(1)$ sized light client proofs using recursive SNARKs. 
+This requires some nodes have a large computational overhead to produce these proofs. 
+%Also because this requires verifying consensus with small circuits, they do not use the consensus paradigm discussed above where a majority of validators sign, and instead use a longest chain rule version of proof of stake~\cite{mina}. 
+Their protocol is not accountable because, as with Dfinity above, it is not possible to tell from the proof which validators signed off on a fork, nor when this happened. 
+%Another downside is that because the proof only shows the length of a chain (and its block density), similar to a Bitcoin SPV proof, a light client needs to be connected to an 
+%honest node to tell if a block is in the longest chain. If the client is connected to a single malicious node, it could be given a proof for a shorter fork and not see any proofs of chains the fork choice rule would prefer.
+\end{comment}
+
+%\vspace{-0.2cm}
+\paragraph{Mina} achieves light clients with $O(1)$ sized light client proofs using recursive SNARKs. This requires some nodes have a large 
+computational overhead to produce these proofs. Also because this requires verifying consensus with small circuits, they do not use the consensus paradigm 
+discussed above where a majority of validators sign, and instead use a longest chain rule version of proof of stake~\cite{mina}. 
+Their protocol is not accountable because, as with Dfinity above, it is not possible to tell from the proof which validators signed off on a fork, nor when this happened. 
+Another downside is that because the proof only shows the length of a chain (and its block density), similar to a SPV proof in Bitcoin~\cite{bitcoin}, a light client needs to be connected to an 
+honest node to tell if a block is in the longest chain. If the client is connected to a single malicious node, it could be given a proof for a shorter fork and not see any proofs of chains the fork choice rule would prefer.
+%\vspace{-0.2cm}
+\subsubsection{Commit-and-Prove and Related Approaches}
+\label{sec:commit_prove}
+
+\noindent Our custom SNARKs are an instance of the commit-and-prove paradigm~\cite{KilianPhD,CLOS02,CP_proposal,HP_paper} 
+which is a generalisation for zero-knowledge proofs/arguments in which the prover proves statements about values that are committed. 
+In practice, commit-and-prove systems (for short, CP) can be used to compress a large data structure and then prove something about its content 
+(e.g., polynomial commitments~\cite{KZG_10}, vector commitments~\cite{vector_commitment_1}, accumulators~\cite{first_accumulator}). CP schemes 
+can also be used to decouple the publishing of commitments to some data from the proof generation: each of these actions may be performed by different 
+parties or entities~\cite{zkp_reference}. Finally, commitments can be used to make different proof systems interoperable~\cite{CP_paper,interoperability_2}. 
+Our custom design SNARKs have properties from the first two categories, however we could not have simply re-used an existing argument system: by 
+designing custom circuits and SNARKs, we ensured improved efficiency for our use cases. \\
+
+
+%The paragraph below was a comment/was commented out when shortening the paper.
+\noindent Another paradigm related to commit-and-prove is called hash-and-prove~\cite{HP_paper}: for large data structures or simply data that is expensive to be 
+handled directly by a computationally constrained verifier, one can hash that data and then create a (succinct) proof for some verifiable computation that uses 
+the original, large, dataset. The committee key scheme notion that we define in this work has both similarities to but also differences with regard to this 
+paradigm. The similarities are that, both the way we instantiate our committee key (i.e., using a polynomial commitment 
+with a trusted universal setup) and the way we instantiate our aggregate public key, can be generalised as some form of (possibly deterministic) 
+hash function. One difference is that the setup for the polynomial commitment is the same as that from which the proving and verification key for our committee key scheme are 
+computed; thus our version of the hashes and the keys for the committee key scheme are definitely not independent as in the case of hash-and-commit~\cite{HP_paper}. Finally, 
+built into our definition of committee key scheme and its security properties, we make use of a secure aggregatable signature scheme. This, in turn, allows us to design and 
+prove the security properties of our accountable light client(s). In fact, to add some intuition to the fact that a committee key scheme is more than 
+just a hash-and-prove instance, we mention that our committee key scheme inherits an unforgeability property from its aggregatable scheme subcomponent. 
+This is one property that as far as we are aware no hash-and-prove scheme has. \\
+
+\noindent When proving the security of our arguments, we use an extension of some of the more commonly employed SNARK definitions; we call this extension ``a hybrid model SNARK''. 
+Our notion resembles the existing notion of SNARKs with online-offline verifiers as described in~\cite{HP_paper}, where the verifier computation is split into 
+two parts: during the offline phase some computation (possibly of commitments) happens; this computation takes some public inputs as parameters and, when not 
+performed by the verifier, it may also be performed (in part) by the prover. The online phase is the main computation performed by the verifier. In the case of our hybrid 
+model SNARKs, however, the input to the offline counterpart described above (which is what we call the $\mathit{PartInput}$ algorithm) may even be the witness or 
+a part of the witness for the respective relation. For our custom SNARKs, $\mathit{PartInput}$ produces part of the public input used by the verifier; 
+since for our use case, $\mathit{PartInput}$ does handle a portion of the witness, this operation cannot be performed by the verifier for that relation. 
+Moreover, in our instantiation, $\mathit{PartInput}$ produces computationally binding commitment schemes that are opened by the prover. Both of these properties 
+are not explicitly part of our general definition for hybrid model SNARKs, but they are crucial and explicitly assumed and used 
+in proving the security for the result of our compiler's second step (see Section~\ref{sec_two_step_compiler}).
+
+%\begin{comment}
+%\subsection{BLS multisignatures} \label{ssec:BLS}
+
+%\input{bls_and_rogue_key_related_work.tex}
+
+%TODO: This could be explained somewhere other than the intro if preferred {\color{red}@Alistair from Oana: Can we replace or merge the 4 sentences below on multisignatures with/%into the more detailed description I give above?}
+
+%There are several variants of BLS multisignatures. We will consider the easiest one for which the aggregate public key is simply the sum of the public keys of the signers
+
+%This naive scheme is vulnerable to rogue key attacks, which can be prevented using proofs of possession [cn].  In our case, we can assume that the list of public keys comes from a %trusted source, such as the previous set of validators, who checked the proofs of possession and so the verifier themselves does not need to.
+
+%\subsection{Implementation}
+%\label{sec:intro_implementation}
+
+%\noindent {\color{red} Our implementation leverages a pair of pairing-friendly elliptic curves which we call the inner curve and the outer curve respectively, such that the base field of the %inner curve matches the scalar field of the outer curve.} \\
+
+%\noindent {\color{red}The first pair of pairing friendly elliptic curves where the inner curve's base field and the outer curve's scalar field are identical 
+%but the two curves do not form a cycle has been introduced by ZEXE~\cite{zexe}. The authors call such a pair of elliptic curves a two-chain. 
+%The ZEXE two-chain curves are BLS12-377 and CP6-782. In this work we build on the two-chain ZEXE instantiation in the following way: we 
+%keep BLS12-377 as the inner curve and, for efficiency reasons which will be detailed later in the paper, we replace the CP6-782 outer curve with 
+%BW6-761~\cite{BW6}.\\
+
+%\noindent Both BLS12-377 and BW6-761 are pairing friendly curves and we make use of that as follows. Intuitively we use BLS12-377 
+%to sign and verify BLS signatures with the public keys being elements of the first source group of the efficient pairing associated with BLS12-377. Hence, 
+%our BLS signature public keys are natively represented over the base field of BLS12-377. Then we use BW6-761 to prove using succinct proofs 
+%(i.e., snarks) public key aggregation for public keys signing the same message. Because the base field of BLS12-377 matches the scalar field 
+%of BW6-761 and since in a snark system the proof is performed in an arithmetic circuit over the scalar field of the curve, so, 
+%in our case the scalar field of BW6-761, any efficiency loss due to curves mismatch is avoided. \\
+
+%\noindent Note that even if our implementation is instantiated with a specific pairing-friendly two-chain as described above, 
+%our theoretical results (see section \ref{sec:snarks}) generalise to any pairing-friendly two-chain and, where possible, we state 
+%them as such.} 
+%\end{comment}
+

@@ -1,0 +1,69 @@
+\subsection{Pairings}
+\label{sec:pairings}
+
+\noindent If $E$ is an elliptic curve defined over a prime field $\mathbb{F}_{p}$ of large characteristic $p$, 
+we denote by $E(\mathbb{F}_{p})$ the abelian group containing all the points $(x, y) \in (\mathbb{F}_{p})^2$ 
+that satisfy the elliptic curve equation along with the point at infinity. Let $r$ be a large prime such that $r$ divides 
+$|E(\mathbb{F}_{p})|$ and $\mathit{gcd}(p, r) = 1$. The \emph{embedding degree of $E$} is the smallest integer $k$ 
+such that $r$ divides $p^{k}-1$. If $k$ is small we say $E$ is \emph{pairing friendly}. 
+We call $\mathbb{F}_p$ \emph{the base field of $E$} and $\mathbb{F}_r$ 
+(i.e., the prime field of characteristic $r$) \emph{the scalar field of $E$}. \\
+
+\noindent Pairing friendly curves are important to us in this work because they allow us to efficiently construct 
+and instantiate aggregatable signatures and SNARKs. For a pairing friendly curve $E$ as above, 
+let $\mathbb{G}_1$, $\mathbb{G}_2$ and $\mathbb{G}_T$ be appropriately chosen subgroups of order
+$r$ in $E(\mathbb{F}_{p})$, $E(\mathbb{F}_{p^l})$ (for some $l \leq k$)\footnote{$E(\mathbb{F}_{{p}^l})$ is the group of all points 
+$(x,y) \in (\mathbb{F}_{p^l})^2$ that satisfy the elliptic curve equation of $E$ along with the point at infinity.} and in the multiplicative group 
+$\mathbb{F}_{p^k}^*$ of the extension field $\mathbb{F}_{p^k}$. The types of pairings we are interested in this work are mappings  
+$e$ which are secure~\cite{secure_pairings, pairings_for_cryptographers}, efficiently computable, they are defined as 
+$e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$ for 
+which \emph{bilinearity} (i.e., $e(a \cdot g_1, b \cdot g_2) = e(g_1, g_2)^{a\cdot b}$, 
+$\forall a, b \in \mathbb{Z}_r$, $\forall g_1 \in \mathbb{G}_1$, $\forall g_2 \in  \mathbb{G}_2$) 
+and \emph{non-degeneracy} (i.e., if $g_1$ and $g_2$ are generators of $\mathbb{G}_1$ and 
+$\mathbb{G}_2$, respectively, then $g_T = e(g_1, g_2)$ is a generator for $\mathbb{G}_T$) hold. \\ 
+
+\noindent Our results in this work hold for a pair of pairing-friendly elliptic curves $\einn$ (\emph{the inner curve}) and  
+$\eout$ (\emph{the outer curve}) such that the base field of $\einn$ equals the scalar field of $\eout$. In line with the naming 
+from~\cite{zexe}, we call any pair of pairing friendly elliptic curves with such property a \emph{pairing-friendly two-chain}. 
+We denote by $\mathbb{F}$ the base field of $\einn$ and we call $p$ its characteristic. We denote by $r$ the characteristic of
+the scalar field of $\einn$. We also denote by $\epinn$ and by $\epout$ the efficient, secure pairings over $\einn$ and $\eout$, respectively. \\
+
+\noindent We further denote by $\ginn{1}$, $\ginn{2}$ and $\gtinn$ the two cyclic source groups and the cyclic target group for $\epinn$ 
+and $\sginn{1}$, $\sginn{2}$, $\sgtinn$ are uniformly random chosen generators of these three groups. Analogously, $\gout{1}$, 
+$\gout{2}$ and $\gtout$ are the two cyclic source groups and the cyclic target group for $\epout$ and $\sgout{1}$, $\sgout{2}$, $\sgtout$ 
+are uniformly random chosen generators of these three groups. We consider $\ginn{1}$, $\ginn{2}$, $\gout{1}$, $\gout{2}$ 
+with additive notation for their group operation and we consider $\gtinn$ and $\gtout$ with multiplicative notation. 
+We additionally write $[x]_{\indexoneinn} = x \cdot \sginn{1}$, $[x]_{\indextwoinn} = x \cdot \sginn{2}$. 
+We assume that the curves, groups and fields defined in the last two paragraphs have been 
+generated using implicit security parameter $\lambda$. \\
+
+\noindent Finally, we note that in our implementation we instantiate $\einn$ with BLS12-377~\cite{zexe} and $\eout$ with BW6-761~\cite{BW6}.
+
+%\noindent Our implementation leverages a pair of pairing-friendly elliptic curves. 
+%For more details see section \ref{sec:intro_implementation}. For brevity we call them \emph{the inner curve} 
+%(and by this we refer to the curve {\color{red}BLS12-377}) and \emph{the outer curve} (and we refer to the curve {\color{red}BW6-761}). Moreover, we note 
+%that the base field of  {\color{red}BLS12-377} equals the scalar field of {\color{red}BW6-761}. In line with the naming from~\cite{zexe}, 
+%we call any pair of pairing friendly elliptic curves with such property a \emph{pairing-friendly two-chain}. \\
+
+%\noindent  We denote by $\mathbb{F}$ the common prime field of {\color{red} BW6-761} and {\color{red}BLS12-377} and we call $p$ its characteristic. 
+%The scalar field of {\color{red}BW6-761} is also a prime field. We denote by $r$ its characteristic. We also denote by $e_{\mathit{BLS}}$ and by $e$ the efficient, secure 
+%pairings over {\color{red}BLS12-377} and {\color{red}BW6-761}, respectively. $\mathbb{G}_{1,\mathit{BLS}}$, $\mathbb{G}_{2,\mathit{BLS}}$ and 
+%$\mathbb{G}_{T,\mathit{BLS}}$ are the two cyclic source groups and the cyclic target group for $e_{\mathit{BLS}}$ 
+%and $g_{1,\mathit{BLS}}$, $g_{2,\mathit{BLS}}$, $g_{T,\mathit{BLS}}$ are uniformly random 
+%chosen generators of these three groups. Analogously, $\mathbb{G}_1$, $\mathbb{G}_2$ and $\mathbb{G}_T$ are the two cyclic 
+%source groups and the cyclic target group for $e$ and $g_1$, $g_2$, $g_T$ are uniformly random chosen generators of these 
+%three groups. \\ 
+
+%\noindent  We consider $\mathbb{G}_{1,\mathit{BLS}}$, $\mathbb{G}_{2,\mathit{BLS}}$, $\mathbb{G}_{1}$, $\mathbb{G}_{2}$ 
+%with additive notation for their group operation and we consider $\mathbb{G}_{T,\mathit{BLS}}$ and $\mathbb{G}_{T}$ with multiplicative notation. 
+%We additionally write $[x]_{1, \mathit{BLS}} = x \cdot g_{1,\mathit{BLS}}$, $[x]_{2,\mathit{BLS}} = x \cdot g_{2,\mathit{BLS}}$,  
+%$[x]_{T,\mathit{BLS}} = g_{T,\mathit{BLS}}^x$ and $[x]_1 = x \cdot g_1$, $[x]_2 = x \cdot g_2$, $[x]_T = g_T^x$. \\
+
+%\noindent Our results (see section \ref{sec:snarks}) generalise to any pairing-friendly two-chain and, where possible, 
+%we state them as such. For that we denote by $\einn$ and $\eout$ the inner curve and the outer curve, respectively, of any pairing-friendly 
+%two-chain and by $\ginn{1}$ we denote the first source group of the pairing over $\einn$. We overload the notation and we denote by $\mathbb{F}$ the 
+%common field of any pairing-friendly two-chain. Finally, we assume that the curves, group and field defined in this paragraph have been 
+%generated using implicit security parameter $\lambda$. 
+
+
+

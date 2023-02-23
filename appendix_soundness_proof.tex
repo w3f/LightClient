@@ -1,0 +1,198 @@
+\section{Postponed Security Proof for Light Client Systems}
+\label{supplementary_proof_sec_soundness}
+
+\noindent In this section we prove the following theorem:
+
+\begin{theorem} 
+\label{thm_lc_soundness}
+If $\mathit{AS}$ is the secure aggregatable signature scheme defined in Instantiation~\ref{insta:bls} and if 
+$\mathit{CKS_{\mathcal{R}}}$ is the secure committee key scheme defined in Instantiation~\ref{inst:cks}, 
+then, together with the assumptions stated at the beginning of Section~\ref{sec:LCinstantiation} and for 
+$\mathcal{R} \in \{ \Rlacom, \Racom \}$, the tuple ($\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$, $\mathit{LC.VerifyProof}$) 
+as instantiated in Section~\ref{sec:LCinstantiation} is a light client  as formalised by Definition~\ref{scheme_light_client}.
+\end{theorem}
+
+\begin{proof}
+\noindent \textit{Perfect Completeness:} 
+Let $m$ be a message decided in some epoch $i$ of a valid consensus view $C$. 
+Since $C$ is a valid consensus view, this implies $\mathit{HistoricVerifyData}$ outputs $1$. Adding that $m$ has been decided in epoch $i$ 
+and using assumption (I.4.), we have that for each previous epoch $j \in [i-1]$, $(j, \mathbf{Com}(\mathbf{pk_{j+1}}))$ 
+was decided in epoch $j$; we denote this as property $(\ast)$. Since $$\mathit{IsCommitment}(j, \mathbf{Com}(\mathbf{pk_{j+1}})) = 1, \forall j \in [i-1]$$  
+holds and using assumptions (I.5.), (I.2.) and (G.1.), we conclude the proofs of possession for each of the public keys in 
+$\mathbf{pk_{j}}$, $j  \in [i]$ pass the verification $\mathit{AS.VerifyPoP}$ (property $(**)$) and, as a consequence, each of the public keys in $\mathbf{pk_{j}}$, $j  \in [i]$ belong to $\ginn{1}$ (property $(***)$). 
+The main fact we have to show (with the notation used in the description of 
+$\mathit{LC.VerifyProof}$), is that the following two predicates hold:
+$$\mathit{AS.Verify}(\mathit{pp}, \mathit{apk_j}, m_j, \mathbf{\Sigma}(j)) = 1, \forall j \in [i]  \ \ \ \ \ (1)$$ 
+and 
+$$\mathit{threshold_j} \geq t, \forall j \in [i] \ \ \ \ \ (2).$$
+\noindent Indeed, $(1)$ holds due to perfect completeness for aggregation for secure signature scheme instantiation 
+$\mathit{AS}$ which applies because: (a) for every epoch $j \in [i]$, as computed by $\mathit{LC.GenerateProof}$, 
+each of the individual signatures aggregated into $\mathbf{\Sigma}(j)$ passes $\mathit{AS.Verify}$, (b)
+the aggregation $\mathbf{\Sigma}(j)$ is computed correctly as per $\mathit{LC.GenerateProof}$, (c) the proofs of possession have been checked 
+for each of the public keys in $\mathbf{pk_{j}}$, $\forall j  \in [i]$ (see property $(**)$), and, finally, (d) the aggregation of public 
+keys denoted by $\mathit{apk_j}$, $\forall \ j \in [i]$, has been computed correctly as $(\mathbf{bit_j}(k) \cdot \mathbf{pk_j}(k))_{k=1}^{v}$ 
+due to property $(***)$ and the perfect completeness of the SNARK scheme for relation $\mathcal{R}$ invoked by the instantiation of 
+$\mathit{CKS}_{\mathcal{R}}.\mathit{Prove}$. \\
+Moreover, due to definition of $f_{\mathit{threshold}}$ and the fact that 
+$m_j = (j, \mathbf{Com}(\mathbf{pk_{j+1}})), \forall j \in [i-1]$ and, respectively,  $m_i = m$ have been 
+decided in their respective epochs as per $(*)$, we have that $(2)$ holds. \\
+
+\noindent Finally, using $(1)$, letting $ \mathit{ck_j} = \mathit{com_j} = \mathbf{Com}(\mathbf{pk_{j+1}})$, $ \forall \ j \in [i]$ and since 
+$\forall \ j \in [i]$, $\pi_{\mathit{SNARK,j}}$, $\mathit{apk_j}$ and $\mathit{ck_j}$ are honestly computed as described by  
+$\mathit{LC.GenerateProof}$ and invoking the perfect completeness property of the $\mathit{CKS_{\mathcal{R}}}$ committee key scheme, 
+we obtain that $$\mathit{CKS_{\mathcal{R}}.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathbf{Com}(\mathbf{pk}_{\mathbf{j+1}}), 
+m_j, \mathbf{\Sigma}(j), (\pi_{\mathit{SNARK,j}}, \mathit{apk_j}), \mathbf{bit_j}) = 1, \forall j \in [i]  \ \ \ \ \ (3).$$
+In turn, the fact that $(2)$ and $(3)$ hold with probability $1$ immediately implies 
+$$\mathit{LC.VerifyProof}(\mathit{pp}_{\mathit{LC}},\mathit{LC.seed}, \mathit{LC .GenerateProof}(\mathit{pp}_{\mathit{LC}}, C, m, \mathcal{R}),m, \mathcal{R}) = \mathit{acc}$$ with probability 1 (q.e.d.). \\
+
+\noindent \textit{Soundness:} 
+\noindent In order to prove soundness, we first state and prove the following: 
+\begin{proposition} 
+\label{le:lc_soundness}
+Given an efficient adversary $\mathcal{A}$ as defined in the soundness game 
+(Definition~\ref{scheme_light_client}) and let $(\pi, m, C)$ be its corresponding output. 
+
+Let $i = \mathit{epoch}_{\mathit{id}}(m)$. Assuming that 
+$$\mathit{LC.VerifyProof}(\mathit{pp}_{\mathit{LC}}, \mathit{LC.seed}, m, \mathcal{R}) = \mathit{acc}$$ and 
+$\mathit{CheckValidConsensus}(C) = 1$ and 
+$\mathit{HonestThreshold}(t', \mathit{OGenerateKeypair}, C) = 1$ (i.e., the light client proof $\pi$ is accepted, 
+$C$ is a valid consensus view as per Definition~\ref{def:valid_consensus} and for each epoch $k$ in $C$, $PK_k$ 
+contains at least $t'$ honest validators), then:
+\begin{itemize}
+\item Statement $A(j)$: For $ j < i$, assuming further that $\mathit{com_j} = \mathbf{Com}(\mathbf{pk_j})$, %and that the validity of the proofs of 
+%possession for each key in $\mathbf{pk_j}$ has been checked (either as a property of $\mathsf{genstate}$ for $j=1$ 
+%or by the honest validators in $\mathbf{pk_{j-1}}$) and $\mathbf{pk_j} \in \ginn{1}^{n-1} $, 
+then there exists some honest validator whose key is in $\mathbf{pk_j}$ such that it signed 
+$m_j = (j, \mathbf{Com}(\mathbf{pk_{j+1}}))$, except with negligible probability.
+\item Statement $B(j)$: For $j < i$, if an honest validator whose key is in $\mathbf{pk_j}$ 
+signed $m_j$ with \\ $\mathit{epoch_{\mathit{id}}}(m_j) = j$ and 
+$\mathit{IsCommitment}(m_j) =1$ then $m_j= (j, \mathbf{Com}(\mathbf{pk_{j+1}}))$.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}(Proposition) We prove the proposition above by induction. Moreover, we prove the proposition 
+only for $ \mathcal{R} = \Rlacom$. The proposition can be proven analogously for $\mathcal{R} = \Racom$. 
+Proving the base case, namely that $A(1)$ holds under the assumption G.1. and proving that $A(j)$ holds 
+if $B(j-1)$ holds follows a very similar proof structure hence we give complete details only for the latter and add 
+only the differences for the former. We complete the induction step by proving that if $A(j)$ holds then $B(j)$ holds. \\
+
+\noindent First proof of the induction step: Assume that statement $B(j-1)$ holds. We have to prove that $A(j)$ holds. 
+Due to the assumption that the light client proof $\pi$ is accepted and due to 
+the definition of step $j$ in algorithm $\mathit{LC.VerifyProof}$, we have that properties 
+$(1)$ and $(2)$ as described below hold, except with negligible probability, where
+
+$$(\mathit{CKS}_{\mathcal{R}}.\mathit{Verify}(\mathit{pp},  \mathit{rs_{\mathit{vk}}}, \mathit{com_j}, m_j, 
+ \mathbf{\Sigma}(j), (\mathbf{\pi_{\mathit{SNARK},j}}, \mathit{apk_j}), 
+\mathbf{bit_j}) = 1) \ \ \ \ \  (1)$$ 
+and
+$$(\mathit{threshold_j} \geq t) \ \ \ \ \  (2)$$
+
+\noindent Due to Instantiation~\ref{inst:cks}, $(1)$, in turn, is equivalent to properties $(3)$ and $(4)$ holding, 
+except with negligible probability, where:
+
+$$ \mathit{AS.Verify}(\mathit{pp}, \mathit{apk_j}, m_j, \mathbf{\Sigma}(j)) = 1 \ \ \ \ \  (3)$$ 
+and
+$$\mathit{SNARK.Verify}(\mathit{rs}_{\mathit{vk}}, (\mathit{com_j}, \mathbf{bit_{j}} || 0, \mathit{apk}), \pi_{\mathit{SNARK}}, \mathcal{R}) = 1 \ \ \ \ \  (4)$$ 
+
+\noindent By the knowledge soundness property of the hybrid model SNARK for relation $\mathcal{R}$ and 
+algorithm $\mathit{SNARK.PartInputs}$ defined in Section~\ref{sec_two_step_compiler}  
+(where $c(\mathbf{pk_j}) = \mathit{incl}(\mathbf{pk_j}) =1$ 
+iff $\mathbf{pk_j} \in \ginn{1}^{n-1}$ holds) and since $(4)$ holds and since $\mathbf{pk_j} \in \ginn{1}^{n-1}$ holds 
+as a consequence of the fact that the proofs of possession for each of the public
+keys in $\mathbf{pk_j}$ pass the verification in $\mathit{AS.VerifyPoP}$ (which, in turn, holds since 
+$B(j-1)$ holds plus due to integration assumptions I.1.- I.3. and the definition of $\mathit{IsCommitment}$), 
+it means that, extractor $\mathcal{E}$ (as described in Definition~\ref{dfn_snark} can extract 
+$w$ such that $$(\mathbf{x_j} = (\mathit{com_j},\mathbf{bit_j}||0,\mathit{apk_j}), w = \mathbf{pk'}) \in \mathcal{R},$$ 
+except with negligible probability. In particular, this means $\mathit{apk_j} = \sum_{k=1}^{n-1} \mathbf{bit_j}(k) \cdot \mathbf{pk'}(k)$ and 
+$\mathbf{Com}(\mathbf{pk'}) = \mathit{com_j}$. By the computational binding of the KZG commitment used in defining $\mathit{com_j}$ 
+and by the fact that  $\mathit{com_j} = \mathbf{Com}(\mathbf{pk_j})$ by assumption (i), we obtain that $\mathbf{pk'} = \mathbf{pk_j}$, 
+hence
+$$\mathit{apk_j} = \sum_{k=1}^{n-1} \mathbf{bit_j}(k) \cdot \mathbf{pk_j}(k) \ \ \ \ \ (5)$$ 
+which, in turn, by the definition of aggregatable signature scheme $\mathit{AS}$ in Instantiation~\ref{sec:bls} is equivalent to: 
+
+$$\mathit{apk_j} = \mathit{AS.AggregateKeys}(\mathit{pp}, (\mathbf{pk_j}(k))_{k=1}^{n-1}) \ \ \ \ \ (6)$$ 
+
+\noindent Next, we look at $(2)$ which is equivalent to $\mathit{HammingWeight^*}(\mathbf{bit_j}) \geq t \ (7)$; (7)  
+together with the fact that there are at least $t'$ honest validators in 
+$\mathbf{pk}$ (since $\mathit{HonestThreshold}(t', \mathit{OGenerateKeypair}, C) = 1$) and the assumption P.2. that 
+$t+t' \geq v=n-1$, we obtain that there exists at least an honest validator in $\mathbf{pk_j}$ 
+whose public key is aggregated into $\mathit{apk_j}$. We denote this as property $(8)$. \\
+
+\noindent Finally, it is clear that due to $(3), (6), (8)$ and since the proofs of possession for each of the public 
+keys in $\mathbf{pk_j}$ pass the verification in AS.VerifyPoP (in turn, since $B(j-1)$ holds and due to integration assumptions 
+I.1.- I.3. and the definition of $\mathit{IsCommitment}$), the statement $A(j)$ 
+becomes equivalent to showing that the advantage
+$\mathit{Adv}^{\mathit{multiforge}}_{\mathcal{A}_{\mathit{sound}}}({\lambda})$ in the following game is negligible $(9)$,
+where, in general, 
+$$\mathit{Adv}^{\mathit{multiforge}}_{\mathcal{A}}({\lambda}) = \mathit{Pr}[\mathit{Game}^{\mathit{multiforge}}_{\mathcal{A}}({\lambda}) =1]$$
+\noindent and 
+\begin{align*}
+&\mathit{Game}^{\mathit{multiforge}}_{\mathcal{A}}({\lambda}): \\
+& \mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}) \\
+& ((\mathit{pk}_{k}^*,\pi^*_{k, \mathit{PoP}}), \mathit{sk}_{k}^*)_{k=1}^{t'} \leftarrow \mathit{AS.GenerateKeypair}(\mathit{pp})\\
+& Q \leftarrow \emptyset \ \\
+& ((\mathit{pk_k}, \pi_{k,\mathit{PoP}})_{k=1}^{u}, m, \mathit{asig}) \leftarrow \mathcal{A}^{\mathit{OMSign}}(\mathit{pp}, (\mathit{pk_k^*},\pi^*_{k,\mathit{PoP}})_{k=1}^{t'}) \\
+& \textit{If } \exists \ k \in [t'], \mathit{pk}_{k}^*  \notin \{ \mathit{pk_i} \}_{i=1}^{u}  \vee (m, \mathit{pk}^*_{k}) \in Q, \textit{ then return } 0 \\
+& \textit{For } i \in [u] \\
+& \ \ \ \ \ \textit{ If } \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i}, \pi_{\mathit{PoP},i})=0  \textit{ return } 0 \\
+& \mathit{apk} \leftarrow \mathit{AS.AggregateKeys}(\mathit{pp}, (\mathit{pk_i})_{i=1}^{u}) \\
+& \textit{Return } \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig})
+\end{align*}
+\noindent and
+\begin{align*}
+& \mathit{OMSign}(m_k, \mathit{pk}^*): \\
+& \textit{If } \mathit{pk}^* \in Q_{\mathit{keys}|\mathit{pk}} \\
+& \ \ \ \ \sigma_j \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk}^*, m_k) \\
+& \ \ \ \  Q \leftarrow Q \cup \{(m_k,  \mathit{pk}^*) \} \\
+& \ \ \ \ \textit{return } \ \sigma_k \\
+& Else \\
+& \ \ \ \ \textit{return}
+\end{align*}
+
+\noindent and $\mathcal{A}_{\mathit{sound}}$ is defined such that $\mathit{asig} = \mathbf{\Sigma(j)}$, $m = m_j$, 
+$\mathit{apk} = \mathit{apk_j}$ and the public keys output by $\mathcal{A}_{\mathit{sound}}$ are the non-zero public 
+keys from the vector $(\mathbf{bit_j}(k) \cdot \mathbf{pk_j}(k))_{k=1}^{n-1}$.
+
+\noindent We prove statement (9) by contradiction: if we assume the advantage 
+$\mathit{Adv}^{\mathit{multiforge}}_{\mathcal{A}_{\mathit{sound}}}({\lambda})$ is non-negligible, 
+then, using a standard hybrid argument and reducing the game 
+$\mathit{Game}^{\mathit{multiforge}}_{\mathcal{A}}({\lambda})$ to the game \\
+$\mathit{Game}^{\mathit{forge}}_{\mathcal{A}}({\lambda})$ as per Definition~\ref{def:aggregate_signatures}, 
+the advantage $\mathit{Adv}^{\mathit{forge}}_{\mathcal{A}_{\mathit{sound}}}({\lambda})$ is also non-negligible; 
+however, this, in turn, contradicts the fact that the instantiation $\mathit{AS}$ is an unforgeable 
+aggregatable signature scheme, hence our proof for $A(j)$ is complete.  \\
+
+\noindent Observation: In the case of the proof for $A(1)$, the only difference is that the proofs of possession for each of the public 
+keys in $\mathbf{pk_1}$ pass the verification in $\mathit{AS.VerifyPoP}$ by assumption G.1. By the definition of aggregatable signature 
+scheme $\mathit{AS}$, as the consequence, $\mathbf{pk_1} \in \ginn{1}^{n-1}$.\\
+
+\noindent Second proof of the induction step: Assume that statement $A(j)$ holds. 
+ Assume by contradiction that $B(j)$ does not hold, i.e., an honest validator $\mathit{HVal}$ whose key is in $\mathbf{pk_j}$ signed $m_j$ such that 
+$\mathit{IsCommitment}(m_j) = 1$ and $m_j \neq (j, \mathbf{Com}(\mathbf{pk_{j+1}}))$ (we call this property (10)).
+%where $\mathbf{pk_{j+1}}$ is the validator set for epoch $j+1$ in $C$. \\
+
+\noindent Due to assumption I.3, $\mathit{HVal}$ does not sign $m_j$ unless $\mathit{HVal}$ has a valid consensus view $C'$ deciding 
+a message $m'$ with required data $d_{m'}$ and  $m_j = (j, \mathbf{Com}(\mathit{NextEpochKeys}(m', d_{m'}))$ 
+(we call this property (11)). By (10) and (11) and the fact that the commitment scheme used to compute $\mathbf{Com}(\cdot)$ is binding,  we obtain:
+$$\mathit{NextEpochKeys}(m', r_{m'}) \neq \mathbf{pk_{j+1}} \ \ \ \ \ (12).$$
+
+%{\color{blue}\noindent Due to G.2. and by consensus assumption C.2., except with negligible probability, $C$ and $C'$ 
+%have the same validator sets, in particular $\mathbf{pk_j}$ for epoch $j$. Do we need this? How is it used? Clarify and add to text.}
+
+\noindent By assumptions I.3. and I.4, there exists in epoch $j$ of valid consensus view $C$ some decided message $m'_j$ with 
+$\mathit{epoch}_{\mathit{id}}(m'_j) = j$ and $m'_j =\mathbf{Com}(\mathbf{pk_{j+1}})$.
+Then, by assumption I.1, $m'_j$ and $m'$ are incompatible. This, in turn, contradicts assumption C.1. combined with assumption G.2. 
+since $C$ and $C'$ decided in epoch $j$ messages $m'_j$ and $m'$, respectively.
+Hence our initial assumption is false and $B(j)$ is proven to hold. And our proposition proof is complete.
+\end{proof}
+
+\noindent 
+We are now able to prove the soundness property. Given an efficient adversary $\mathcal{A}$ 
+as defined in the soundness game (Definition~\ref{scheme_light_client}) and let $(\pi, m, C)$ 
+be its corresponding output. Let $i = \mathit{epoch}_{\mathit{id}}(m)$. Assuming that 
+$$\mathit{LC.VerifyProof}(\mathit{pp}_{\mathit{LC}}, \mathit{LC.seed}, m, \mathcal{R}) = \mathit{acc}$$ and 
+$\mathit{CheckValidConsensus}(C) = 1$ and $\mathit{HonestThreshold}(t', \mathit{OGenerateKeypair}, C) = 1$, 
+then, using the proposition above, we obtain that statement $B(i-1)$ holds. Then, letting $m_i = m$ and with an analogous 
+reasoning used for proving the induction step, namely that $A(j)$ holds when $B(j)$ holds (please see proof above) we are able to conclude 
+that $m$ was signed by an honest validator only with negligible probability (q.e.d).
+\end{proof}

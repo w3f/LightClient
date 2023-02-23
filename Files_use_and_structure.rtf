@@ -1,0 +1,30 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww28600\viewh16580\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 How to use and switch easily between eprint version and a conference version of the LC paper\
+\
+1. !!! VERY IMPORTANT BEFORE FOR ANY  ANONYMOUS SUBMISSION !!!\
+- Comment out acknowledgements.tex\
+- Use anon_implementation.tex instead of implementation.tex \
+\
+\
+2. HOW TO SHORTEN THE SUBMISSION\
+-When submitting for a conference use the following files\
+short_elliptic_curves_and_pairings\
+short_multisignatures_def\
+short_snarks_def\
+\
+-Comment out section \\section\{An Accountable Light Client System\} with files \'93new_light_client_model_updated\'94 and \'93light_client_instantiation\'94 for most submissions to conferences or move to appendix.\
+-In order to shorten the Plonk compiler extension section, either 1. comment out  \\subsection\{Compiler for Hybrid Model SNARKs with Mixed Inputs\} inside no_witness_relation file and add short summary text about it and add the subsection to the appendix or \
+             								2. Keep second step (compiler_step_2 file) but use short version of first step short_step_1_compiler file	\
+\
+\
+3. OTHER\
+To comment out even more text, comment out the text marked as such (search for \'93comment\'94 in each of the following sections):\
+- intro\
+- the last section in the apk_vs_plonk_comparison especially when the LC model is not used in the submission (main body or even more so, if it\'92s not added to the appendix). \
+}
