@@ -44,24 +44,26 @@ then the corresponding light client system which defines such a light client ver
 one can design a light client system with the following properties: accountability, asynchronous safety and incrementability.  
 
 \begin{itemize}
-\item Our light client system is accountable, i.e. if the light client verifier is misled and the transcript of its communication is given to the network then one can identify a large 
-number (e.g. 1/3) of misbehaving consensus participants (i.e., misbehaving validators in our specific case). On the one hand, identifying misbehaving consensus participants 
+\item Our light client system is accountable, i.e. if the light client verifier is misled and the transcript of its communication is given to the network then one 
+can identify a large number (e.g. 1/3) of misbehaving consensus participants (i.e., misbehaving validators in our specific case). On the one hand, 
+identifying misbehaving consensus participants 
 is challenging in the light client system context when we want to send minimal data to the light client verifier. On the other hand, 
 identifying misbehaviour is necessary for any proof of stake protocols (including Polkadot and Ethereum) 
 whose security relies on identifying and punishing misbehaving consensus participants. 
-\item Our light client system is asynchronously safe i.e. under the consensus' honesty assumptions, our light client verifier cannot be misled even if it has a restricted view of the 
-network e.g. only connecting to one node, which may be malicious. This is because our light client system inherits the property of asynchronous safety from the Byzantine agreement 
+\item Our light client system is asynchronously safe i.e. under the consensus' honesty assumptions, our light client verifier cannot be misled 
+even if it has a restricted view of the network e.g. only connecting to one node, which may be malicious. This is because our light client system 
+inherits the property of asynchronous safety from the Byzantine agreement 
 protocol of the blockchain. Such light client systems would not be possible for consensus based on longest chains.  
-\item Our light client system is incremental - i.e its succinct state is incrementally updated - it is optimised to make these updates efficiently, which is particularly relevant for the bridge 
-application, as opposed to trying to optimise verifying consensus decisions from the blockchain genesis.
+\item Our light client system is incremental - i.e its succinct state is incrementally updated - it is optimised to make these updates efficiently, 
+which is particularly relevant for the bridge application, as opposed to trying to optimise verifying consensus decisions from the blockchain genesis.
 \end{itemize}
 
 %\vspace{-0.2cm}
 \paragraph{Bridge security} We note that \$1.2 billion has been stolen in attacks on insecure bridges during first 8 months of 2022 alone \cite{elliptic_harmony,elliptic_nomad}. 
 Of the top 10 crypto thefts of all times, \$1.6bn out of \$3.4bn come from bridge attacks \cite{elliptic_nomad}. Such bridges may be a weaker point, 
-compared to the security of the blockchains themselves and they carry a lot of economical value. It therefore makes sense to consider a security model for the 
-bridges that is as strong as that for the corresponding blockchains. For blockchains that have accountable safety for consensus, that means having accountable safety for bridges. 
-The most secure bridges use light client systems, e.g. Cosmos' IBC protocol \cite{IBC_paper}, but efficiency is still an 
+compared to the security of the blockchains themselves and they carry a lot of economical value. It therefore makes sense to consider a security model 
+for the bridges that is as strong as that for the corresponding blockchains. For blockchains that have accountable safety for consensus, that means 
+having accountable safety for bridges. The most secure bridges use light client systems, e.g. Cosmos' IBC protocol \cite{IBC_paper}, but efficiency is still an 
 obstacle in using on-chain light client verifiers in bridges. Recently, zkBridge~\cite{zkBridge} proposed an ultra-light client for blockchains on which validators use 
 individual ed25519 signatures, as is the case for many Cosmos chains right now. However, the goal in~\cite{zkBridge} is to create a bridge that is compatible with 
 the already existing cryptography on these chains without altering their logic. This design choice hinders to some extent the corresponding provers' efficiency. 
@@ -78,12 +80,12 @@ In Section \ref{sec_prelims}, we give cryptographic preliminaries necessary for 
 custom SNARKs and our committee key scheme and prove their security. In Section \ref{sec_light_client_model}, we give a model for a light client system and 
 the consensus system it works with, we provide a light client system instantiation and prove it satisfies the security properties according to the newly 
 introduced definitions. In Section \ref{sec_implementation}, we describe and give benchmarks for our custom SNARKs implementations. We conclude in 
-Section~\ref{conclusions}. Our paper includes an extensive appendix as follows. In Section~\ref{supplementary_poly_protocols_appendix} 
-we remind and further refine the definition of ranged polynomial protocols for NP relations, in 
-Sections~\ref{supplementary_proof_sec_cks}, \ref{supplementary_proof_sec_soundness}, \ref{supplementary_proof_sec_accountability}, \ref{sec:missing_snark_proofs} 
-we include in detail all the postponed security proofs, in Section~\ref{suplementary_plonk_comparison} we give a detailed comparison between 
-PLONK universal SNARK and our custom designed SNARKs. Finally, Section~\ref{sec:rolled_out} contains, for the reader's benefit, 
-one of our full rolled out S(N)ARKs. 
+Section~\ref{conclusions}. Our paper includes an extensive appendix as follows. In Section~\ref{sec:ethereum} we give the intuition on how to apply our 
+bridge to Ethereum. In Section~\ref{supplementary_poly_protocols_appendix} we remind and further refine the definition of ranged polynomial protocols for 
+NP relations, in Sections~\ref{sec:missing_snark_proofs}, \ref{supplementary_proof_sec_cks}, \ref{supplementary_proof_sec_soundness}, 
+\ref{supplementary_proof_sec_accountability}, we include in detail all the postponed security proofs, in Section~\ref{suplementary_plonk_comparison} 
+we give a detailed comparison between PLONK universal SNARK and our custom designed SNARKs. Finally, Section~\ref{sec:rolled_out} contains, 
+for the reader's benefit, one of our full rolled out S(N)ARKs. 
 %\vspace{-0.25cm}
 \section{Our Solution} 
 \label{sec:sketch}
@@ -225,9 +227,9 @@ and we believe this compiler extension to be of independent interest.
 \paragraph{Conditional NP Relations for Efficiency} Secondly, we also require NP relations that have a well-defined subpredicate which is verified outside the SNARKs. 
 In a blockchain instantiation, any current validator set has to come to a consensus, among other things, on the next validator set, represented by a set of public keys. 
 The validator set computes and signs a pair of polynomial commitments to the next set of validators' public keys\footnote{In fact, the pair of commitments are 
-polynomial commitments to the interpolation polynomials (over an appropriately chosen cyclic subgroup) to the $x$ and, respectively, to the $y$ coordinates of the validators' public keys. 
-In turn, as detailed in Section~\ref{sec:snarks}, these polynomials are needed to efficiently arithmetise the incomplete addition formula for elliptic curve points and, thus, efficiently aggregate the public keys 
-of the validators who sign consensus messages in each epoch.}. Before including a public key in the set, 
+polynomial commitments to the interpolation polynomials (over an appropriately chosen cyclic subgroup) to the $x$ and, respectively, to the $y$ coordinates of 
+the validators' public keys. In turn, as detailed in Section~\ref{sec:snarks}, these polynomials are needed to efficiently arithmetise the incomplete addition formula 
+for elliptic curve points and, thus, efficiently aggregate the public keys of the validators who sign consensus messages in each epoch.}. Before including a public key in the set, 
 the validators perform several checks on the proposed public key, such as being in a particular subgroup of the elliptic curve. This check is not performed by the SNARKs' constraint 
 system, but is required for the correctness of the statement the SNARKs prove. This design decision makes our SNARKs more efficient, but it also means we have to extend the 
 usual definition of NP relations to conditional NP relations, where in fact, one of the subpredicates that define the conditional relation is checked outside the SNARKs 
@@ -302,16 +304,17 @@ Their protocol is not accountable because, as with Dfinity above, it is not poss
 
 %\vspace{-0.2cm}
 \paragraph{Mina} achieves light clients with $O(1)$ sized light client proofs using recursive SNARKs. This requires some nodes have a large 
-computational overhead to produce these proofs. Also because this requires verifying consensus with small circuits, they do not use the consensus paradigm 
-discussed above where a majority of validators sign, and instead use a longest chain rule version of proof of stake~\cite{mina}. 
-Their protocol is not accountable because, as with Dfinity above, it is not possible to tell from the proof which validators signed off on a fork, nor when this happened. 
-Another downside is that because the proof only shows the length of a chain (and its block density), similar to a SPV proof in Bitcoin~\cite{bitcoin}, a light client needs to be connected to an 
-honest node to tell if a block is in the longest chain. If the client is connected to a single malicious node, it could be given a proof for a shorter fork and not see any proofs of chains the fork choice rule would prefer.
+computational overhead to produce these proofs. Also because this requires verifying consensus with small circuits, they do not use the consensus 
+paradigm discussed above where a majority of validators sign, and instead use a longest chain rule version of proof of stake~\cite{mina}. 
+Their protocol is not accountable because, as with Dfinity above, it is not possible to tell from the proof which validators signed off on a fork, 
+nor when this happened. Another downside is that because the proof only shows the length of a chain (and its block density), similar to a SPV 
+proof in Bitcoin~\cite{bitcoin}, a light client needs to be connected to an honest node to tell if a block is in the longest chain. If the client is connected 
+to a single malicious node, it could be given a proof for a shorter fork and not see any proofs of chains the fork choice rule would prefer.
 %\vspace{-0.2cm}
 \subsubsection{Commit-and-Prove and Related Approaches}
 \label{sec:commit_prove}
 
-\noindent Our custom SNARKs are an instance of the commit-and-prove paradigm~\cite{KilianPhD,CLOS02,CP_proposal,HP_paper} 
+\paragraph{Commit-and-Prove} Our custom SNARKs are an instance of the commit-and-prove paradigm~\cite{KilianPhD,CLOS02,CP_proposal,HP_paper} 
 which is a generalisation for zero-knowledge proofs/arguments in which the prover proves statements about values that are committed. 
 In practice, commit-and-prove systems (for short, CP) can be used to compress a large data structure and then prove something about its content 
 (e.g., polynomial commitments~\cite{KZG_10}, vector commitments~\cite{vector_commitment_1}, accumulators~\cite{first_accumulator}). CP schemes 
@@ -319,31 +322,30 @@ can also be used to decouple the publishing of commitments to some data from the
 parties or entities~\cite{zkp_reference}. Finally, commitments can be used to make different proof systems interoperable~\cite{CP_paper,interoperability_2}. 
 Our custom design SNARKs have properties from the first two categories, however we could not have simply re-used an existing argument system: by 
 designing custom circuits and SNARKs, we ensured improved efficiency for our use cases. \\
-
-
-%The paragraph below was a comment/was commented out when shortening the paper.
-\noindent Another paradigm related to commit-and-prove is called hash-and-prove~\cite{HP_paper}: for large data structures or simply data that is expensive to be 
-handled directly by a computationally constrained verifier, one can hash that data and then create a (succinct) proof for some verifiable computation that uses 
-the original, large, dataset. The committee key scheme notion that we define in this work has both similarities to but also differences with regard to this 
-paradigm. The similarities are that, both the way we instantiate our committee key (i.e., using a polynomial commitment 
-with a trusted universal setup) and the way we instantiate our aggregate public key, can be generalised as some form of (possibly deterministic) 
+\vspace{-0.2cm}
+\paragraph{Hash-and-Prove} Another paradigm related to commit-and-prove is called hash-and-prove~\cite{HP_paper}: for large data structures or simply data that is 
+expensive to be handled directly by a computationally constrained verifier, one can hash that data and then create a (succinct) proof for some 
+verifiable computation that uses the original, large, dataset. The committee key scheme notion that we define in this work has both similarities 
+to but also differences with regard to this paradigm. The similarities are that, both the way we instantiate our committee key (i.e., using a polynomial 
+commitment with a trusted universal setup) and the way we instantiate our aggregate public key, can be generalised as some form of (possibly deterministic) 
 hash function. One difference is that the setup for the polynomial commitment is the same as that from which the proving and verification key for our committee key scheme are 
 computed; thus our version of the hashes and the keys for the committee key scheme are definitely not independent as in the case of hash-and-commit~\cite{HP_paper}. Finally, 
 built into our definition of committee key scheme and its security properties, we make use of a secure aggregatable signature scheme. This, in turn, allows us to design and 
 prove the security properties of our accountable light client(s). In fact, to add some intuition to the fact that a committee key scheme is more than 
 just a hash-and-prove instance, we mention that our committee key scheme inherits an unforgeability property from its aggregatable scheme subcomponent. 
 This is one property that as far as we are aware no hash-and-prove scheme has. \\
-
-\noindent When proving the security of our arguments, we use an extension of some of the more commonly employed SNARK definitions; we call this extension ``a hybrid model SNARK''. 
-Our notion resembles the existing notion of SNARKs with online-offline verifiers as described in~\cite{HP_paper}, where the verifier computation is split into 
-two parts: during the offline phase some computation (possibly of commitments) happens; this computation takes some public inputs as parameters and, when not 
-performed by the verifier, it may also be performed (in part) by the prover. The online phase is the main computation performed by the verifier. In the case of our hybrid 
-model SNARKs, however, the input to the offline counterpart described above (which is what we call the $\mathit{PartInput}$ algorithm) may even be the witness or 
-a part of the witness for the respective relation. For our custom SNARKs, $\mathit{PartInput}$ produces part of the public input used by the verifier; 
-since for our use case, $\mathit{PartInput}$ does handle a portion of the witness, this operation cannot be performed by the verifier for that relation. 
-Moreover, in our instantiation, $\mathit{PartInput}$ produces computationally binding commitment schemes that are opened by the prover. Both of these properties 
-are not explicitly part of our general definition for hybrid model SNARKs, but they are crucial and explicitly assumed and used 
-in proving the security for the result of our compiler's second step (see Section~\ref{sec_two_step_compiler}).
+\vspace{-0.2cm}
+\paragraph{SNARKs with Online-Offline Verifiers} When proving the security of our arguments, we use an extension of some of the more commonly 
+employed SNARK definitions; we call this extension ``a hybrid model SNARK''. Our notion resembles the existing notion of SNARKs with online-offline 
+verifiers as described in~\cite{HP_paper}, where the verifier computation is split into two parts: during the offline phase some computation (possibly of 
+commitments) happens; this computation takes some public inputs as parameters and, when not performed by the verifier, it may also be performed 
+(in part) by the prover. The online phase is the main computation performed by the verifier. In the case of our hybrid model SNARKs, however, the 
+input to the offline counterpart described above (which is what we call the $\mathit{PartInput}$ algorithm) may even be the witness or a part of the 
+witness for the respective relation. For our custom SNARKs, $\mathit{PartInput}$ produces part of the public input used by the verifier; since for our 
+use case, $\mathit{PartInput}$ does handle a portion of the witness, this operation cannot be performed by the verifier for that relation. Moreover, 
+in our instantiation, $\mathit{PartInput}$ produces computationally binding commitment schemes that are opened by the prover. Both of these 
+properties are not explicitly part of our general definition for hybrid model SNARKs, but they are crucial and explicitly assumed and used in proving 
+the security for the result of our compiler's second step (see Section~\ref{sec_two_step_compiler}).
 
 %\begin{comment}
 %\subsection{BLS multisignatures} \label{ssec:BLS}
