@@ -151,7 +151,7 @@ with the claimed set of signers and so the full node should be able to report th
 which doesn't correspond to the claimed epoch's validator set, then at some point previously the light client proof must have shown that the committee key for some correct validator set signed 
 the wrong committee key for the next set which is a message that is incompatible with the correct committee key that they signed on the real chain. {\color{red}Note that the accountability of 
 our light client system instantiation relies on the accountability of the underlying consensus protocol. Indeed, our light client is accountable only if signatures on incompatible messages 
-are enough for consensus accountability e.g., in Casper FFG~\cite{CasperFFG} and it is not directly applicable to consensus protocols where forensics are required for accountability e.g. 
+are enough for consensus accountability e.g., in Casper FFG~\cite{CasperFFG} and it is not directly applicable to consensus protocols where forensics (such as in~\cite{forensics}) are required for accountability e.g. 
 Polkadot's GRANDPA, Section 4.1~\cite{GRANDPA}. If the consensus protocol is not accountable with signatures, then the consensus protocol needs to 
 be modified, e.g., by adding another layer, BEEFY~\cite{BEEFY}.}
 \vspace{-0.05in}

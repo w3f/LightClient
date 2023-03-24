@@ -70,8 +70,16 @@ We denote by $\mathbb{B} = \{0,1\} \subset \mathbb{F}$. \\
 \end{split}
 \end{equation*}
 \vspace{-0.008in}
-\noindent where $\mathbf{pk} = (\mathit{pk_0}, \ldots, \mathit{pk_{n-2}})$ and $\mathbf{bit} = (\mathit{bit_0}, \ldots, \mathit{bit_{n-1}})$. 
-\noindent Next we use the following polynomials and polynomial identities: \\
+\noindent where $\mathbf{pk} = (\mathit{pk_0}, \ldots, \mathit{pk_{n-2}})$ and $\mathbf{bit} = (\mathit{bit_0}, \ldots, \mathit{bit_{n-1}})$.\\ 
+
+\noindent{\color{red} Next, we introduce the following Lagrange interpolation polynomials of degree at most $n-1 = |H|$ over the cyclic group $H$ (see Section~\ref{sec:lagrange}): 
+$b(X)$ - interpolates the bits of the bitvector $\mathit{bit}$; $pkx(X)$, $pky(X)$ - interpolate all public keys' 
+$x$ and $y$ coordinates, respectively; $kaccx(X)$, $kaccy(X)$ - interpolate the $x$ and $y$ coordinates, respectively, 
+of the iterative sum of the actual signing validators' public keys. We also define five polynomial identities $id_1(X), \ldots, id_5(X)$ supporting the following intuition: $id_1(X)$, $id_2(X)$ 
+ensure the $x$ and, respectively, the $y$ coordinates of the partial sum of actual signing validators public keys follows formulas $(\ast)$, $(\ast\ast)$ from Observation 1; $id_3(X)$, $id_4(X)$ 
+ensure first partial aggregate sum is $h$ and the total sum is $h + \mathit{apk}$; this is necessary in order to ensure the addition of the public keys (which are elliptic curve points) 
+never falls into case c) defined in Observation 1; $id_5(X)$ ensures $b(X)$ evaluates to bits over $H$. Together, polynomial identities $id_1(X)$ to $id_4(X)$ are necessary 
+to define the corresponding $H$-ranged polynomial protocol $\Pla$ for relation $\Rla$. In more detail, we have:}  \\
 
 \noindent \textsf{Polynomials as Computed by Honest Parties} 
 \begin{align*}
@@ -129,7 +137,7 @@ conditional NP relation $\Rla$. For this, we first prove:
 \vspace{-0.05in}
 \begin{test_claim} Assume that $\forall i < n-1$ such that $\mathit{bit}_i = 1$, $pk_i = (pkx_i, pky_i) \in \ginn{1}$. 
 If polynomial identities $id_i(X) = 0, \forall i \in [5],$ hold over range 
-$H$ and and the polynomial $b(X)$ has been constructed via interpolation on $H$ such that $b(\omega^i) = \mathit{bit}_i, \forall i <n$ then $\mathit{bit}_i \in \mathbb{B} = \{0,1\} \subset \mathbb{F}, \forall i <n$ \\
+$H$ and the polynomial $b(X)$ has been constructed via interpolation on $H$ such that $b(\omega^i) = \mathit{bit}_i, \forall i <n$ then $\mathit{bit}_i \in \mathbb{B} = \{0,1\} \subset \mathbb{F}, \forall i <n$ \\
 $(kaccx_{0}, kaccy_{0}) = (h_x, h_y)$, $(kaccx_{n-1}, kaccy_{n-1}) = (h_x, h_y)\\ \oplus (apk_x, apk_y)$, 
 $(kaccx_{i+1}, kaccy_{i+1}) =  (kaccx_{i}, kaccy_{i}) \oplus \mathit{bit}_i(pkx_{i}, pky_{i})$, $\forall i < n-1$.
 %where in the last relation $\mathit{bit_i}$ should not be interpreted as a field element but as a binary bit
@@ -142,7 +150,7 @@ $id_3(X) =0, id_4(X )= 0, id_5(X) = 0$ holding over $H$. To prove the remaining 
 the incomplete addition formulae for curve points in affine coordinates, over elliptic curve in short Weierstrasse form and state:\\ 
 \vspace{-0.1in}
 
-\noindent \textit{Observation:} Suppose that $\mathit{bit} \in \{0,1\}$, $(x_1,y_1)$ is a point on an elliptic curve in 
+\noindent \textit{Observation 1:} \label{obs} Suppose that $\mathit{bit} \in \{0,1\}$, $(x_1,y_1)$ is a point on an elliptic curve in 
 short Weierstrasse form, and, if $\mathit{bit} = 1$, so is $(x_2,y_2)$. We claim that the following equations: 
 \begin{align*}
 &\mathit{bit}((x_1 - x_2)^2 (x_1 + x_2 + x_3) - (y_2 - y_1)^2 ) + (1 - \mathit{bit})(y_3 - y_1) \\ & =0 \ (\ast)\\
