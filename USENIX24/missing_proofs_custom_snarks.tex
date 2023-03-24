@@ -1,0 +1,82 @@
+\section{Postponed Proofs for Packed Accountable Ranged Polynomial Protocol}
+\label{sec:missing_snark_proofs}
+
+\noindent We give below the missing proofs from Section~\ref{sec_a}:
+
+\begin{test_claim}
+\label{claim:bitvector_comm}
+If the polynomial identities $id_6(X) = 0, id_7(X) = 0$ hold over range $H$, then, 
+\ewnp, 
+we have $c_{a,i} =  2^{i \mod \block} \cdot r^{i \div \block}$, $\forall i < n$ and $\mathsf{sum} = \sum_{i=0}^{n-1}b_i \cdot c_{a,i}$, 
+where $b_i = b(\omega^i), \forall i <n$. If, additionally, identity $id_5(X) = 0$ holds over $H$, 
+$r$ has been randomly chosen in $\mathbb{F}$, $\mathsf{sum} = \sum_{j=0}^{\frac{n}{\block}-1} b'_{j}r^j$ 
+(as computed by $\mathcal{V}_{poly}$) and $\mathit{bit_{i}} \in \mathbb{B}, \forall i < n$ and 
+$b'_{j} = \sum_{k=0}^{\block -1}2^k \cdot \mathit{bit_{\block \cdot j + k}}, \forall 0 \leq j \leq \frac{n}{\block} -1$ 
+(due to the input $(b'_{0}, \ldots, b'^{\frac{n}{\block} -1})$ 
+being interpreted by the verifier $\mathcal{V}_{poly}$ as in $\mathbb{F}_{|\block|}^{\frac{n}{\block}}$), then \ewnp, 
+$b_i = \mathit{bit_{i}}, \forall i <n$.
+\end{test_claim}
+
+\begin{proof}
+To prove the first part of the claim, assume by contradiction that $c_{a,0} = k  \neq 1$. 
+Then, by induction, since $id_6(X) = 0$ on $H$, 
+$$c_{a,i} = k \cdot 2^{i \mod \block} \cdot r^{i \div \block}, \forall 0<i<n.$$ 
+Additionally, the property
+\begin{align*} 
+c_{a,0} = c_{a,n-1} \cdot (2+ (\frac{r}{2^{\block -1}} -2) \cdot 1) + (1 - r^{\frac{n}{\block}}) \tag{1}
+\end{align*}  
+\noindent holds (again, from $id_6(X) = 0$ on $H$). However, substituting $c_{a,0} = k$ 
+and $c_{a,n-1} = k \cdot 2^{\block -1} \cdot r^{\frac{n}{\block} -1}$ in $(1)$, we obtain 
+$k = k \cdot 2^{\block -1} \cdot r^{\frac{n}{\block} -1} \cdot \frac{r}{2^{\block -1}} +1 - r^{\frac{n}{\block}}$ which is equivalent to 
+$k(1 - r^{\frac{n}{\block}}) = 1 - r^{\frac{n}{\block}}$, and, due to Schwartz-Zippel Lemma and the fact that degree $n$ is negligibly 
+smaller compared to the size of $\mathbb{F}$, this implies \ewnp $k =1$ thus contradiction,
+so the values $c_{a,i}$ have indeed the claimed form. \\
+Next, by expanding $id_7(X) = 0$ over $H$, the following holds
+\begin{align*}
+acc_{a,1} &= acc_{a,0} + b_0 \cdot c_{a,0} \\
+acc_{a,2} &= acc_{a,1} + b_1\cdot c_{a,1} \\
+\ldots \\
+acc_{a,n-1} &= acc_{a,n-2} + b_{n-2} \cdot c_{a,n-2} \\
+acc_{a,0} &= acc_{a,n-1} + b_{n-1} \cdot c_{a,n-1} - \mathsf{sum}.
+\end{align*}
+
+\noindent By summing together the LHS and, respectively, the RHS of the equalities above and 
+reducing the equal terms, we obtain $\mathsf{sum} = \sum_{i=0}^{n-1}b_i\cdot c_{a,i}$. \\
+
+\noindent For the second part of the claim, since $id_5(X) = 0$ holds over $H$ then 
+$b_i = b(\omega^i) \in \mathbb{B}, \forall i \leq n-1$. Finally, from 
+verifier's computation and from the first part of the claim we have 
+\begin{align*}
+\sum_{j=0}^{\frac{n}{\block}-1} b'_{j}r^j = \mathsf{sum} =  \sum_{i=0}^{n-1} b_i \cdot c_{a,i} & = \sum_{i=0}^{n-1} b_i \cdot 2^{i \mod \block} \cdot r^{i \div \block} = \\
+&= \sum_{j=0}^{\frac{n}{\block} -1} (\sum_{k=0}^{\block -1} 2^k \cdot b_{\block\cdot j +k}) \cdot r^j = \sum_{j=0}^{\frac{n}{\block} -1} b''_{j}r^j \tag{2},
+\end{align*}
+where $\forall j, b''_{j}$ are field elements equal to the binary representation that uses contiguous blocks 
+of $\block$ components from the bitmask $(\mathit{b}_0, \ldots, \mathit{b}_{n-1})$.
+Since both the LHS and the RHS of relation (2) represent two ways of computing $\mathsf{sum}$ as an inner product of a vector 
+of field elements (on one hand, $(\mathit{b'_{0}}, \ldots, \mathit{b'_{\frac{n}{\block}-1}})$, on the other hand, 
+$(\mathit{b''_{0}}, \ldots, \mathit{b''_{\frac{n}{\block}-1}})$ ) with the vector $(1, r, \ldots, r^{\frac{n}{\block}-1})$, 
+where $r$ has been chosen at random, by the small exponents test \cite{small_exponents}, we obtain that \ewnp 
+$\mathit{b''_{j}} = \mathit{b'_{j}}, \\ \forall \ 0 \leq j\leq \frac{n}{\block}-1$. Finally, if we equate the bit representation in $\mathbb{F}$ 
+(i.e., using field elements from $\mathbb{B}$) of field elements $\mathit{b''_{j}}$ and $\mathit{b'_{j}}, \forall 0\leq j\leq \frac{n}{\block}-1$ and remember that, 
+by verifier's check or by construction, respectively, each such field element has no more that \block binary bits, we can conclude that \ewnp 
+$b_i = \mathit{bit_i}, \forall i <n$.
+\end{proof}
+
+\begin{lemma} 
+$\Pa$ as described in Section~\ref{sec_a} is an $H$-ranged polynomial protocol for conditional NP relation $\Ra$.
+\end{lemma}
+
+\begin{proof} 
+If $(\mathbf{b'}, \mathbf{pk}, \mathit{apk}, \mathbf{bit}) \in \Ra$, meaning that 
+$\mathbf{pk} \in \ginn{1}^{n-1}$ and $\mathbf{bit} \in \mathbb{B}^n$ and $\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i}$ and 
+ $b'_{j} = \sum_{i=0}^{\block -1}2^i \cdot \mathit{bit_{\block \cdot j + i}}, \forall j < \frac{n}{\block}$ 
+hold then it is easy to see that the honest prover $\mathcal{P}_{poly}$ in $\Pa$ will convince the honest 
+verifier $\mathcal{V}_{poly}$ in $\Pa$ to accept with probability $1$ so perfect completeness holds. Regarding knowledge-soundness, if the verifier $\mathcal{V}_{poly}$ in $\Pa$ accepts, 
+then the extractor $\mathcal{E}$ sets $(\mathit{bit}_0, \ldots, \mathit{bit}_{n-1})$ as the vector of evaluations over $H$ of polynomial $b(X)$ sent by $\mathcal{P}_{poly}$ 
+to $\mathcal{I}$. Next, we prove that if $(\mathit{pk_0}, \ldots, \mathit{pk_{n-2}}) \in \ginn{1}^{n-1}$ and the verifier in $\Pa$ accepts, 
+then $$((\mathit{b'_{0}}, \ldots, \mathit{b'_{\frac{n}{\block}-1}}), (\mathit{pk_0}, \ldots, \mathit{pk_{n-2}}), \mathit{apk}, (\mathit{bit}_0, \ldots, \mathit{bit}_{n-1})) \in \Ra,$$ 
+which is equivalent to proving that  $\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i}$ and 
+ $\mathbf{bit} \in \mathbb{B}^n$ and  $$b'_{j} = \sum_{i=0}^{\block -1}2^i \cdot \mathit{bit_{\block \cdot j + i}}, \forall j < \frac{n}{\block}.$$
+
+According to Claim~\ref{claim:bitvector_comm} and corollary~\ref{corollary:keys_affine_comm} this indeed holds \ewnp
+\end{proof}

@@ -1,0 +1,28 @@
+%\subsection{Conventions}
+%\label{sec:conventions}
+%\vspace{-0.03in}
+\noindent We assume all algorithms receive an implicit security parameter $\lambda$. 
+An efficient algorithm is one that runs in uniform probabilistic polynomial time(PPT) in the length of its input and $\lambda$. 
+%{\color{blue} Every input to each of our algorithms apart from the message in our BLS (multi)signature 
+%has at most polynomial length in the security parameter. If the length of that message would be polynomially bounded we could then just say that 
+%that ``efficient algorithm means an algorithm that runs in polynomial time in the security parameter".}
+%When we say that $A$ is an efficient adversary we mean that $A$ is a family $\{A_{\lambda}\}_{\lambda \in \mathbb{N}}$ 
+%of non-uniform polynomial-size circuits. If the adversary consists of multiple circuit families $A_1, A_2, \ldots$, then we write $A = (A_1, A_2, \ldots)$. 
+We assume the correct parameters for the curves, groups, pairings, the group generators, etc. have been generated and shared with all parties before running any algorithm or protocol. 
+A function $f(\lambda)$ is negligible in $\lambda$, written as $\mathit{negl}(\lambda)$, if $1/f(\lambda)$ grows faster than 
+any polynomial in $\lambda$ and is overwhelming in $\lambda$ if $1-f(\lambda)=\mathit{negl}(\lambda)$. $\mathsf{poly}(\lambda)$ 
+is some polynomial in $\lambda$ and \ewnp means except with probability $\mathit{negl}(\lambda)$.
+We write $y = A(x; r)$ when algorithm $A$ on input $x$ and randomness $r$, outputs $y$.
+We write $y \leftarrow A(x)$ for picking randomness $r$ uniformly at random and setting $y = A(x; r)$. We denote by $|S|$ the cardinality of set $S$. 
+%Unless otherwise stated, when we write that an event holds with some probability, we implicitly mean 
+%that the probability is computed over the randomness of all randomised algorithms involved.
+%We say a function is negligible in $\lambda$ and denote it by $\mathit{negl}(\lambda)$ if that function vanishes faster than the inverse of any polynomial in $\lambda$. 
+%We say that a function is overwhelming in $\lambda$ if it has the form $1- $ some function negligible in $\lambda$. 
+%We also use the notation \ewnp to mean except with negligible probability, or, equivalently, with overwhelming probability. We denote by $\mathsf{poly}(\lambda)$ an  
+%unspecified function which has a polynomial expression in $\lambda$. 
+%We generally use boldface font to denote vectors whose components we explicitly make use of in the text and 
+%we use italic font to denote the rest of the variables.
+%We work over finite fields of large characteristic. 
+$\mathbb{F}_{<d}[X]$ is the set of all polynomials of degree less than $d$ over the field $\mathbb{F}$. For any integer 
+$n \geq 1$, we denote by $[n]$ the set $\{1, \ldots, n\}$.
+\vspace{-0.015in}

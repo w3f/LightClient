@@ -1,0 +1,68 @@
+%\vspace{-0.2cm}
+\noindent We implemented and benchmarked the protocol. The implementation allows us to evaluate the performance of our protocol and serve as prototype for future deployment. The implementation 
+is open source and publicly available at \url{https://github.com/CCS23-anonymous/light-client}. It is written in Rust and uses the Arkworks library. \\
+
+%\vspace{-0.1cm}
+\noindent Table \ref{tab:benchmarks} gives the prover and verifier time for the two SNARK schemes (basic accountable and  packed accountable, see Section~\ref{sec:snarks}) with $v = n-1 = 2^{10}-1$, $v = n-1 = 2^{16}-1$ 
+and $v=n-1=2^{20}-1$ signers. The benchmarks were run on commodity hardware, with an 2.2 GHz i7 and 16GB RAM. We remind the reader that by $v$ we denote the maximum number of validators in our system and that $n$ was defined in Section~\ref{sec:lagrange}.\\
+
+%\begin{center}
+\begin{table*}[h!]
+\hfill
+\begin{tabular}{| l | l | l | l | l |l | l |}
+\hline
+ Scheme & \multicolumn{2}{|c|}{$v = 2^{10}-1$} & \multicolumn{2}{|c|}{$v = 2^{16}-1$} & \multicolumn{2}{|c|}{$v = 2^{20}-1$}     \\
+\cline{2-7}
+ &  prover & verifier & prover & verifier &  prover & verifier \\
+\hline
+
+Basic Accountable & 564ms & 26ms & 22s & 46ms & 332s & 231ms \\
+Packed Accountable & 830ms & 29ms & 31s & 33ms & 447s & 57ms \\
+%Counting            & 761ms & 27ms & 31s & 30ms & 692s & 107ms \\
+\hline
+\end{tabular}
+%\setlength{\belowcaptionskip}{-0.5cm}
+\caption{Proof and verifier times for the different schemes and numbers of signers}
+\label{tab:benchmarks}
+\end{table*}
+%\end{center}
+
+%\vspace{-0.2cm}
+\noindent These signer numbers are approximately the range of the number of validators that we aimed our implementation at e.g. the Kusama blockchain (\url{https://kusama.network/}) has 1000 validators which is also the number that Polkadot is aiming for, and Ethereum 2 has about 348,000 validators and it has been suggested that there will be no more than $2^{19}$~\cite{ethresearch1}. \\
+
+\noindent At $v = n-1 = 1023$, the prover can generate a proof in any scheme in well under a second, which is short enough to generate a proof for every block in most prominent blockchains. Even for $v= n-1 =2^{20}-1$, the prover time is under 6.4 minutes, the time for an Ethereum 2 epoch, the time that validators finalise the chain. For verification time, the basic accountable scheme is slower, considerably so for larger signer numbers. \\
+
+\noindent  Table \ref{tab:operations} gives the number of operations the prover and verifier use. Table \ref{tab:proof-size} gives the proof constituents and also the total proof and input sizes in bits. The basic accountable scheme's verifier performance at large numbers is so slow because it includes $O(n)$ field operations, which dominate the running time, however at 1023 signers it gives the smallest size. The packed accountable scheme, which includes $O(n/\lambda)$ field operations, fairs better on the benchmarks for large signer sets. The prover is considerably slower for the latter scheme because it needs to do additional operations. At larger signer sizes, the proof size  is dominated by the bitfield.
+
+%\vspace{-0.1in}
+\begin{table*}[h!]
+\hfill
+\begin{tabular}{| l | l| l| l|}
+\hline
+Scheme & Prover operations  &Verifier operations \\
+\hline
+Basic Accountable & $12\times FFT(N)+FFT(4N)+9ME(N)$  & $2P+11E+O(n)F$ \\
+Packed Accountable & $18\times FFT(N)+FFT(4N)+12ME(N)$  & $2P+16E+O(n/\lambda+log(n))F$ \\
+%Counting & $13\times FFT(N)+FFT(4N)+11ME(N)$  & $2P+14E+O(log(n))F$ \\
+\hline
+\end{tabular}
+%\setlength{\belowcaptionskip}{-1cm}
+\caption{Expensive prover and verifier operations. $FFT(M)$ is an FFT of size M. $ME(M)$ is a  multi-scalar multiplication of size $M$. $P$ is a pairing, $E$ is a single scalar multiplication and $F$ is a field operation.}
+\label{tab:operations}
+%\end{table*}
+\vspace{-0.1in}
+%\begin{table*}[h!]
+\begin{tabular}{| l | l | l | l | l | l |}
+\hline
+Scheme & Proof & Input & \multicolumn{3}{|c|}{Actual proof + input size in bits} \\
+\cline{4-6}
+& & & $v = 2^{10}-1$ & $v = 2^{16}-1$ & $v = 2^{20}-1$ \\
+\hline
+Basic Accountable & $5\mathbb{G}_{1,out}+5\mathbb{F}$ & $2\mathbb{G}_{1,out}+1\mathbb{G}_{1,inn}+n$ bits & 9088 & 73600 & 1056640 \\
+Packed Accountable & $8\mathbb{G}_{1,out}+8\mathbb{F}$ & $2\mathbb{G}_{1,out}+1\mathbb{G}_{1,inn}+n$ bits & 12544 & 77056 & 1060096 \\
+%Counting &  $7\mathbb{G}_{1,out}+7\mathbb{F}$ & $2\mathbb{G}_{1,out}+1\mathbb{G}_{1,inn}$ & 10368  & 10368  & 10368 \\
+\hline
+\end{tabular}
+\caption{Proof/input constituents and total proof/input size for implementation.}
+\label{tab:proof-size}
+\end{table*}
