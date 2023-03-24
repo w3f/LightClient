@@ -72,18 +72,24 @@ We denote by $\mathbb{B} = \{0,1\} \subset \mathbb{F}$. \\
 \vspace{-0.008in}
 \noindent where $\mathbf{pk} = (\mathit{pk_0}, \ldots, \mathit{pk_{n-2}})$ and $\mathbf{bit} = (\mathit{bit_0}, \ldots, \mathit{bit_{n-1}})$.\\ 
 
-\noindent{\color{red} Next, we introduce the following Lagrange interpolation polynomials of degree at most $n-1 = |H|$ over the cyclic group $H$ (see Section~\ref{sec:lagrange}): 
-$b(X)$ - interpolates the bits of the bitvector $\mathit{bit}$; $pkx(X)$, $pky(X)$ - interpolate all public keys' 
-$x$ and $y$ coordinates, respectively; $kaccx(X)$, $kaccy(X)$ - interpolate the $x$ and $y$ coordinates, respectively, 
-of the iterative sum of the actual signing validators' public keys. We also define five polynomial identities $id_1(X), \ldots, id_5(X)$ supporting the following intuition: $id_1(X)$, $id_2(X)$ 
-ensure the $x$ and, respectively, the $y$ coordinates of the partial sum of actual signing validators public keys follows formulas $(\ast)$, $(\ast\ast)$ from Observation 1; $id_3(X)$, $id_4(X)$ 
-ensure first partial aggregate sum is $h$ and the total sum is $h + \mathit{apk}$; this is necessary in order to ensure the addition of the public keys (which are elliptic curve points) 
-never falls into case c) defined in Observation 1; $id_5(X)$ ensures $b(X)$ evaluates to bits over $H$. Together, polynomial identities $id_1(X)$ to $id_4(X)$ are necessary 
-to define the corresponding $H$-ranged polynomial protocol $\Pla$ for relation $\Rla$. In more detail, we have:}  \\
+\noindent{\color{red} Next, we introduce the following Lagrange interpolation polynomials of degree at most $n-1 = |H|$ over cyclic group $H$ (Section~\ref{sec:lagrange}): 
+$b(X)$ - interpolates the bits of bitvector $\mathit{bit}$; $pkx(X)$, $pky(X)$ - interpolate all public keys' 
+$x$ and $y$ coordinates, respectively; $kaccx(X)$, $kaccy(X)$ - interpolate $x$ and $y$ coordinates, respectively, 
+of the iterative partial aggregate sum of the actual signing validators' public keys. We also define five polynomial identities $id_1(X), \ldots, id_5(X)$ supporting the following intuition: $id_1(X)$, $id_2(X)$ 
+ensure the $x$ and, respectively, the $y$ coordinates of the iterative partial aggregate sums of actual signing validators public keys (up to each index $i \leq n-2$) 
+follow formulas $(\ast)$, $(\ast\ast)$ from Observation 1 which gives all possible cases of 
+complete curve point addition when the second curve point is multiplied by a bit; $id_3(X)$, $id_4(X)$ 
+ensure first partial aggregate sum is $h$ and the total aggregate sum is $h + \mathit{apk}$; this is necessary in order to ensure the addition of the public keys (i.e., elliptic curve points) 
+never falls into condition (3) defined in Observation 1, which recursively implies the partial aggregate sum at every step is a well defined curve point; 
+$id_5(X)$ ensures $b(X)$ evaluates to bits over $H$. Together, $id_1(X)$ to $id_4(X)$ define 
+the $H$-ranged polynomial protocol $\Pla$ for relation $\Rla$; $id_5(X)$ will be used to prove a more general result, applicable also for the 
+$H$-ranged polynomial protocol $\Pa$ for relation $\Ra$ (Section~\ref{sec_a}). In more detail, we have:}  \\
 
 \noindent \textsf{Polynomials as Computed by Honest Parties} 
+\vspace{-0.1cm}
 \begin{align*}
-&\mathsf{b(X)} = \sum_{i=0}^{n-1} \mathit{bit_i} \cdot \mathsf{L_i(X)}; \mathsf{pkx(X)} =  \sum_{i=0}^{n-2} \mathit{pkx_i} \cdot \mathsf{L_i(X)}; \mathsf{pky(X)} \\ &=  \sum_{i=0}^{n-2} \mathit{pky_i} \cdot \mathsf{L_i(X)} \\
+&\mathsf{b(X)} = \sum_{i=0}^{n-1} \mathit{bit_i} \cdot \mathsf{L_i(X)}; \\ 
+& \mathsf{pkx(X)} =  \sum_{i=0}^{n-2} \mathit{pkx_i} \cdot \mathsf{L_i(X)}; \mathsf{pky(X)} =  \sum_{i=0}^{n-2} \mathit{pky_i} \cdot \mathsf{L_i(X)} \\
 &\mathsf{kaccx(X)}  =  \sum_{i=0}^{n-1} \mathit{kaccx_i} \cdot \mathsf{L_i(X)}; \mathsf{kaccy(X)}  = \sum_{i=0}^{n-1} \mathit{kaccy_i} \cdot \mathsf{L_i(X)}, 
 \end{align*}
 \noindent where $(\mathit{pkx_0}, \ldots, \mathit{pkx_{n-2}})$ 
@@ -110,7 +116,7 @@ $\forall i < n-1$. %Note that in the last relation $\mathit{bit_i}$ is not inter
 $id_5(X)$ is not strictly needed for % defining ranged polynomial protocols for 
 $\Rla$, but %included 
 %here to ease presentation and  for %proofs consistency for the next 
-for the section. \\
+for the section~\ref{sec_a}. \\
 \vspace{-0.10in}
 
 \noindent \textsf{$H$-ranged Polynomial Protocol $\Pla$ for Conditional NP Relation $\Rla$} describes the interaction of the prover 
