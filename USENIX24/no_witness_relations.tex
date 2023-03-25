@@ -33,7 +33,7 @@ in $\mathbb{F}$. This vector has size $n-1$ ($n$ defined in
 Section~\ref{sec:lagrange}). For $\Rla$ we denote 
 the $n$ components bitvector by $\mathbf{bit} = (\mathit{bit_0}, \ldots, \mathit{bit_{n-1}})$ 
 (meaning that each component belongs to the set $\{0,1\} \subset \mathbb{F}$), 
-while the $\Rla$ relation is defined using the \emph{compacted bitvector} 
+{\color{red} while the $\Ra$ relation is defined using} the \emph{compacted bitvector} 
 $\mathbf{b'} = (\mathit{b'_{0}}, \ldots, \mathit{b'_{\frac{n}{\block}-1}})$ of $\frac{n}{\block}$ field elements, 
 each of which is $\block$ binary bits long ($\block$ has been defined in Section~\ref{sec:lagrange}). 
 Each of the bits in the bit representation of these field elements signals the 
@@ -241,7 +241,7 @@ Corollary~\ref{corollary:keys_affine_comm}. \end{proof}
 \vspace{-0.15in}
 \subsection{Packed Accountable Protocol}
 \label{sec_a}
-Let $\mathbb{F}_{|\block|} = \{0, \ldots, 2^{\block -1} \}$.%, with $\block$ defined in Section~\ref{sec:lagrange}. 
+Let $\mathbb{F}_{|\block|} = \{0, \ldots, 2^{\block -1} \}$. %, with $\block$ defined in Section~\ref{sec:lagrange}.
 Our conditional packed accountable relation $\Ra$ and the corresponding $H$-ranged polynomial protocol 
 $\Pa$ are:\\
  
@@ -387,7 +387,7 @@ the notation $[\ldots]_{\indexoneout}$ and $[\ldots]_{\indextwoout}$ was defined
 
 \item $\mathit{ck} \leftarrow \mathit{CKS_{\mathcal{R}}.GenCommitteeKey}(\mathit{rs_{pk}}, (\mathit{pk_i})_{i=1}^{n-1})$, where 
 $\mathit{CKS_{\mathcal{R}}.GenCommitteeKey}$ first checks whether $(\mathit{pk_i})_{i=1}^{n-1} \in \ginn{1}^{n-1}$; 
-if this holds, it outputs $\bot$; otherwise, \\$\mathit{CKS_{\mathcal{R}}.GenCommitteeKey}$ continues as: \\
+{\color{red} if this does not hold}, it outputs $\bot$; otherwise, \\$\mathit{CKS_{\mathcal{R}}.GenCommitteeKey}$ continues as: \\
 \noindent Let $\mathbf{pkx} = (\mathit{pkx_{1}}, \ldots, \mathit{pkx_{n-1}})$, $\mathbf{pky} = (\mathit{pky_{1}}, \ldots, \mathit{pky_{n-1}})$, $\forall i \in [n-1]$, $\mathit{pk_i} = (\mathit{pkx_i}, \mathit{pky_i}) \in \mathbb{F}^{2}$. \\
 \noindent Let $pkx(X) = \sum_{i=0}^{n-2} \mathit{pkx_{i+1}} \cdot L_i(X)$, $pky(X) = \sum_{i=0}^{n-2} \mathit{pky_{i+1}} \cdot L_i(X)$. Let $[pkx]_{\indexoneout} = pkx(\tau) \cdot [1]_{\indexoneout}$, $[pky]_{\indexoneout} = pky(\tau) \cdot [1]_{\indexoneout}$. Output $\mathit{ck} = ([pkx]_{\indexoneout}, [pky]_{\indexoneout})$.\\
 \noindent Note that $\mathbb{F}$ and $\{L_i(X)\}_{i=1}^{n-2}$ are as defined in Section~\ref{sec:lagrange}. 

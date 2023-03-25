@@ -35,7 +35,7 @@ in $\mathbb{F}$. This vector has size $n-1$ ($n$ defined in
 Section~\ref{sec:lagrange}). For $\Rla$ we denote 
 the $n$ components bitmask by $\mathbf{bit} = (\mathit{bit_0}, \ldots, \mathit{bit_{n-1}})$ 
 (meaning that each component belongs to the set $\{0,1\} \subset \mathbb{F}$), 
-while the $\Rla$ relation is defined using the \emph{compacted bitmask} 
+while the $\Ra$ relation is defined using the \emph{compacted bitmask} 
 $\mathbf{b'} = (\mathit{b'_{0}}, \ldots, \mathit{b'_{\frac{n}{\block}-1}})$ of $\frac{n}{\block}$ field elements, 
 each of which is $\block$ binary bits long ($\block$ has been defined in Section~\ref{sec:lagrange}). 
 Each of the bits in the bit representation of these field elements signals the 
@@ -379,7 +379,7 @@ the notation $[\ldots]_{\indexoneout}$ and $[\ldots]_{\indextwoout}$ was defined
 
 \item $\mathit{ck} \leftarrow \mathit{CKS_{\mathcal{R}}.GenerateCommitteeKey}(\mathit{rs_{pk}}, (\mathit{pk_i})_{i=1}^{n-1})$, where 
 $\mathit{CKS_{\mathcal{R}}.GenerateCommitteeKey}$ first checks whether $(\mathit{pk_i})_{i=1}^{n-1} \in \ginn{1}^{n-1}$; 
-if this holds, it outputs $\bot$; otherwise, the algorithm \\ $\mathit{CKS_{\mathcal{R}}.GenerateCommitteeKey}$ continues with the 
+if this does not hold, it outputs $\bot$; otherwise, the algorithm \\ $\mathit{CKS_{\mathcal{R}}.GenerateCommitteeKey}$ continues with the 
 computations described below: \\
 \noindent Let $\mathbf{pkx} = (\mathit{pkx_{1}}, \ldots, \mathit{pkx_{n-1}})$, $\mathbf{pky} = (\mathit{pky_{1}}, \ldots, \mathit{pky_{n-1}})$, $\forall i \in [n-1]$, $\mathit{pk_i} = (\mathit{pkx_i}, \mathit{pky_i}) \in \mathbb{F}^{2}$. \\
 \noindent Let $pkx(X) = \sum_{i=0}^{n-2} \mathit{pkx_{i+1}} \cdot L_i(X)$, $pky(X) = \sum_{i=0}^{n-2} \mathit{pky_{i+1}} \cdot L_i(X)$.\\ 

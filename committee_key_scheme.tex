@@ -33,7 +33,7 @@ outputs $1$ if the verification succeeds and $0$ otherwise.
 \noindent We say ($\mathit{CKS.Setup}$, $\mathit{CKS.GenerateCommitteeKey}$, $\mathit{CKS.Prove}$, $\mathit{CKS.Verify}$) 
 is a committee key scheme for aggregatable signatures if it satisfies \emph{perfect completeness} and 
 \emph{soundness} as defined below.
-\end{definition}
+
 
 \noindent \textbf{Perfect Completeness} A committee key scheme for aggregatable signatures 
 ($\mathit{CKS.Setup}$, \\ $\mathit{CKS.GenerateCommitteeKey}$, $\mathit{CKS.Prove}$, $\mathit{CKS.Verify}$)
@@ -54,9 +54,10 @@ has soundness if for every efficient adversary $\mathcal{A}$ it holds that:
 &\mathit{Pr}[\mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m,  \mathit{asig}, \pi, (\mathit{bit}_{i})_{i=1}^u) =1 
  \implies \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1  |  \\
 & (\mathit{pp}, \mathit{rs}_{\mathit{vk}},\mathit{rs}_{\mathit{pk}}) \leftarrow \mathit{CKS.Setup}(v), (\mathit{pk}_{i})_{i=1}^u, (\mathit{bit}_{i})_{i=1}^u, \mathit{asig}, \pi, m  \leftarrow \mathcal{A}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{rs}_{\mathit{pk}}), \\
-&  \mathit{ck} \leftarrow \mathit{CKS.GenerateCommitteKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk}_{i})_{i=1}^u), \\
+&  \mathit{ck} \leftarrow \mathit{CKS.GenerateCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk}_{i})_{i=1}^u), \\
 & \mathit{apk} \leftarrow \mathit{AS.AggregateKeys}( \mathit{pp},( \mathit{pk}_{i})_{i:\mathit{bit_i}=1})] = 1 - \negl(\lambda)
 \end{align*}
+\end{definition}
 
 \noindent Next, we define an additional security property, namely unforgeability. \\
 
@@ -74,7 +75,7 @@ where
 & \textit{If } (\forall i: \mathit{pk}^* \neq \mathit{pk_i} \wedge \mathit{bit_i}=0) \vee m \in Q, \textit{ then return } 0 \\
 & \textit{For } i \in [u] \\
 & \ \ \ \ \ \textit{ If } \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i}, \pi_{\mathit{PoP,i}})=0  \textit{ return } 0 \\
-& \mathit{ck} \leftarrow \mathit{CKS.GenerateCommitteKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^u) \\
+& \mathit{ck} \leftarrow \mathit{CKS.GenerateCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^u) \\
 & \textit{Return } \mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}},  \mathit{ck}, m, \mathit{asig}, \pi, (\mathit{bit_i})_{i=1}^u)
 \end{align*}
 and 
