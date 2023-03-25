@@ -1,21 +1,25 @@
 \subsection{Committee Key Scheme}
 \label{sec:committee_key}
 %\vspace{-0.03in}
-{\color{red} Bellow we introduce the notion of committee key scheme for aggregatable signatures (CKS). 
-This notion, upon appropriate instantiation (Section~\ref{sec:inst_committee_key}),  
-builds upon aggregatable signature schemes (Section~\ref{sec:multisig_short}) allowing a prover to convince a verifier that ...
-The notion of CKS and its instantiation can be used, in turn, for an accountable light client 
-scheme instantiation (LCI) as sketched in Section~\ref{sec:lcsketch}. Before providing formal definition for CKS, we include some intuition for its chosen security properties.  
+{\color{red} Bellow we introduce the notion of committee key scheme for aggregatable signatures ($\mathit{CKS}$). 
+This notion, for an appropriate instantiation (Section~\ref{sec:inst_committee_key}),  
+builds upon aggregatable signature schemes (Section~\ref{sec:multisig_short}) allowing a prover to convince a verifier that an alleged aggregated signature 
+for subset of signers out of an all possible set of signers represented by a bitvector and a proof together with a key summarising an all possible set of signers' 
+public keys (in the following called \emph{committee key}) are valid. The notion of $\mathit{CKS}$ and its instantiation can be used, in turn, for an accountable 
+light client scheme instantiation ($\mathit{LCI}$) as sketched in Section~\ref{sec:lcsketch}. Before providing formal definition for $\mathit{CKS}$, 
+we include some intuition for its chosen security properties.  
 \begin{itemize}
-\item Perfect completeness: If all of $\mathit{CKS.Verify}$ inputs except for an aggregated signature have been generated honestly and if the signature is accepted 
-by $\mathit{AS.Verify}$, then $\mathit{CKS.Verify}$ on the signature and honest inputs accepts; this is the counter-notion to AS perfect completeness for aggregation 
-(Definition 3.1); it is used for proving (Section I) perfect completeness of our LCI. 
-\item Soundness: An adversary cannot output a CKS verifying proof and alleged aggregated signature pair without the aggregated signature being accepted by AS.Verify; 
-it is crucial for proving LCI accountability completeness. 
-\item Unforgeability: Is inherited from the underlying AS and is a consequence of AS unforgeability and CKS soundness; it shows CKS has more security properties beyond 
-an argument system. AS unforgeability is used for proving LCI accountable soundness.
+\item \emph{Perfect completeness}: If all of $\mathit{CKS.Verify}$ inputs except for an aggregated signature have been generated honestly and if the signature is accepted 
+by $\mathit{AS.Verify}$ (Definition~\ref{def:aggregate_signatures}), then $\mathit{CKS.Verify}$ on the signature and honest inputs accepts; this is the counter-notion to perfect completeness for aggregation 
+(Definition~\ref{def:aggregate_signatures}); it is used for proving \emph{$\mathit{LCI}$ perfect completeness}. 
+\item \emph{Soundness}: An adversary cannot output a $\mathit{CKS}$ verifying proof and alleged aggregated signature pair without the aggregated signature being accepted 
+by $\mathit{AS.Verify}$; this property is crucial for proving \emph{$\mathit{LCI}$ accountability completeness}. 
+\item \emph{Unforgeability}: It is similar to the underlying aggregatable signature scheme unforgeability 
+and it is a direct consequence of the signature's scheme unforgeability and $\mathit{CKS}$ soundness; 
+it shows $\mathit{CKS}$ has further security properties beyond those of an argument system. $\mathit{CKS}$ unforgeability 
+is used for proving \emph{$\mathit{LCI}$ accountable soundness.}
 \end{itemize}}
-%\vspace{-0.05in}
+\vspace{-0.1in}
 \begin{definition}
 \label{def: committee_key} (Committee Key Scheme for Aggregatable Signatures) Let $\mathit{AS}$ be an aggregatable signature scheme that fulfils 
 Definition~\ref{def:aggregate_signatures}.  A committee key scheme for aggregatable signatures consists of the following tuple of algorithms 
@@ -65,7 +69,7 @@ it holds that:
 &\mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp}, (\mathit{pk}_{i})_{i:\mathit{bit_i}=1})]=1
 \end{align*} 
 \vspace{-0.08cm}
-\noindent \textbf{Soundness} A CKS for aggregatable signatures 
+\noindent \textbf{Soundness} A $\mathit{CKS}$ for aggregatable signatures 
 ($\mathit{CKS.Setup}$, $\mathit{CKS.GenCommitteeKey}$, $\mathit{CKS.Prove}$, $\mathit{CKS.Verify}$)
 has soundness if for every efficient adversary $\mathcal{A}$ it holds that: 
 \begin{align*}
