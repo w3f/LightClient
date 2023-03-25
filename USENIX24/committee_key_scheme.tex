@@ -1,9 +1,20 @@
 \subsection{Committee Key Scheme}
 \label{sec:committee_key}
 %\vspace{-0.03in}
-Bellow we introduce the notion of committee key scheme for aggregatable signatures. This generalises aggregatable signature schemes. 
-The notion of CKS and its instantiation (Section~\ref{sec:inst_committee_key}) can be used, in turn, to instantiate an accountable light client 
-scheme as sketched in Section~\ref{sec:lcsketch}.
+{\color{red} Bellow we introduce the notion of committee key scheme for aggregatable signatures (CKS). 
+This notion, upon appropriate instantiation (Section~\ref{sec:inst_committee_key}),  
+builds upon aggregatable signature schemes (Section~\ref{sec:multisig_short}) allowing a prover to convince a verifier that ...
+The notion of CKS and its instantiation can be used, in turn, for an accountable light client 
+scheme instantiation (LCI) as sketched in Section~\ref{sec:lcsketch}. Before providing formal definition for CKS, we include some intuition for its chosen security properties.  
+\begin{itemize}
+\item Perfect completeness: If all of $\mathit{CKS.Verify}$ inputs except for an aggregated signature have been generated honestly and if the signature is accepted 
+by $\mathit{AS.Verify}$, then $\mathit{CKS.Verify}$ on the signature and honest inputs accepts; this is the counter-notion to AS perfect completeness for aggregation 
+(Definition 3.1); it is used for proving (Section I) perfect completeness of our LCI. 
+\item Soundness: An adversary cannot output a CKS verifying proof and alleged aggregated signature pair without the aggregated signature being accepted by AS.Verify; 
+it is crucial for proving LCI accountability completeness. 
+\item Unforgeability: Is inherited from the underlying AS and is a consequence of AS unforgeability and CKS soundness; it shows CKS has more security properties beyond 
+an argument system. AS unforgeability is used for proving LCI accountable soundness.
+\end{itemize}}
 %\vspace{-0.05in}
 \begin{definition}
 \label{def: committee_key} (Committee Key Scheme for Aggregatable Signatures) Let $\mathit{AS}$ be an aggregatable signature scheme that fulfils 
