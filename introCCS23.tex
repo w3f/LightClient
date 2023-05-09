@@ -77,10 +77,14 @@ protocol of the blockchain. Such light client systems would not be possible for 
 In Section~\ref{sec:sketch}, we sketch our proposed protocols and compare 
 them to existing work. In Section~\ref{sec_prelims}, we give cryptographic 
 preliminaries necessary for later sections. In Section~\ref{sec_apk_proofs}
-we describe our custom SNARKs and our committee key scheme. In 
-Section~\ref{sec_implementation} we give benchmarks for our custom SNARKs 
+we describe our custom SNARKs and our committee key scheme. In Section \ref{sec_light_client_model}, 
+we give a model for a light client system and the consensus system it works with, we provide a light client system 
+instantiation and prove it satisfies the security properties according to the newly 
+introduced definitions. In Section~\ref{sec_implementation} we give benchmarks for our custom SNARKs 
 implementations. We conclude in Section~\ref{conclusions}. Our paper includes 
-an extensive appendix for more details as follows. In Section~\ref{sec:ethereum} we give the 
+an extensive appendix for more details as follows. In Section~\ref{sec:other_choice_h} 
+we give an alternative construction for a global parameter necessary for designing and 
+proving the soundness of our custom SNARKs. In Section~\ref{sec:ethereum} we give the 
 intuition on how to apply our bridge to Ethereum. In Section~\ref{supplementary_poly_protocols_appendix} 
 we remind and further refine the definition of ranged polynomial protocols for NP relations, 
 in Sections~\ref{sec:missing_snark_proofs}, \ref{supplementary_proof_sec_cks}, 
