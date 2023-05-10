@@ -4,19 +4,23 @@
 \noindent For the polynomial protocols and custom SNARKs we have designed in Section~\ref{sec:snarks}, we have chosen 
 $h \in \einn \setminus \ginn{1}$. However, we have not covered so far the case when $\einn = \ginn{1}$ and how to 
 choose $h$ in such a situation. Our current section will give a guide for that. In fact, if $\einn = \ginn{1}$, we provide a 
-method of choosing $h$ that will be suitable not only for our custom SNARKs from Section~\ref{sec:snarks}, but also for any other SNARK that proves the 
-correctness of an aggregated public key (i.e., $\mathit{apk}$ for an aggregatable signature scheme), among other modelled constraints. \\
+method of choosing $h$ that will be suitable not only for our custom SNARKs from Section~\ref{sec:snarks}, but also for any other 
+SNARK that proves the correctness of an aggregated public key (i.e., $\mathit{apk}$ for an aggregatable signature scheme), 
+among other modelled constraints. \\
 
 \noindent Let $\mathcal{H}$ be a hash function, $\mathcal{H}: \{0, 1\} \rightarrow \mathbb{F}$ such that $\mathcal{H}$ is used for 
 the Fiat-Shamir transformation of a succinct argument of knowledge (including a sub-proof of correctness of $\mathit{apk}$) 
 into its non-interactive version. Let $x$ be the public input corresponding to the above succinct argument of knowledge. 
 Note that in case of the hybrid model SNARKs defined in this work (see Definition~\ref{dfn_snark}), the public input includes the partial input. 
 For a concrete example of a partial input, see one of our custom SNARKs fully rolled out in Section~\ref{sec:rolled_out}. Then, the prover and 
-the verifier compute $h$, for example as $$h = \mathcal{H}(h, \textit{"starting \ input \ point \ for \ public \ keys \ addition"}).$$ Intuitively, in the 
-random oracle model (which is already an assumption we need for a secure Fiat-Shamir transformation that preserves knowledge-soundness), 
-$h$ is thus an elliptic curve point on $\einn$, uniformly distributed on $\einn = \ginn{1}$. Hence, for a large enough elliptic curve group (i.e., an 
-elliptic curve for which the number of elliptic curve points is $O(2^{\lambda})$ for security parameter $\lambda$), the probability of $h$ plus 
-any elliptic curve point being equal to a fixed elliptic curve is negligible in $\lambda$. This, in turn, ensures that condition 
-3) from Observation~\ref{obs:incomplete_addition} is only met with negligible probability. Hence, knowledge soundness 
+the verifier compute $h$, for example as 
+$$h = \mathcal{H}(h, \textit{"starting \ input \ point \ for \ public \ keys \ addition"}).$$
+Intuitively, in the random oracle model (which is already an assumption we need for a secure Fiat-Shamir transformation that preserves 
+knowledge-soundness), $h$ is thus an elliptic curve point on $\einn$, uniformly distributed on $\einn = \ginn{1}$. Moreover, by including 
+the additional string in the computation of the hash function $\mathcal{H}$ we can re-use the same function for multiple specific tasks 
+related to a SNARK (e.g., both for defining $h$ and for obtaining non-interactivity (N) in a SNARK). Hence, for a large enough elliptic 
+curve group (i.e., an elliptic curve for which the number of elliptic curve points is $O(2^{\lambda})$ for security parameter $\lambda$), 
+the probability of $h$ plus any elliptic curve point being equal to a fixed elliptic curve is negligible in $\lambda$. This, in turn, ensures that 
+condition 3) from Observation~\ref{obs:incomplete_addition} is only met with negligible probability. Hence, knowledge soundness 
 for our polynomial protocols in Sections~\ref{sec_la},\ref{sec_a} still holds with overwhelming probability, so all follow-up results in 
 Section~\ref{sec:snarks} still hold. 
