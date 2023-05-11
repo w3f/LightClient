@@ -127,11 +127,12 @@ It then verifies $\sigma$ against $\mathit{apk}$ and accepts if both steps succe
 \end{itemize}
 
 \noindent With the above committee key scheme, if $C$ and $\pi$ are constant size, 
-the communication cost becomes $O(1)+|T|$ bits instead of $|T|$ public keys. {\color{red} So far we have implicitly assumed validators have equal stakes. 
-One can generalise our alternative approach introduced above to validators with unequal stakes by including at~\ref{a'}, a'.,  a commitment to all stakes 
-and to~\ref{b'}, b'., a claimed total signing stake that can be proved via a scalar product between stakes of the signing validators and 
-the bitvector. Moreover, $\mathit{apk}$ is appropriately replaced by the scalar product between signing validators' stakes and their 
-respective public keys. The bitvector cannot be removed as it is needed for ensuring accountability of our light client system.}
+the communication cost becomes $O(1)+|T|$ bits instead of $|T|$ public keys.  
+
+So far we have implicitly assumed validators have equal stakes. 
+One can generalise our approach  above to validators with unequal stakes by including at~\ref{a'}, a'.,  a commitment to all stakes 
+and to~\ref{b'}, b'., a claimed total signing stake that can be proved by including, inside the SNARK, a scalar product between stakes of the signing validators and the bitvector. 
+The bitvector remains part of the input as it is needed for ensuring accountability.
 
 \subsection{From CKS to Accountable Light Client}
 \label{sec_intro_committee}
