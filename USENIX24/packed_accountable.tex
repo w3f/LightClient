@@ -1,0 +1,97 @@
+\section{Packed Accountable Protocol}
+\label{sec_a}
+Let $\mathbb{F}_{|\block|} = \{0, \ldots, 2^{\block -1} \}$. %, with $\block$ defined in Section~\ref{sec:lagrange}.
+Our conditional packed accountable relation $\Ra$ and the corresponding $H$-ranged polynomial protocol 
+$\Pa$ are:\\
+ 
+\noindent \textsf{Conditional Packed Accountable Relation $\Ra$} 
+\begin{equation*}
+\begin{split}
+\Ra = & \{(\mathbf{pk} \in (\mathbb{F}^2)^{n-1},\mathbf{b'} \in \mathbb{F}_{|\block|}^{\frac{n}{\block}},
+\mathit{apk} \in \mathbb{F}^2; \mathbf{bit}) : \\ 
+ & \mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \\
+ & \wedge \mathbf{bit} \in \mathbb{B}^n  \wedge b'_{j} = \sum_{i=0}^{\block -1}2^i \cdot \mathit{bit_{\block \cdot j + i}}, \forall j < \frac{n}{\block} \} 
+\end{split}
+\end{equation*}
+where $\mathbf{b'} = (b'_{0}, \ldots, b'_{{\frac{n}{\block}} -1})$.
+
+\noindent \textsf{New Polynomials as Computed by Honest Parties} 
+\begin{align*}
+aux(X) = & \sum_{i=0}^{n-1}aux_i \cdot L_i(X); c_{a}(X) \\
+& = \sum_{i=0}^{n-1} c_{a,i} \cdot L_i(X); acc_{a}(X)  =  \sum_{i=0}^{n-1} acc_{a,i}  \cdot L_i(X)
+\end{align*}
+
+\noindent where $aux_{i} = 1 \in \mathbb{F}$ if $i$ is divisible with $\block$ and $aux_{i} = 0 \in \mathbb{F}$ otherwise, $\forall i < n$ 
+and $c_{a,i} = 2^k \cdot r^j$, $k = i \mod \block$, $j = i \div \block$, $\forall i < n$ ($r \in \mathbb{F}$ is introduced in protocol $\Pa$) and $acc_{a,i}$ are components of $(0, \mathit{bit}_0 \cdot c_{a,0}, \mathit{bit}_0 \cdot c_{a,0}+ \mathit{bit}_1  \cdot c_{a,1}, \ldots, \sum_{i=0}^{n-2}\mathit{bit}_i \cdot c_{a,i})$, where $\mathit{bit_{0}}, \ldots, \mathit{bit_{n-1}}$ represent the first $n$ 
+bits of the concatenation of the binary representation of 
+$\mathit{b'_{0}}, \ldots, \mathit{b'_{\frac{n}{\block}-1}}$ each 
+padded  with 0s  if necessary, to have an individual length of $\block$ bits. With this definition of $(\mathit{bit_{0}}, \ldots, \mathit{bit_{n-1}})$, $b(X)$ remains the same as in Section~\ref{sec_la}.\\
+
+\noindent \textsf{New Polynomial Identities} 
+\begin{align*}
+id_6(X) & =  c_{a}(\omega \cdot X) - c_{a}(X) \cdot L_{n-1}(X). \\
+& \cdot (2+ (\frac{r}{2^{\block -1}} -2)  \cdot aux(\omega \cdot X)) - (1 - r^{\frac{n}{\block}}) \\
+id_7(X) & = acc_{a}(\omega \cdot X) - acc_{a}(X) - b(X)\cdot c_{a}(X)  \\
+& +  \mathsf{sum} \cdot L_{n-1}(X),
+\end{align*}
+
+\noindent where $\mathsf{sum}$ is a field element known to both $\mathcal{P}_{poly}$ and $\mathcal{V}_{poly}$ and will be defined below. \\ 
+
+\noindent \textsf{$H$-ranged Polynomial Protocol $\Pa$ for $\Ra$} \\
+
+%\noindent In the following, we describe $H$-ranged polynomial protocol $\Pa$ for conditional relation 
+%$\Ra$. \\
+
+\noindent $\mathcal{P}_{poly}$ and $\mathcal{V}_{poly}$ know public inputs 
+$\mathbf{b'} \in \mathbb{F}_{|\block|}^{\frac{n}{\block}}$ and 
+$\mathbf{pk} \in (\mathbb{F}^2)^{n-1} $ and $\mathit{apk} \in \mathbf{F}^2$ which are interpreted as per their domains. 
+
+\begin{enumerate}
+\item $\mathcal{V}_{poly}$ computes $pkx(X)$, $pky(X)$ and $aux(X)$.
+\item $\mathcal{P}_{poly}$ sends polynomials $b(X)$, $kaccx(X)$ and $kaccy(X)$ to $\mathcal{I}$. 
+\item $\mathcal{V}_{poly}$ replies with a random value $r$ chosen from $\mathbb{F}$. 
+\item $\mathcal{V}_{poly}$ computes $\mathsf{sum}$ as $\sum_{j=0}^{\frac{n}{\block}-1} \mathit{b'_{j}} \cdot r^j$.\footnote{Note that if 
+$b'_{j} = \sum_{k=0}^{\block -1}2^k \cdot \mathit{bit_{\block \cdot j + k }}$, $\forall j < \frac{n}{\block}$ and $\mathit{bit_i} \in \mathbb{B}, \forall i <n$, 
+then $\sum_{i=0}^{n-1} 2^{i \mod \block} \cdot r^{i \div \block} \cdot \mathit{bit}_{i} = \sum_{j=0}^{\frac{n}{\block}-1}(\sum_{i=0}^{\block -1}2^k \cdot \mathit{bit_{\block \cdot j + k }}) \cdot r^j= \sum_{j=0}^{\frac{n}{\block}-1} \mathit{b'_{j}} \cdot r^j$.}
+\item $\mathcal{P}_{poly}$ sends polynomials $c_{a}(X)$ and $acc_{a}(X)$ to $\mathcal{I}$. 
+\item $\mathcal{V}_{poly}$ asks $\mathcal{I}$ to check that $id_i(x) = 0, \forall x \in H, \forall i \in [7]$ and accepts if $\mathcal{I}$'s checks verify. 
+\end{enumerate}
+
+\noindent We show $\Pa$ is an $H$-ranged polynomial protocol 
+for $\Ra$. First, we prove the following:
+
+\begin{test_claim}
+\label{claim:bitvector_comm}
+If the polynomial identities $id_6(X) = 0, id_7(X) = 0$ hold over range $H$, then, 
+\ewnp, 
+we have $c_{a,i} =  2^{i \mod \block} \cdot r^{i \div \block}$, $\forall i < n$ and $\mathsf{sum} = \sum_{i=0}^{n-1}b_i \cdot c_{a,i}$, 
+where $b_i = b(\omega^i), \forall i <n$. If, additionally, identity $id_5(X) = 0$ holds over $H$, 
+$r$ has been randomly chosen in $\mathbb{F}$, $\mathsf{sum} = \sum_{j=0}^{\frac{n}{\block}-1} b'_{j}r^j$ 
+(as computed by $\mathcal{V}_{poly}$) and $\mathit{bit_{i}} \in \mathbb{B}, \forall i < n$ and 
+$b'_{j} = \sum_{k=0}^{\block -1}2^k \cdot \mathit{bit_{\block \cdot j + k}}, \forall 0 \leq j \leq \frac{n}{\block} -1$ 
+(due to  $(b'_{0}, \ldots, b'^{\frac{n}{\block} -1})$ 
+being interpreted by $\mathcal{V}_{poly}$ as in $\mathbb{F}_{|\block|}^{\frac{n}{\block}}$), then \ewnp, 
+$b_i = \mathit{bit_{i}}, \forall i <n$.
+\end{test_claim}
+\vspace{-0.15in}
+
+\begin{proof}
+We show the first part of the claim by proving by contradiction that $c_{a,0} =1$ using the Schwartz-Zippel Lemma, the fact that $r$ has been 
+randomly chosen, and, also the fact that $n$ is negligibly smaller than the size of $\mathbb{F}$. Finally, we expand $\mathit{id_7}(X) = 0$ 
+over $H$, sum the LHS and the RHS, equate and obtain the desired property of $\mathsf{sum}$. We show the second part of 
+the claim by expressing $\mathsf{sum}$ in two ways as $\sum_{j=0}^{\frac{n}{\block}-1} b'_{j}r^j $ and as $\sum_{i=0}^{n-1} b_i \cdot c_{a,i}$ and re-writing the 
+latter as an inner product of a vector of field elements with the vector $(1, r, \ldots, r^{\frac{n}{\mathsf{block}}-1})$ and using the small exponents test~\cite{small_exponents}. 
+Full proof can be found in Section~\ref{sec:missing_snark_proofs}.
+\end{proof}
+\vspace{-0.1in}
+
+\begin{lemma} 
+$\Pa$ is an $H$-ranged polynomial protocol $\Ra$.
+\end{lemma}
+\vspace{-0.15in}
+
+\begin{proof} 
+The proof follows an analogous logic as used for proving Lemma~\ref{le:ba}. We additionally use 
+Claim~\ref{claim:bitvector_comm} and Corollary~\ref{corollary:keys_affine_comm}. Full proof can be found in Section~\ref{sec:missing_snark_proofs}.
+\end{proof}
+\vspace{-0.15in}
