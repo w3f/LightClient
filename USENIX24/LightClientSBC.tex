@@ -1,57 +1,184 @@
-% Template for 2023 NREL's Autonomous Energy Systems Workshop absrtract; to be used with:
-%          spconf.sty  - Signal Processing Conferences LaTeX style file, and
-%          IEEEbib.bst - IEEE bibliography style file.
-% --------------------------------------------------------------------------
-\documentclass{article}
 \usepackage{spconf,amsmath,graphicx}
 \usepackage{lipsum}
 
-% Example definitions.
-% --------------------
-\def\x{{\mathbf x}}
-\def\L{{\cal L}}
+\usepackage{url, xspace}, graphicx}
+\usepackage{amsmath,amsthm, amsfonts}
+\usepackage{hyperref, cryptocode, framed}
+\usepackage{booktabs, array, paralist}
+\usepackage{verbatim}
+\usepackage{subfig}
+\usepackage{mathrsfs}
+\usepackage[normalem]{ulem}
+\usepackage{soul}
 
-% Title.
-% ------
-\title{ABSTRACT TEMPLATE FOR 2023 Autonomous Energy Systems Workshop}
-%
-% Single address.
-% ---------------
-\name{Author Name\thanks{Author's Email}}
-\address{Author Affiliation}
+
+\newcommand{\prove}{\ensuremath{\mathsf{Prove}}\xspace}
+\newcommand{\group}{\ensuremath{\mathsf{group}}\xspace}
+\newcommand{\ck}{\ensuremath{\mathsf{ck}}\xspace}
+\newcommand{\key}[1]{\ensuremath{\mathsf{ck}_{#1}}\xspace}
+\newcommand{\konefirst}{\ensuremath{\key{1,[:m']}}\xspace}
+\newcommand{\konesecond}{\ensuremath{\key{1,[m':]}}\xspace}
+\newcommand{\ktwofirst}{\ensuremath{\key{2,[:m']}}\xspace}
+\newcommand{\ktwosecond}{\ensuremath{\key{2,[m':]}}\xspace}
+\newcommand{\avec}{\ensuremath{\mathbf{\mathsf{a}}}\xspace}
+\newcommand{\vvec}{\ensuremath{\mathbf{v}}\xspace}
+
+\newcommand{\Avec}{\ensuremath{\mathbf{A}}\xspace}
+
+\newcommand{\bvec}{\ensuremath{\mathbf{\mathsf{b}}}\xspace}
+\newcommand{\zL}{\ensuremath{\mathit{z_L}}\xspace}
+\newcommand{\zR}{\ensuremath{\mathit{z_R}}\xspace}
+
+\newcommand{\afirst}{\ensuremath{\avec_{[:m']}}\xspace}
+\newcommand{\asecond}{\ensuremath{\avec_{[m':]}}\xspace}
+\newcommand{\Afirst}{\ensuremath{\Avec_{[:m']}}\xspace}
+\newcommand{\Asecond}{\ensuremath{\Avec_{[m':]}}\xspace}
+
+\newcommand{\vfirst}{\ensuremath{\vvec_{[:m']}}\xspace}
+\newcommand{\vsecond}{\ensuremath{\vvec_{[m':]}}\xspace}
+\newcommand{\bfirst}{\ensuremath{\bvec_{[:m']}}\xspace}
+\newcommand{\bsecond}{\ensuremath{\bvec_{[m':]}}\xspace}
+
+\newcommand{\CL}{\ensuremath{\mathit{C_L}}\xspace}
+\newcommand{\CR}{\ensuremath{\mathit{C_R}}\xspace}
+\newcommand{\TL}{\ensuremath{\mathit{T_L}}\xspace}
+\newcommand{\TR}{\ensuremath{\mathit{T_R}}\xspace}
+
+\newcommand{\negl}{\ensuremath{\mathit{negl}}\xspace}
+\newcommand{\einn}{\ensuremath{\mathit{E}_{\mathit{inn}}}\xspace}
+\newcommand{\eout}{\ensuremath{\mathit{E}_{\mathit{out}}}\xspace}
+\newcommand{\ginn}[1]{\ensuremath{\mathbb{G}_{\mathit{#1,inn}}}\xspace}
+\newcommand{\gout}[1]{\ensuremath{\mathbb{G}_{\mathit{#1,out}}}\xspace}
+\newcommand{\gtinn}{\ensuremath{\mathbb{G}_{\mathit{T,inn}}}\xspace}
+\newcommand{\gtout}{\ensuremath{\mathbb{G}_{\mathit{T,out}}}\xspace}
+\newcommand{\sginn}[1]{\ensuremath{g_{\mathit{#1,inn}}}\xspace}
+\newcommand{\sgout}[1]{\ensuremath{g_{\mathit{#1,out}}}\xspace}
+\newcommand{\sgtinn}{\ensuremath{g_{\mathit{T,inn}}}\xspace}
+\newcommand{\sgtout}{\ensuremath{g_{\mathit{T,out}}}\xspace}
+
+\newcommand{\indexoneinn}{\ensuremath{\mathit{1,inn}}\xspace}
+\newcommand{\indextwoinn}{\ensuremath{\mathit{2,inn}}\xspace}
+
+\newcommand{\indexoneout}{\ensuremath{\mathit{1,out}}\xspace}
+\newcommand{\indextwoout}{\ensuremath{\mathit{2,out}}\xspace}
+
+
+\newcommand{\epinn}{\ensuremath{\mathit{e}_{\mathit{inn}}}\xspace}
+\newcommand{\epout}{\ensuremath{\mathit{e}_{\mathit{out}}}\xspace}
+\newcommand{\block}{\ensuremath{\mathsf{block}}\xspace}
+\newcommand{\LCseed}{\ensuremath{\mathit{LC.seed}}\xspace}
+\newcommand{\bgamma}{\boldsymbol{\gamma}}
+\newcommand{\bsigma}{\boldsymbol{\sigma}}
+\newcommand{\GoneBLS}{\mathbb{G}_{1, \mathit{BLS}}\xspace}
+\newcommand{\GtwoBLS}{\mathbb{G}_{2, \mathit{BLS}}\xspace}
+\newcommand{\GTBLS}{\mathbb{G}_{T, \mathit{BLS}}\xspace}
+
+\newcommand{\goneBLS}{\mathit{g}_{1, \mathit{BLS}}\xspace}
+\newcommand{\gtwoBLS}{\mathit{g}_{2, \mathit{BLS}}\xspace}
+\newcommand{\gTBLS}{\mathit{g}_{T, \mathit{BLS}}\xspace}
+
+\newcommand{\eBLS}{\mathit{e}_{\mathit{BLS}}\xspace}
+\newcommand{\HBLS}{\mathit{H}_{\mathit{BLS}}\xspace}
+\newcommand{\HPoP}{\mathit{H}_{\mathit{PoP}}\xspace}
+\newcommand{\Hinn}{\mathit{H}_{\mathit{inn}}\xspace}
+\newcommand{\piinn}{\pi_{\mathit{inn}}\xspace}
+\newcommand{\PoP}{\mathit{inn}\xspace}
+
+\newcommand{\Rla}{\mathcal{R}^{\mathit{incl}}_{\mathsf{ba}}\xspace}
+\newcommand{\Ra}{\mathcal{R}^{\mathit{incl}}_{\mathsf{pa}}\xspace}
+\newcommand{\Rvt}{\mathcal{R}^{\mathit{incl}}_{\mathsf{c}}\xspace}
+
+\newcommand{\Rlacom}{\mathcal{R}^{\mathit{incl}}_{\mathsf{ba},\mathit{com}}\xspace}
+\newcommand{\Racom}{\mathcal{R}^{\mathit{incl}}_{\mathsf{pa},\mathit{com}}\xspace}
+\newcommand{\Rvtcom}{\mathcal{R}^{\mathit{incl}}_{\mathsf{c},\mathit{com}}\xspace}
+
+
+\newcommand{\Pla}{\mathscr{P}_{\mathsf{ba}}\xspace}
+\newcommand{\Pa}{\mathscr{P}_{\mathsf{pa}}\xspace}
+\newcommand{\Pvt}{\mathscr{P}_{\mathsf{c}}\xspace}
+
+\newcommand{\Plastar}{\mathscr{P}_{\mathsf{ba}}^{\ast}\xspace}
+\newcommand{\Pastar}{\mathscr{P}_{\mathsf{pa}}^{\ast}\xspace}
+\newcommand{\Pvtstar}{\mathscr{P}_{\mathsf{c}}^{\ast}\xspace}
+
+\newcommand{\Plah}{\mathscr{P}_{\mathsf{ba}}^{h}\xspace}
+\newcommand{\Pah}{\mathscr{P}_{\mathsf{pa}}^{h}\xspace}
+\newcommand{\Pvth}{\mathscr{P}_{\mathsf{c}}^{h}\xspace}
+\newcommand{\kate}{\ensuremath{\mathsf{KZG}}\xspace}
+\newcommand{\ewnp}{e.w.n.p.\ }
+
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{construction}[theorem]{Instantiation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{test_claim}[theorem]{Claim}
+
+
+
+\title{Accountable Light Client Systems for PoS Blockchains}
+
+%\name{Author Name\thanks{Author's Email}}
+%\address{Author Affiliation}
 
 \begin{document}
-%\ninept
-%
 \maketitle
-%
-% \begin{abstract}
-% \lipsum[3-5]
-% \end{abstract}
 
-\section{Introduction and Background}
-\label{sec:intro}
+\begin{abstract} A major challenge for blockchain interoperability is having an on-chain light client protocol that is both efficient and secure.
+We present a protocol that provides short proofs about the state of a decentralised consensus protocol while being able to detect misbehaving parties.
+To do this naively, a verifier would need to maintain an updated list of all participants' public keys which makes the corresponding proofs long.
+Existing solutions either are not able to detect misbehaving parties (i.e. lack accountability) or are not efficient. We define and design a committee key scheme with short proofs that does not include any of the individual participants' public keys in plain which makes it very efficient. Our committee key scheme, in turn, uses a custom designed SNARK which has a fast prover time. Our committee key scheme can be used in an accountable light client system as the main cryptographic core for building bridges between proof-of-stake blockchains. By allowing a large number of participants, our scheme allows decentralization and interoperability without compromise. Finally, we implement a prototype of our custom SNARK for which we provide benchmarks.
+\end{abstract}
 
-\lipsum[1]
+\section{Introduction} \label{sec_intro}
+\input{intro.tex}
 
-\section{Contributions}
-\label{sec:contributions}
+\section{Implementation} \label{sec_implementation}
+%\input{anon_implementation}
+\input{implementation}
 
-\lipsum[1]
+\section{Preliminaries} \label{sec_prelims}
+\input{preliminaries}
+\input{elliptic_curves_and_pairings}
+\input{short_multisignatures_def}
+%\input{multisignatures_def}
+\input{committee_key_scheme}
+\input{conditional_NP_relations}
+\input{short_snarks_def}
+\input{poly_proto_poly_comm}
+\input{lagrange_bases}
 
-{\bf References:}
-List and number all bibliographical references at the end of the
-paper. The references can be numbered in alphabetic order or in
-order of appearance in the document. When referring to them in
-the text, type the corresponding reference number in square
-brackets as shown at the end of this sentence \cite{C2}. An
-additional page is allowed, but must contain only references to the prior literature and figures.
+\section{Custom SNARKs for  Aggregation } \label{sec_apk_proofs}
+\input{no_witness_relations.tex}
 
-% References should be produced using the bibtex program from suitable
-% BiBTeX files (here: strings, refs, manuals). The IEEEbib.bst bibliography
-% style file from IEEE produces unsorted bibliography list.
-% -------------------------------------------------------------------------
-\bibliographystyle{IEEEbib}
-\bibliography{refs}
+
+\section{Conclusions}\label{conclusions}
+\input{conclusions}
+
+%\section{Acknowledgements} \label{sec_ack}
+%\input{acknowledgements}
+
+\bibliography{bibliography}
+\bibliographystyle{ieeetr}
+%%\bibliography{bibliography}
+%%\bibliographystyle{splncs04}
+\onecolumn
+\appendix
+\section*{Appendices}
+\input{multisignatures_def.tex}
+\input{appendix_snarks.tex}
+\input{appendix_ranged_polynomial_protocols.tex}
+\input{missing_proofs_custom_snarks.tex}
+\input{alternative_choice_h.tex}
+\input{appendix_compiler}
+\input{apk_vs_plonk_comparison.tex}
+\input{appendix_CKS_proof.tex}
+\section{An Accountable Light Client System} \label{sec_light_client_model}
+\input{new_light_client_model_updated}
+\input{light_client_instantiation}
+\input{appendix_soundness_proof.tex}
+\input{appendix_accountability_proof.tex}
+%\input{appendix_step_1_compiler.tex}
+\input{appendix_full_accountable.tex}
+\input{appendix_ethereum.tex}
 
 \end{document}
