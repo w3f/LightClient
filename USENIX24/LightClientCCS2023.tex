@@ -5,17 +5,17 @@
 %% The original source files were:
 %%
 %% samples.dtx  (with options: `sigconf')
-%% 
+%%
 %% IMPORTANT NOTICE:
-%% 
+%%
 %% For the copyright see the source file.
-%% 
+%%
 %% Any modified versions of this file must be renamed
 %% with new filenames distinct from sample-sigconf.tex.
-%% 
+%%
 %% For distribution of the original source see the terms
 %% for copying and modification in the file samples.dtx.
-%% 
+%%
 %% This generated file may be distributed as long as the
 %% original source files, as listed above, are part of the
 %% same distribution. (The sources need not necessarily be
@@ -47,34 +47,36 @@
 %%
 \documentclass[sigconf]{acmart}
 \usepackage[toc,page]{appendix}
-\usepackage[utf8]{inputenc}     
-     
+\usepackage[utf8]{inputenc}
+
 %%% page dimensions
-\usepackage{geometry} 
-\geometry{margin=1.08in} 
+\usepackage{geometry}
+\geometry{margin=0.9in}
 %\usepackage{numdef}
-   
-\usepackage{url}   
+
+\usepackage{url}
 %\usepackage[hyphen]{url}
 \usepackage{xspace}
-\usepackage{graphicx} 
+\usepackage{graphicx}
 \usepackage{amsmath,amsthm}
 \usepackage{amsfonts}
 %\usepackage{amssymb} %\therefore
 \usepackage{hyperref}
 \usepackage{cryptocode}
-\usepackage{framed} 
+\usepackage{framed}
 % \usepackage[parfill]{parskip} % activate to begin paragraphs with an empty line rather than an indent
-    
+
  %%% packages
-\usepackage{booktabs} 
-\usepackage{array} 
-\usepackage{paralist} 
-\usepackage{verbatim} 
-\usepackage{subfig}     
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{paralist}
+\usepackage{verbatim}
+\usepackage{subfig}
 \usepackage{mathrsfs}
 \usepackage[normalem]{ulem}
 \usepackage{soul}
+
+
 
 %%% headers & footers
 \newcommand{\prove}{\ensuremath{\mathsf{Prove}}\xspace}
@@ -239,9 +241,9 @@
 %%
 %% end of the preamble, start of the body of the document source.
 %\usepackage[utf8]{inputenc}
- 
+
 %\pagenumbering{roman}
- 
+
 \begin{document}
 
 %%
@@ -305,13 +307,13 @@
 \newtheorem{test_claim}[theorem]{Claim}
 
 
-\begin{abstract} A major challenge for blockchain interoperability is having an on-chain light client protocol that is both efficient and secure. 
-We present a protocol that provides short proofs about the state of a decentralised consensus protocol while being able to detect misbehaving parties. 
-To do this naively, a verifier would need to maintain an updated list of all participants' public keys which makes the corresponding proofs long. 
+\begin{abstract} A major challenge for blockchain interoperability is having an on-chain light client protocol that is both efficient and secure.
+We present a protocol that provides short proofs about the state of a decentralised consensus protocol while being able to detect misbehaving parties.
+To do this naively, a verifier would need to maintain an updated list of all participants' public keys which makes the corresponding proofs long.
 Existing solutions either are not able to detect misbehaving parties (i.e. lack accountability) or are not efficient. We define and design a committee key scheme with short proofs that does not include any of the individual participants' public keys in plain which makes it very efficient. Our committee key scheme, in turn, uses a custom designed SNARK which has a fast prover time. Our committee key scheme can be used in an accountable light client system as the main cryptographic core for building bridges between proof-of-stake blockchains. By allowing a large number of participants, our scheme allows decentralization and interoperability without compromise. Finally, we implement a prototype of our custom SNARK for which we provide benchmarks.
 \end{abstract}
 
- \maketitle 
+ \maketitle
 
 
 \section{Introduction} \label{sec_intro}
@@ -342,9 +344,9 @@ Existing solutions either are not able to detect misbehaving parties (i.e. lack 
 %\section{Acknowledgements} \label{sec_ack}
 %\input{acknowledgements}
 
-\bibliography{bibliography} 
+\bibliography{bibliography}
 \bibliographystyle{ieeetr}
-%%\bibliography{bibliography} 
+%%\bibliography{bibliography}
 %%\bibliographystyle{splncs04}
 \onecolumn
 \appendix
@@ -356,7 +358,7 @@ Existing solutions either are not able to detect misbehaving parties (i.e. lack 
 \input{alternative_choice_h.tex}
 \input{appendix_compiler}
 \input{apk_vs_plonk_comparison.tex}
-\input{appendix_CKS_proof.tex} 
+\input{appendix_CKS_proof.tex}
 \section{An Accountable Light Client System} \label{sec_light_client_model}
 \input{new_light_client_model_updated}
 \input{light_client_instantiation}
@@ -366,4 +368,4 @@ Existing solutions either are not able to detect misbehaving parties (i.e. lack 
 \input{appendix_full_accountable.tex}
 \input{appendix_ethereum.tex}
 
-\end{document}        
+\end{document}
