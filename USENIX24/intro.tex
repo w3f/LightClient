@@ -25,7 +25,7 @@ Using the committee key, the proof and the bitvector, a light client can verify 
 public keys belong (as per our use case) signed the message. Although the bitvector has length proportional to the number of validators, it is still orders of magnitude 
 more succinct than giving all the public keys or signatures. Public keys or signatures are usually 100s of bits long and as a result this scheme reduces the amount of 
 data required by a factor of 100 times or more. We could instantiate our committee key scheme using any universal SNARK scheme and suitable commitment scheme. 
-However, to avoid long prover times for large validator sets, we use optimized custom SNARKs. We have implemented this scheme 
+However, to avoid long prover times for large validator sets, we use optimised custom SNARKs. We have implemented this scheme 
 (Section~\ref{sec_implementation}) and it gives fast enough proving times for the use cases we consider: a prover with 
 commodity hardware can generate these custom SNARK proofs in real time, i.e., as fast as the consensus generates instances of this problem.
 
@@ -287,7 +287,7 @@ shorter fork and not see any proofs of chains the fork choice rule would prefer.
 \subsubsection{Commit-and-Prove and Related Approaches}
 \label{sec:commit_prove}
 
-\noindent Our custom SNARKs are an instance of the commit-and-prove paradigm~\cite{KilianPhD,CLOS02,CP_proposal,HP_paper} 
+\noindent Our custom SNARKs are an instance of the commit-and-prove paradigm~\cite{KilianPhD,CLOS02,CP_proposal,HP_paper,CP_paper} 
 which is a generalisation for zero-knowledge proofs/arguments in which the prover proves statements about values that are committed.\\
 
 \begin{comment}
@@ -300,8 +300,8 @@ have simply re-used an existing argument system: by designing custom circuits an
 \end{comment}
 \vspace{-0.1in}
 
-{\color{red}In this context, ECLIPSE~\cite{eclipse} presents a compiler that starts off with popular SNARKs (e.g., Sonic, PLONK, 
-Marlin) and via a new general compilation method generates CP-variants for these SNARKs. 
+{\color{red}In this context, ECLIPSE~\cite{eclipse} presents a compiler that starts off with popular SNARKs (e.g., Sonic~\cite{sonic}, PLONK~\cite{plonk}, 
+Marlin~\cite{marlin}) and via a new general compilation method generates CP-variants for these SNARKs. 
 Our proposed compiler uses as a first step the standard PLONK compiler.  As a second step we simply 
 re-cast the SNARK resulted in the first step as a SNARK for a new relation. 
 The security of the re-casting holds under mild conditions that deterministically relate some polynomials 
