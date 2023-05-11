@@ -310,13 +310,13 @@ processed by the verifier in the ranged polynomial protocol (before applying PLO
 public inputs. To our knowledge, our re-casting conditions are less stringent than the conditions needed 
 in~\cite{eclipse}.}
 
-{\color{red}We cannot use the ECLIPSE compilation technique either in full or in part to compile our custom SNARKs 
+We cannot use the ECLIPSE compilation technique either in full or in part to compile our custom SNARKs 
 since the types of NP relations derived after ECLIPSE compilation are simply incompatible with ours. While in the 
 case of ECLIPSE, the witnesses for the NP relations before compilation remain witnesses also for the relations 
 after compilation, in our case, some part of the public input before compilation becomes witness after the 
 re-casting of the SNARK for a new NP relation. Thus, overall, ECLIPSE and the current work solve different problems. 
 Finally, our compilation method requires only the PLONK compiler without additional computational 
-steps so it is more efficient than the one in~\cite{eclipse}.} 
+steps so it is more efficient than the one in~\cite{eclipse}.
 
 %The paragraph below was a comment/was commented out when shortening the paper.
 \begin{comment}
