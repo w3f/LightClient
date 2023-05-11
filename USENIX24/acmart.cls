@@ -722,7 +722,7 @@
      paperwidth=8.5in, paperheight=11in,
      includeheadfoot, columnsep=2pc,
      top=57pt, bottom=73pt, inner=54pt, outer=54pt,
-     marginparwidth=2pc,heightrounded
+     marginparwidth=1.5pc,heightrounded
      }%
 \or % siggraph
    \geometry{twoside=true, head=13pt,
