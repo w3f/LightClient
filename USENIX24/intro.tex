@@ -142,20 +142,29 @@ We assume that $\mathit{info}_n$ can be proven from a commitment to the state at
 \noindent\paragraph{Proving the General Claim $\mathit{info}_n$:} Once the light client verifier is convinced of $cpk_{n-1}$ for the epoch $n-1$ and $t$ of the validators in epoch $n-1$ signed $H_n$, it needs a committee key scheme proof for $cpk_n$ and a bitfield with $t$ ones that $t$ validators signed $H_n$. Finally, such a proof needs the opening of the commitment $H_n$ to $\mathit{info}_n$.
 \vspace{-0.08in}
 
-\noindent\paragraph{Accountability:} Now suppose that a full node obtains a light client proof for something that contradicts something it sees as decided by the blockchain. For our bridge use case, 
-all light client proofs will be publicly available on another blockchain. We assume that we can express this contradiction in terms of a pair of messages that should never be signed by an honest 
-validator, and that any validators doing so can be punished. These we call incompatible messages. In this example, such pairs of messages should include validator sets commitment to different 
-commitments $(i,cpk_{i+1})$ and $(i,cpk'_{i+1})$, $cpk_{i+1} \neq cpk'_{i+1}$ and similarly distinct $H_n$ and $H'_n$. If a light client proof contains a message signed by a committee key which 
-is a commitment to the public keys of a known set of validators which is incompatible with a message the same set signed on the blockchain, then the signature in the proof is a valid BLS signature 
-with the claimed set of signers and so the full node should be able to report that public keys that signed both messages misbehaved. If an incompatible message was signed by a committee key 
-which doesn't correspond to the claimed epoch's validator set, then at some point previously the light client proof must have shown that the committee key for some correct validator set signed 
-the wrong committee key for the next set which is a message that is incompatible with the correct committee key that they signed on the real chain. {\color{red}Note that the accountability of 
-our light client system instantiation relies on the accountability of the underlying consensus protocol. Indeed, our light client is accountable only if signatures on incompatible messages 
-are enough for consensus accountability e.g., in Casper FFG~\cite{CasperFFG} and it is not directly applicable to consensus protocols where forensics (such as in~\cite{forensics}) are required for accountability, e.g., Polkadot's GRANDPA, Section 4.1~\cite{GRANDPA}. If the consensus protocol is not accountable with signatures, then the consensus protocol needs to 
-be modified by adding another layer (e.g., BEEFY~\cite{BEEFY}).}
+\noindent\paragraph{Accountability:} Now suppose that a full node obtains a light client proof for something that contradicts something it sees as decided 
+by the blockchain. For our bridge use case, all light client proofs will be publicly available on another blockchain. We assume that we can express this 
+contradiction in terms of a pair of messages that should never be signed by an honest validator, and that any validators doing so can be punished. 
+These we call incompatible messages. In this example, such pairs of messages should include validator sets commitment to different 
+commitments $(i,cpk_{i+1})$ and $(i,cpk'_{i+1})$, $cpk_{i+1} \neq cpk'_{i+1}$ and similarly distinct $H_n$ and $H'_n$. If a light client proof 
+contains a message signed by a committee key which is a commitment to the public keys of a known set of validators which is incompatible with a 
+message the same set signed on the blockchain, then the signature in the proof is a valid BLS signature with the claimed set of signers and so the full 
+node should be able to report that public keys that signed both messages misbehaved. If an incompatible message was signed by a committee key 
+which doesn't correspond to the claimed epoch's validator set, then at some point previously the light client proof must have shown that the committee 
+key for some correct validator set signed the wrong committee key for the next set which is a message that is incompatible with the correct committee 
+key that they signed on the real chain. {\color{red}Note that the accountability of our light client system instantiation relies on the accountability of the 
+underlying consensus protocol. Indeed, our light client is accountable only if signatures on incompatible messages are enough for consensus 
+accountability e.g., in Casper FFG~\cite{CasperFFG} and it is not directly applicable to consensus protocols where forensics (such as in~\cite{forensics}) 
+are required for accountability, e.g., Polkadot's GRANDPA, Section 4.1~\cite{GRANDPA}. If the consensus protocol is not accountable with signatures, 
+then the consensus protocol needs to be modified by adding another layer (e.g., BEEFY~\cite{BEEFY}).}
 \vspace{-0.05in}.
 
-\noindent\paragraph{Efficiency Gain:} If one follows the obvious approach described above using BLS aggregation and aims to convince the light client verifier that $\mathit{info}_n$ is decided, then one needs to send $O(v)$ public keys for each validator set change, where $v$ is the upper bound on the size of the validator set. Using our succinct committee key scheme however, one requires only a constant size proof and $v$ bits for each validator set change to convince the light client that $\mathit{info}_n$ was decided. Since a public key or signature typically takes 100s of bits, our approach achieves much smaller proof sizes.  More details our achieved efficiency are available in Section~\ref{sec_implementation}.
+\noindent\paragraph{Efficiency Gain:} If one follows the obvious approach described above using BLS aggregation and aims to convince the 
+light client verifier that $\mathit{info}_n$ is decided, then one needs to send $O(v)$ public keys for each validator set change, where $v$ is 
+the upper bound on the size of the validator set. Using our succinct committee key scheme however, one requires only a constant size 
+proof and $v$ bits for each validator set change to convince the light client that $\mathit{info}_n$ was decided. Since a public key or 
+signature typically takes 100s of bits, our approach achieves much smaller proof sizes.  More details our achieved efficiency are 
+available in Section~\ref{sec_implementation}.
 \vspace{-0.05in}
 
 \noindent\paragraph{Formalisation:} We give a formal model for the security properties of our accountable light client in Appendix~\ref{sec:LCinstantiation}.
@@ -168,7 +177,9 @@ be modified by adding another layer (e.g., BEEFY~\cite{BEEFY}).}
 %\noindent In the following we discuss how we use custom SNARKs with efficient prover time to implement the committee key scheme. 
 %While we achieved very fast proving times in our implementation, it came at the cost of not using a general purpose SNARK protocol, 
 %leading to a more involved security model and the necessity of additional security proofs. \\
-\noindent Here we discuss how we use custom SNARKs with efficient prover time to implement our committee key scheme. While we achieved very fast proving time in our SNARKs implementation, this came at the cost of not using a general purpose SNARK protocol, in turn leading to a more involved security model and the necessity of additional security proofs.  \\
+\noindent Here we discuss how we use custom SNARKs with efficient prover time to implement our committee key scheme. 
+While we achieved very fast proving time in our SNARKs implementation, this came at the cost of not using a general purpose 
+SNARK protocol, in turn leading to a more involved security model and the necessity of additional security proofs.  \\
 
 \vspace{-0.05cm}
 %\noindent Our SNARKs have inputs an aggregate public key $\mathit{apk}$, a commitment $C$ to a list of public keys $(pk_i)$, and a bitvector $(b_i)$. 
@@ -265,17 +276,21 @@ Their protocol is not accountable because, as with Dfinity above, it is not poss
 \paragraph{Mina~\cite{mina}} achieves light clients with $O(1)$ sized light client proofs using recursive SNARKs. This requires some nodes have a large computational overhead to produce proofs. Also because this requires verifying consensus with small circuits, they do not use the consensus paradigm 
 discussed above where a majority of validators sign, and instead use a longest chain rule version of proof of stake~\cite{mina}. 
 Their protocol is not accountable because, as with Dfinity above, it is not possible to tell from the proof which validators signed off on a fork, nor when this happened. 
-Another downside is that because the proof only shows the length of a chain (and its block density), similar to a Bitcoin SPV proof, a light client needs to be connected to an 
-honest node to tell if a block is in the longest chain. If the client is connected to a single malicious node, it could be given a proof for a shorter fork and not see any proofs of chains the fork choice rule would prefer.
+Another downside is that because the proof only shows the length of a chain (and its block density), similar to a Bitcoin SPV proof, a light client needs to be 
+connected to an honest node to tell if a block is in the longest chain. If the client is connected to a single malicious node, it could be given a proof for a 
+shorter fork and not see any proofs of chains the fork choice rule would prefer.
 \vspace{-0.03cm}
 \subsubsection{Commit-and-Prove and Related Approaches}
 \label{sec:commit_prove}
 
 \noindent Our custom SNARKs are an instance of the commit-and-prove paradigm~\cite{KilianPhD,CLOS02,CP_proposal,HP_paper} 
 which is a generalisation for zero-knowledge proofs/arguments in which the prover proves statements about values that are committed. 
-In practice, commit-and-prove systems (for short, CP) can be used to compress a large data structure and then prove something about its content 
-(e.g., polynomial commitments~\cite{KZG_10}, vector commitments~\cite{vector_commitment_1}, accumulators~\cite{first_accumulator}). CP schemes can also be used to decouple the publishing of commitments to some data from the proof generation: each of these actions may be performed by different parties or entities~\cite{zkp_reference}. Finally, commitments can be used to make different proof systems interoperable~\cite{CP_paper,interoperability_2}. Our SNARKs have properties from the first two categories, however we could not have simply re-used an existing argument system: by 
-designing custom circuits and SNARKs, we ensured improved efficiency for our use cases. \\
+In practice, commit-and-prove systems (for short, CP) can be used to compress a large data structure and then prove something about its 
+content (e.g., polynomial commitments~\cite{KZG_10}, vector commitments~\cite{vector_commitment_1}, accumulators~\cite{first_accumulator}). 
+CP schemes can also be used to decouple the publishing of commitments to some data from the proof generation: each of these actions may be 
+performed by different parties or entities~\cite{zkp_reference}. Finally, commitments can be used to make different proof systems 
+interoperable~\cite{CP_paper,interoperability_2}. Our SNARKs have properties from the first two categories, however we could not 
+have simply re-used an existing argument system: by designing custom circuits and SNARKs, we ensured improved efficiency for our use cases. \\
 \vspace{-0.1in}
 
 %The paragraph below was a comment/was commented out when shortening the paper.
