@@ -1,0 +1,23 @@
+ECLIPSE~\cite{eclipse} presents a compiler that starts off with popular SNARKs (e.g., Sonic, PLONK, 
+Marlin) and via a new general compilation method generates CP-variants for these SNARKs. 
+Our proposed compiler uses as a first step the standard PLONK compiler (with only very mild 
+adaptations to incorporate our extended definition of ranged polynomial protocols). 
+As a second step we simply re-cast the SNARK resulted in the first step as a SNARK for a new relation. 
+The security of the recasting holds under mild conditions that deterministically relate some polynomials 
+processed by the verifier in the ranged polynomial protocol (before applying PLONK compiler) to some 
+public inputs. To our knowledge, our re-casting conditions are less stringent than the conditions needed 
+by the ECLIPSE compiler to work.
+
+We cannot use the ECLIPSE compilation technique either in full or in part to compile our custom SNARKs 
+in this work since the types of NP relations derived after compilation are simply incompatible. While in the 
+case of ECLIPSE, the witnesses for the NP relations before compilation remain witnesses also for the relations 
+after compilation, in our case, some part of the public input before compilation becomes witness after the 
+re-casting of the SNARK for a new NP relation. So overall we solve a related but different problem to the one 
+solved by ECLIPSE. Finally, our compilation method requires only the PLONK compiler without additional computational 
+steps so it is more efficient than the one in~\ref{eclipse}. 
+
+  
+%Short conclusion: our compiler work in LC paper is not implied by ECLIPSE compiler; in fact, what I have called "second %compilation step" in our case is a misnomer. All we do in the second compilation step is to re-cast the SNARK already obtained %as a result of the standard PLONK compilation as a SNARK for a new relation. This holds under some mild conditions that %deterministically relate some polynomials processed by the verifier to some public inputs (in the polynomial protocol).  NOTE: %our conditions for re-casting are, I believe, less stringent than the conditions needed by the ECLIPSE compiler to work.
+
+
+%Moreover, the reason why the ECLIPSE compiler does not give as outcome the SNARKs we use in our LC paper is because %ECLIPSE's witnesses are the same in both relations before and after compilation. Their second relation just adds explicit %commitments (to some part of the witness) as public inputs. In our case, some part of the public input before compilation %becomes witness after the re-casting of the SNARK for a new relation. We also add, of course, commitments to this witness as %part of the public input in the second relation (after re-casting). So overall we solve related but different problem to the one in %ECLIPSE
