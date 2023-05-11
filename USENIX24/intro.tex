@@ -288,14 +288,34 @@ shorter fork and not see any proofs of chains the fork choice rule would prefer.
 \label{sec:commit_prove}
 
 \noindent Our custom SNARKs are an instance of the commit-and-prove paradigm~\cite{KilianPhD,CLOS02,CP_proposal,HP_paper} 
-which is a generalisation for zero-knowledge proofs/arguments in which the prover proves statements about values that are committed. 
+which is a generalisation for zero-knowledge proofs/arguments in which the prover proves statements about values that are committed.\\
+
+\begin{comment}
 In practice, commit-and-prove systems (for short, CP) can be used to compress a large data structure and then prove something about its 
 content (e.g., polynomial commitments~\cite{KZG_10}, vector commitments~\cite{vector_commitment_1}, accumulators~\cite{first_accumulator}). 
 CP schemes can also be used to decouple the publishing of commitments to some data from the proof generation: each of these actions may be 
 performed by different parties or entities~\cite{zkp_reference}. Finally, commitments can be used to make different proof systems 
 interoperable~\cite{CP_paper,interoperability_2}. Our SNARKs have properties from the first two categories, however we could not 
-have simply re-used an existing argument system: by designing custom circuits and SNARKs, we ensured improved efficiency for our use cases. \\
+have simply re-used an existing argument system: by designing custom circuits and SNARKs, we ensured improved efficiency for our use cases. 
+\end{comment}
 \vspace{-0.1in}
+
+{\color{red}In this context, ECLIPSE~\cite{eclipse} presents a compiler that starts off with popular SNARKs (e.g., Sonic, PLONK, 
+Marlin) and via a new general compilation method generates CP-variants for these SNARKs. 
+Our proposed compiler uses as a first step the standard PLONK compiler.  As a second step we simply 
+re-cast the SNARK resulted in the first step as a SNARK for a new relation. 
+The security of the re-casting holds under mild conditions that deterministically relate some polynomials 
+processed by the verifier in the ranged polynomial protocol (before applying PLONK compiler) to some 
+public inputs. To our knowledge, our re-casting conditions are less stringent than the conditions needed 
+in~\cite{eclipse}.}
+
+{\color{red}We cannot use the ECLIPSE compilation technique either in full or in part to compile our custom SNARKs 
+since the types of NP relations derived after ECLIPSE compilation are simply incompatible with ours. While in the 
+case of ECLIPSE, the witnesses for the NP relations before compilation remain witnesses also for the relations 
+after compilation, in our case, some part of the public input before compilation becomes witness after the 
+re-casting of the SNARK for a new NP relation. Thus, overall, ECLIPSE and the current work solve different problems. 
+Finally, our compilation method requires only the PLONK compiler without additional computational 
+steps so it is more efficient than the one in~\cite{eclipse}.} 
 
 %The paragraph below was a comment/was commented out when shortening the paper.
 \begin{comment}
