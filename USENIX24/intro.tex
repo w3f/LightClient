@@ -301,14 +301,14 @@ have simply re-used an existing argument system: by designing custom circuits an
 \end{comment}
 \vspace{-0.1in}
 
-{\color{red}In this context, ECLIPSE~\cite{eclipse} presents a compiler that starts off with popular SNARKs (e.g., Sonic~\cite{sonic}, PLONK~\cite{plonk}, 
+In this context, ECLIPSE~\cite{eclipse} presents a compiler that starts off with popular SNARKs (e.g., Sonic~\cite{sonic}, PLONK~\cite{plonk}, 
 Marlin~\cite{marlin}) and via a new general compilation method generates CP-variants for these SNARKs. 
 Our proposed compiler uses as a first step the standard PLONK compiler.  As a second step we simply 
 re-cast the SNARK resulted in the first step as a SNARK for a new relation. 
 The security of the re-casting holds under mild conditions that deterministically relate some polynomials 
 processed by the verifier in the ranged polynomial protocol (before applying PLONK compiler) to some 
 public inputs. To our knowledge, our re-casting conditions are less stringent than the conditions needed 
-in~\cite{eclipse}.}
+in~\cite{eclipse}.
 
 We cannot use the ECLIPSE compilation technique either in full or in part to compile our custom SNARKs 
 since the types of NP relations derived after ECLIPSE compilation are simply incompatible with ours. While in the 
