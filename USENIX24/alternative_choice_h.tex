@@ -1,7 +1,7 @@
 \section{Choosing $h$ when $\einn = \ginn{1}$}
 \label{sec:other_choice_h}
 
-{\color{red}\noindent For the polynomial protocols and custom SNARKs we have designed in Section~\ref{sec:snarks}, we have chosen 
+\noindent For the polynomial protocols and custom SNARKs we have designed in Section~\ref{sec:snarks}, we have chosen 
 $h \in \einn \setminus \ginn{1}$. However, we have not covered so far the case when $\einn = \ginn{1}$ and how to 
 choose $h$ in such a situation. Our current section will give a guide for that. In fact, if $\einn = \ginn{1}$, we provide a 
 method of choosing $h$ that will be suitable not only for our custom SNARKs from Section~\ref{sec:snarks}, but also for any other SNARK that proves the 
@@ -19,4 +19,4 @@ elliptic curve for which the number of elliptic curve points is $O(2^{\lambda})$
 any elliptic curve point being equal to a fixed elliptic curve is negligible in $\lambda$. This, in turn, ensures that condition 
 3) from Observation~\ref{obs:incomplete_addition} is only met with negligible probability. Hence, knowledge soundness 
 for our polynomial protocols in Sections~\ref{sec_la},\ref{sec_a} still holds with overwhelming probability, so all follow-up results in 
-Section~\ref{sec:snarks} still hold.} 
+Section~\ref{sec:snarks} still hold.

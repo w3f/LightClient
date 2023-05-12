@@ -98,7 +98,7 @@ where
 &((\mathit{pk}^*,\pi^*_{\mathit{PoP}}), \mathit{sk}^*) \leftarrow \mathit{AS.GenKeypair}(\mathit{pp}), Q \leftarrow \emptyset \\
 & ((\mathit{pk_i}, \pi_{\mathit{PoP},i})_{i=1}^{u}, (\mathit{bit_i})_{i=1}^u, \mathit{asig}, \pi, m) \leftarrow \mathcal{A}^{\mathit{OSign}}(\mathit{pp},\mathit{rs}_{\mathit{vk}}, \\ &\mathit{rs}_{\mathit{pk}}, (\mathit{pk^*},\pi^*_{\mathit{PoP}})) \\
 %& \textit{If } (\forall i: \mathit{pk}^* \neq \mathit{pk_i} \wedge \mathit{bit_i}=0) \vee m \in Q, \textit{ then return } 0 \\
-&{\color{red} \textit{If } (\nexists i  \in [u], \mathit{pk}^* = \mathit{pk_i} \wedge \mathit{bit_i}=1) \vee m \in Q, \textit{ then return } 0} \\
+&\textit{If } (\nexists i  \in [u], \mathit{pk}^* = \mathit{pk_i} \wedge \mathit{bit_i}=1) \vee m \in Q, \textit{ then return } 0 \\
 & \textit{For } i \in [u] \\
 & \ \ \ \ \ \textit{ If } \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i}, \pi_{\mathit{PoP,i}})=0  \textit{ return } 0 \\
 & \mathit{ck} \leftarrow \mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^u) \\
