@@ -288,8 +288,9 @@ shorter fork and not see any proofs of chains the fork choice rule would prefer.
 \subsubsection{Commit-and-Prove and Related Approaches}
 \label{sec:commit_prove}
 
-\noindent Our custom SNARKs are an instance of the commit-and-prove paradigm~\cite{KilianPhD,CLOS02,CP_proposal,HP_paper,CP_paper} 
-which is a generalisation for zero-knowledge proofs/arguments in which the prover proves statements about values that are committed.\\
+\noindent Our custom SNARKs are an instance of the commit-and-prove (CP) paradigm~\cite{KilianPhD,CLOS02,CP_proposal,HP_paper,CP_paper, lunar, eclipse} 
+which is a generalisation for zero-knowledge proofs/arguments in which the prover proves statements about values that are committed. We use this paradigm by using a commitment to a large dataset in the input, in a similar way to \cite{HP_paper,CP_paper}. Other CP SNARK protocols (\cite{CP_paper,interoperability_2, lunar, eclipse} consider having (ZK) SNARKs with witness data in common, a very different problem to ours. Hash-and-prove~\cite{HP_paper} considers using hashes of a large input dataset in the input for a SNARK. LegoSNARKs ~\cite{CP_paper} consider using commitments which work with the SNARK protocols more directly and don't need an opening to be explicitly verified inside the SNARK. \cite{CP_paper} claims a 5000x speedup in proving time using this technique for Groth16 in place of hasing.  Our scheme uses a version of this approach, using KZG polymomial commitments~\cite{KZG_10} for the input, and we expect that several orders of magnitude for our proving time improvment over Celo's Plumo protocol that uses hashes comes from this, because we also have a very simple constraint system that would be much bigger if we hashed the input. Our formalism, which generalised PLONK~\cite{plonk}'s polynomial protocols and compiler to work with polynomial commitments for the input, is different from prior work on CP SNARKs.
+
 
 \begin{comment}
 In practice, commit-and-prove systems (for short, CP) can be used to compress a large data structure and then prove something about its 
@@ -298,8 +299,9 @@ CP schemes can also be used to decouple the publishing of commitments to some da
 performed by different parties or entities~\cite{zkp_reference}. Finally, commitments can be used to make different proof systems 
 interoperable~\cite{CP_paper,interoperability_2}. Our SNARKs have properties from the first two categories, however we could not 
 have simply re-used an existing argument system: by designing custom circuits and SNARKs, we ensured improved efficiency for our use cases. 
-\end{comment}
 \vspace{-0.1in}
+\end{comment}
+
 
 In this context, ECLIPSE~\cite{eclipse} presents a compiler that starts off with popular SNARKs (e.g., Sonic~\cite{sonic}, PLONK~\cite{plonk}, 
 Marlin~\cite{marlin}) and via a new general compilation method generates CP-variants for these SNARKs. 
