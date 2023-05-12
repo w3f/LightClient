@@ -1,7 +1,7 @@
 \section{Packed Accountable Protocol}
 \label{sec_a}
 
-Here we describe the packed accountable protocol, which differs from the basic accountable protocol gievn in Section \ref{sec_la}, in that the verifier performs far fewer field operations. It achieves this by partitioning the bitbector into field elements differently, instead of interpreting the bitvector is as a sequence of $0/1$ field elements, instead the bitvector is divided into sequences of $\block$ bits which are interpreted as field elements. Unpacking these to bits in the SNARK adds some complexity, but the verifier has to deal with $1/\block$ times fewer field elements and operations.
+Here we describe the packed accountable protocol, which differs from the basic accountable protocol given in Section \ref{sec_la}, in that the verifier performs far fewer field operations. It achieves this by partitioning the bitvector into field elements differently:  instead of interpreting the bitvector is as a sequence of $0/1$ field elements, that is divided into sequences of $\block$ bits which are interpreted as field elements. Unpacking these to bits in the SNARK adds some complexity, but the verifier has to deal with $1/\block$ times fewer field elements and operations.
 
 
 Let $\mathbb{F}_{|\block|} = \{0, \ldots, 2^{\block -1} \}$. %, with $\block$ defined in Section~\ref{sec:lagrange}.

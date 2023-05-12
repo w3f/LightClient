@@ -68,20 +68,19 @@ protocol of the blockchain. Such light client systems would not be possible for 
 
 \noindent Stakers in proof of stake protocol have an incentive for the chain (chain A) using that protocol to keep working, however they may not have stake in a chain (chain B) bridged to their chain. As a result, they may have no particular incentive in the correct functioning of a light client of chain A on chain B and so not to mislead the light client. In the case when the protocol of chain A has slashing, if an accountable light client on chain B is misled, one can prove to chain A, using information that is publicly available on chain B, of validator of chain A misbehaving in a way that will result in those validators being slashed on chain A. This gives the bridge similar economic security to chain A itself.
 
-Protocols Cardano and Algorand
 \vspace{-0.08in}
 \subsection{Applicability of Our Scheme}
 
 \noindent Our scheme is applicable to proof of stake blockchains where if something is decided by the chain, then a message is signed by some threshold fraction of a validator set, defined as a set of nodes or their public keys, which changes at well-defined times, those changes being signed by an appropriate threshold of the existing set. As mentioned such chains as Polkadot, the many Cosmos chains, or Ethereum fit this model. Our scheme is not applicable to chains using proof of work or many other proof of X schemes. Nor proof of stake protocols when only random validators or random subsets of validators decide something and the whole set never votes, such as protocols using the longest chain rule without a finality gadget.
 
-\noindent Our scheme might well require a hard fork to be applied to many blockchains, especially those that have not implemented the required cryptography. It should be easily implementable for chains that use BLS signatures for consensus but those using signatures that do not support aggregation (e.g., the many using Ed25519), would need to use SNARKs with much slower prover time (e.g., zkBridge~\cite{zkBridge} for Ed25519)). To naively implement our scheme, we would also want validators to compute and sign the commitment to the next set. We note however that this is not strictly necessary, as the commitment could be computed on chain, maybe in a smart contract, as long as light client proof of the result of this computation can be constructed. This would result in longer proofs that cover validator set changes. For blockchains with expensive on-chain computation, native code support for the cryptography we use e.g., with precompiles for smart contracts might be required. It is planned to make the required changes to Polkadot and implement this scheme for it. We discuss in detail what would be required for a light client of Ethereum in Appendix Section~\ref{sec:ethereum}.
+\noindent Our scheme might well require a hard fork to be applied to many blockchains, especially those that have not implemented the required cryptography. It should be easily implementable for chains that use BLS signatures for consensus but those using signatures that do not support aggregation (e.g., the many using Ed25519), would need to use SNARKs with much slower prover time (e.g., zkBridge~\cite{zkBridge} for Ed25519)). To naively implement our scheme, we would also want validators to compute and sign the commitment to the next set. We note however that this is not strictly necessary, as the commitment could be computed on chain, maybe in a smart contract, as long as light client proof of the result of this computation can be constructed. This would result in longer proofs that cover validator set changes. For blockchains with expensive on-chain computation, native code support for the cryptography we use e.g., with precompiles for smart contracts might be required. It is planned to make the required changes to Polkadot and implement this scheme for it. We discuss in detail what would be required for a light client of Ethereum in Appendix~\ref{sec:ethereum}.
 \vspace{-0.1in}
 %The following paragraph should be commented out and changed in case of a conference submission.
 \paragraph{Structure} The paper is organised as follows. 
 In Section~\ref{sec:sketch}, we sketch our proposed protocols and compare 
 them to existing work. In Section~\ref{sec_prelims}, we give cryptographic 
 preliminaries necessary for later sections. In Section~\ref{sec_apk_proofs}
-we describe our custom SNARKs and our committee key scheme. In 
+we describe one of our custom SNARKs and our committee key scheme. In 
 Section~\ref{sec_implementation} we give benchmarks for our custom SNARKs 
 implementations. We conclude in Section~\ref{conclusions}. Our paper includes 
 an extensive appendix for more details.% as follows. 
@@ -280,7 +279,7 @@ Their protocol is not accountable because, as with Dfinity above, it is not poss
 %\vspace{-0.2cm}
 \paragraph{Mina~\cite{mina}} achieves light clients with $O(1)$ sized light client proofs using recursive SNARKs. This requires some nodes have a large computational overhead to produce proofs. Also because this requires verifying consensus with small circuits, they do not use the consensus paradigm 
 discussed above where a majority of validators sign, and instead use a longest chain rule version of proof of stake~\cite{mina}. 
-Their protocol is not accountable because, as with Dfinity above, it is not possible to tell from the proof which validators signed off on a fork, nor when this happened. 
+Their protocol is not accountable because, as with Difinity above, it is not possible to tell from the proof which validators signed off on a fork, nor when this happened. 
 Another downside is that because the proof only shows the length of a chain (and its block density), similar to a Bitcoin SPV proof, a light client needs to be 
 connected to an honest node to tell if a block is in the longest chain. If the client is connected to a single malicious node, it could be given a proof for a 
 shorter fork and not see any proofs of chains the fork choice rule would prefer.
@@ -289,7 +288,13 @@ shorter fork and not see any proofs of chains the fork choice rule would prefer.
 \label{sec:commit_prove}
 
 \noindent Our custom SNARKs are an instance of the commit-and-prove (CP) paradigm~\cite{KilianPhD,CLOS02,CP_proposal,HP_paper,CP_paper, lunar, eclipse} 
-which is a generalisation for zero-knowledge proofs/arguments in which the prover proves statements about values that are committed. We use this paradigm by using a commitment to a large dataset in the input, in a similar way to \cite{HP_paper,CP_paper}. Other CP SNARK protocols (\cite{CP_paper,interoperability_2, lunar, eclipse} consider having (ZK) SNARKs with witness data in common, a very different problem to ours. Hash-and-prove~\cite{HP_paper} considers using hashes of a large input dataset in the input for a SNARK. LegoSNARKs ~\cite{CP_paper} consider using commitments which work with the SNARK protocols more directly and don't need an opening to be explicitly verified inside the SNARK. \cite{CP_paper} claims a 5000x speedup in proving time using this technique for Groth16 in place of hasing.  Our scheme uses a version of this approach, using KZG polymomial commitments~\cite{KZG_10} for the input, and we expect that several orders of magnitude for our proving time improvment over Celo's Plumo protocol that uses hashes comes from this, because we also have a very simple constraint system that would be much bigger if we hashed the input. Our formalism, which generalised PLONK~\cite{plonk}'s polynomial protocols and compiler to work with polynomial commitments for the input, is different from prior work on CP SNARKs.
+which is a generalisation for zero-knowledge proofs/arguments in which the prover proves statements about values that are committed. We employ this paradigm by using a commitment to a large dataset as part of the public 
+input, in a similar way to \cite{HP_paper,CP_paper}. Other CP SNARK protocols (\cite{CP_paper,interoperability_2, lunar, eclipse} consider having (ZK) SNARKs with portions of their respective witnesses overlapping, a very 
+different problem to ours. Hash-and-prove~\cite{HP_paper} considers using hashes of a large input dataset as part of the public input for a SNARK. LegoSNARK ~\cite{CP_paper} considers using commitments which work 
+with the SNARK protocols more directly and don't need an opening to be explicitly verified inside the SNARK. \cite{CP_paper} claims a 5000x speedup in proving time using this technique for Groth16 instead of hashing. Our 
+custom schemes use a version of this approach, using KZG polynomial commitments~\cite{KZG_10} as partof of the public inputs, and we expect that several orders of magnitude for our proving time improvement over Celo's 
+Plumo protocol that uses hashes comes from this. Additionally, we also have a very simple constraint system that would have a considerable increase in size if we hashed the input. 
+Our formalism, which generalised PLONK~\cite{plonk}'s polynomial protocols and compiler to work with polynomial commitments for the input, is different from prior work on CP SNARKs.
 
 
 \begin{comment}
