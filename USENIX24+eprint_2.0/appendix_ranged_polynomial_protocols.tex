@@ -1,0 +1,95 @@
+\section{Ranged Polynomial Protocols for NP Relations}
+\label{supplementary_poly_protocols_appendix}
+
+\noindent In the following, we keep the convention that all algorithms receive an implicit security parameter $\lambda$. The definition below 
+is a natural extension of the notions of polynomial protocols and polynomial protocols for relations from Section 4 of PLONK~\cite{plonk} to 
+polynomial protocols over ranges for conditional NP relations with additional refinements required by our specific use case; these refinements are 
+incorporated into steps 4, 5 and 6 as follows: 
+
+\begin{definition}(Polynomial Protocols over Ranges for Conditional NP Relations)
+\label{def_ranged_poly_protocol}
+Assume three parties, a prover $\mathcal{P}_{poly}$, a verifier $\mathcal{V}_{poly}$ and a trusted party $\mathcal{I}$. 
+Let $\mathcal{R}^c$ be a conditional NP relation (with $c$ being a predicate) and let $x$ be a public 
+input both of which have been given to $\mathcal{P}_{poly}$ and $\mathcal{V}_{poly}$ by an $\mathit{InitGen}$ efficient algorithm. 
+For positive integers $d$, $D$, $t$, $l$, $u$, $e$ and for set 
+$S \subset \mathbb{F}$, an $S$-ranged $(d, D, t, l, u, e)$-polynomial protocol $\mathscr{P}_{\mathcal{R}^c}$ for relation $\mathcal{R}^c$ is a multi-round 
+protocol between $\mathcal{P}_{poly}$, $\mathcal{V}_{poly}$ and $\mathcal{I}$ such that:
+
+\begin{enumerate}
+\item The protocol $\mathscr{P}_{\mathcal{R}^c}$ definition includes a set of pre-processed polynomials $g_1(X), \ldots, g_l(X) \in \mathbb{F}_{<d}[X]$. 
+
+\item The messages of $\mathcal{P}_{poly}$ are sent to $\mathcal{I}$ and are of the form $f(X)$ for $f(X) \in \mathbb{F}_{<d}[X]$. 
+
+If $\mathcal{P}_{poly}$ sends a message not of this form, the protocol is aborted.
+\item The messages from $\mathcal{V}_{poly}$ to $\mathcal{P}_{poly}$ are random coins.
+
+\item
+$\mathcal{V}_{poly}$ may perform arithmetic computations using input $x$ and the random coins used in the 
+communication with $\mathcal{P}_{poly}$. Let $(\mathit{res_1}, \ldots, \mathit{res_u})$ be the results of those computations 
+which $\mathcal{V}_{poly}$ sends to $\mathcal{I}$. 
+
+\item 
+Using vectors which are part of input $x$ and/or other ad-hoc vectors which $\mathcal{V}_{poly}$ deems useful, $\mathcal{V}_{poly}$ 
+may compute interpolation polynomials $s_1(X), \ldots, s_e(X)$ over domain $S$ such that $s_1(X), \ldots, s_e(X) \in \mathbb{F}_{<d}[X]$. 
+$\mathcal{V}_{poly}$ sends $s_1(X), \ldots, s_e(X)$ to $\mathcal{I}$. 
+
+\item 
+At the end of the protocol, suppose $f_1(X), \ldots, f_t(X)$ are the polynomials that were sent from $\mathcal{P}_{poly}$ to 
+$\mathcal{I}$. $\mathcal{V}_{poly}$ may ask $\mathcal{I}$ if certain polynomial identities hold between 
+$$\{f_1(X), \ldots , f_t(X), g_1(X), \ldots, g_l(X), s_1(X), \ldots, s_e(X) \}$$ over set $S$ 
+(i.e., if by evaluating all the polynomials that define the identity at each of the field elements from $S$ 
+we obtain a true statement). Each such identity is of the form 
+
+$$F(X) := G(X, h_1(v_1(X)), \dots , h_M(v_M(X))) \equiv 0,$$
+for some $h_i(X) \in \{f_1(X), \ldots , f_t(X), g_1(X), \ldots , g_l(X), s_1(X), \ldots, s_e(X) \}$, \\ $G(X, X_1, \ldots, X_M) \in \mathbb{F}[X, X_1, \ldots , X_M]$, 
+$v_1(X), \ldots , v_M(X) \in  \mathbb{F}_{<d}[X]$ such that $F(X) \in \mathbb{F}_{<D}[X]$ for every choice of 
+$f_1(X), \ldots, f_t(X)$ made by $P_{poly}$ when following the protocol correctly. Note that some of the coefficients in the identities above may be 
+from the set $\{\mathit{res_1}, \ldots, \mathit{res_u}\}$.
+\item After receiving the answers from $I$ regarding the polynomial identities, 
+$\mathcal{V}_{poly}$ outputs $\mathsf{acc}$ if all identities hold over set $S$, 
+and outputs $\mathsf{rej}$ otherwise.
+\end{enumerate}
+
+\noindent Additionally, the following properties hold: \\
+
+\noindent \textbf{Perfect Completeness:} If $\mathcal{P}_{poly}$ follows the protocol correctly and uses a witness $\omega$ with 
+$(x, \omega) \in \mathcal{R}^c$, $\mathcal{V}_{poly}$ accepts with probability one.
+
+\noindent \textbf{Knowledge Soundness:} There exists an efficient algorithm $E$, that given access to the messages of $\mathcal{P}_{poly}$ 
+to $\mathcal{I}$ it outputs $\omega$ such that, for any strategy of $\mathcal{P}_{poly}$, the probability of $\mathcal{V}_{poly}$ 
+outputting $\mathsf{acc}$ at the end of the protocol and, simultaneously, $(x, \omega) \in \mathcal{R}^c$ is overwhelming in $\lambda$.
+
+\end{definition}
+
+\noindent Our definition for polynomial protocols over ranges does not include a zero-knowledge property as it is not required in our current work. \\
+
+\noindent Given the definition for polynomial protocols over ranges for conditional relations as detailed above, we are now ready to state the following result.
+The proof follows with only minor changes from that of Lemmas 4.5. and 4.7. from~\cite{plonk}. 
+
+\begin{lemma}(Compilation of Ranged Polynomial Protocols for Conditional NP Relations into Hybrid Model SNARKs using PLONK) 
+\label{le:compilation_step_1}
+Let $\mathscr{P}_{\mathcal{R}^c}$ be a public coin $S$-ranged $(d, D, t, l, u, e)$-polynomial protocol for relation $\mathcal{R}^c$ where only 
+one identity is checked by $\mathcal{V}_{poly}$ and predicate $c$ from the definition of ${\mathcal{R}^c}$ needs to be fulfilled only by a part $x_1$ 
+of the public input of the relation ${\mathcal{R}^c}$. Then one can construct a hybrid model SNARK protocol $\mathscr{P}^*_{\mathcal{R}^c}$ for relation 
+$\mathscr{P}_{\mathcal{R}^c}$ with $\mathit{SNARK.PartInput}$ as defined below 
+and with $\mathscr{P}^*_{\mathcal{R}^c}$ secure in the AGM under the $2d$-DLOG 
+assumption\footnote{Definition 2.1. in PLONK~\cite{plonk} formally describes the $2d$-DLOG assumption.} such that:
+\begin{enumerate}
+\item The prover $\mathbf{P}$ in $\mathscr{P}^*_{\mathcal{R}^c}$ requires $\mathsf{e}(\mathscr{P}_{\mathcal{R}^c})$ $\gout{1}$-exponentiations where 
+$\mathsf{e}(\mathscr{P}_{\mathcal{R}^c})$ is define analogously as in PLONK (see preamble of Section 4.2.), however it additionally takes into account 
+polynomials $s_1(X), \ldots, s_e(X)$. 
+\item The total prover communication consists of $t + t^*(\mathscr{P}_{\mathcal{R}^c}) + 1$ $\gout{1}$-elements and M $\mathbb{F}$-elements, where 
+$t^*(\mathscr{P}_{\mathcal{R}^c})$ is defined identically as in PLONK (see preamble of Section 4.2.).
+\item The verifier $\mathbf{V}$ in $\mathscr{P}^*_{\mathcal{R}^c}$ requires $t + t^*(\mathscr{P}_{\mathcal{R}^c})+1$ $\gout{1}$-exponentiations, 
+two pairings and one evaluation of the polynomial $G$, and, additionally, the verifier in $\mathscr{P}^*_{\mathcal{R}^c}$ computes $e$ 
+polynomial commitments to polynomials in the set $\{s_1(X), \ldots, s_e(X)\}$. 
+\item For $x_1$ part of  $\mathit{state_1}$, the algorithm for computing partial inputs is defined as 
+\begin{align*}
+&\mathit{SNARK.PartInput}(\mathit{srs}, \mathit{state_1}, \mathcal{R}^c) \\
+&\mathit{If \ } c(x_1) = 0 \\
+&\ \ \ \ \mathit{Return} \\
+&\mathit{Else } \\
+&\ \ \ \ \mathit{Return} (\mathit{state_1}, x_1)
+\end{align*}
+\end{enumerate}
+\end{lemma}

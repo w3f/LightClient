@@ -1,0 +1,166 @@
+\section{Aggregatable Signature Scheme Definition}
+\label{sec:multisig}
+%\label{suplementary_aggregatable}
+%An aggregatable signature scheme compresses signatures issued using possibly different signing keys into one signature. 
+\begin{comment}
+In this work we use an aggregatable 
+signature scheme making explicit use of the proofs-of-possession (PoPs)~\cite{proofs_of_posession}.
+For our concrete instantiation we use aggregatable BLS signatures with an efficient aggregation procedure, i.e., by adding together keys and by multiplying together signatures, and protect against rogue key attacks~\cite{proofs_of_posession} using PoPs. 
+This is in contrast to other aggregation procedures that do not require PoPs for security 
+but incur a higher computational cost (e.g., due to the use of multi-scalar multiplication~\cite{boneh_compact_multisig}). 
+For our concrete use case of accountable light clients systems, our efficient signature aggregation method results 
+in a simple and more efficient custom argument scheme (i.e., SNARK), which, in turn, compensates for the cost of having 
+to work with PoPs. 
+\end{comment}
+
+\begin{definition}
+\label{def:aggregate_signatures_long}
+(Aggregatable Signature Scheme) An aggregatable signature scheme consists of
+the following tuple of algorithms ($\mathit{AS.Setup}$, $\mathit{AS.GenKeypair}$, $\mathit{AS.VerifyPoP}$, 
+$\mathit{AS.Sign}$, $\mathit{AS.AggKeys}$, $\mathit{AS.AggSigs}$, $\mathit{AS.Verify}$) 
+such that for implicit security parameter $\lambda$:
+\begin{itemize}
+
+\item $\mathit{pp} \leftarrow  \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}})$: a setup algorithm that, given an 
+auxiliary parameter $\mathit{aux_{\mathit{AS}}}$, outputs public protocol parameters $\mathit{pp}$. 
+
+\item $((\mathit{pk},\mathit{\pi_{PoP}}),\mathit{sk}) \leftarrow \mathit{AS.GenKeypair}(\mathit{pp})$:
+a key pair generation algorithm that
+outputs
+a secret key $\mathit{sk}$,
+and the corresponding public key $\mathit{pk}$
+together with a proof of possession $\mathit{\pi_{PoP}}$ for the secret key.
+
+\item $0/1 \leftarrow \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk},\mathit{\pi_{PoP}})$:
+a public key verification algorithm that,
+given a public key $\mathit{pk}$
+and a proof of possession $\mathit{\pi_{PoP}}$,
+outputs
+$1$ if $\mathit{\pi_{PoP}}$ is valid for $\mathit{pk}$ and $0$ otherwise.
+
+\item $\sigma \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk}, m)$:
+a signing algorithm that,
+given a secret key $\mathit{sk}$ and a message $m$ in $\{0, 1\}^*$, returns a signature $\sigma$.
+
+\item $\mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp}, (\mathit{pk_i})_{i=1}^{u})$:
+a public key aggregation algorithm that,
+given a vector of public keys $(\mathit{pk_i})_{i=1}^u$,
+returns
+an aggregate public key $\mathit{apk}$.
+
+\item $\mathit{asig} \leftarrow \mathit{AS.AggSigs}(\mathit{pp}, (\sigma_i)_{i=1}^u)$:
+a signature aggregation algorithm that,
+given a vector of signatures $(\sigma_i)_{i=1}^u$,
+returns
+an aggregate signature $\mathit{asig}$.
+
+\item $0/1 \leftarrow \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig})$:
+a signature verification algorithm that,
+given an aggregate public key $\mathit{apk}$, a message $m \in \{0, 1\}^*$, and an aggregate signature $\sigma$,
+returns
+1 or 0 to indicate if the signature is valid.
+\end{itemize}
+
+\noindent We say ($\mathit{AS.Setup}$, $\mathit{AS.GenKeypair}$, $\mathit{AS.VerifyPoP}$, 
+$\mathit{AS.Sign}$, $\mathit{AS.AggKeys}$,  $\mathit{AS.AggSigs}$, 
+$\mathit{AS.Verify}$) is an aggregatable signature scheme if it satisfies \emph{perfect completeness}  and 
+\emph{perfect completeness for aggregation}  and \emph{unforgeability} as defined below. 
+
+\noindent \textbf{Perfect Completeness} An aggregatable signature scheme
+AS has perfect completeness if for any message $m \in \{0,1\}^*$ and any 
+$u\in\mathbb{N}$ it holds that:
+\begin{align*}
+&\mathit{Pr} [\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig})=1 \  \wedge \ \\
+& \forall  i \in [u]\ \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i},\mathit{\pi_{\mathit{PoP},i}})=1\ |\\
+& \mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}), \\
+& ((pk_{i},\pi_{\mathit{PoP}, i}), sk_{i} ) \leftarrow \mathit{AS.GenerateKeypair}(\mathit{pp}),\ i=1,\ldots, u\\
+&\mathit{apk} \leftarrow \mathit{AggregateKeys}(\mathit{pp}, (\mathit{pk}_{i})_{i=1}^{u}), \\
+& \sigma_i \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk_i}, m),\ i=1,\ldots, u, \\
+& \mathit{asig} \leftarrow \mathit{AS.AggregateSignatures(\mathit{pp}, (\sigma_{i})_{i=1}^{u})}] = 1.
+\end{align*}
+\noindent We note that an aggregatable signature scheme with perfect completeness implies the underlying signature scheme
+has perfect completeness. \\
+
+\noindent \textbf{Perfect Completeness for Aggregation} An aggregatable signature scheme AS
+has perfect completeness for aggregation if, for every adversary $\mathcal{A}$
+\begin{align*}
+& \mathit{Pr}[\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 \ | \ \mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}), \\
+& ((\mathit{pk_i})_{i=1}^u, m, (\sigma_i)_{i=1}^{u}) \leftarrow \mathcal{A}(\mathit{\mathit{pp})} \ 
+\textit{such that} \ \forall i \in [u], \\
+&\mathit{AS.Verify}(\mathit{pp}, \mathit{pk_i}, m, \sigma_i) = 1, \\
+& \mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp},  (\mathit{pk}_{i})_{i=1}^{u}), \\
+&  \mathit{asig} \leftarrow \mathit{AS.AggSigs}(\mathit{pp}, (\sigma_i)_{i=1}^u)] = 1.
+\end{align*}
+
+\noindent \textbf{Unforgeable Aggregatable Signature}
+For an aggregatable signature scheme AS,
+the advantage of an adversary against unforgeability is defined by
+
+$$\mathit{Adv}^{\mathit{forge}}_{\mathcal{A}}({\lambda}) = \mathit{Pr}[\mathit{Game}^{\mathit{forge}}_{\mathcal{A}}({\lambda}) =1]$$
+\noindent where
+\begin{align*}
+&\mathit{Game}^{\mathit{forge}}_{\mathcal{A}}({\lambda}): \\
+& \mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}) \\
+& ((\mathit{pk}^*,\pi^*_{\mathit{PoP}}), \mathit{sk}^*) \leftarrow \mathit{AS.GenerateKeypair}(\mathit{pp})\\
+& Q \leftarrow \emptyset \\
+& ((\mathit{pk_i}, \pi_{\mathit{PoP},i})_{i=1}^{u}, m, \mathit{asig}) \leftarrow \mathcal{A}^{\mathit{OSign}}(\mathit{pp}, (\mathit{pk^*},\pi^*_{\mathit{PoP}})) \\
+& \textit{If } \mathit{pk}^* \notin \{\mathit{pk_i}\}_{i=1}^{u} \vee m \in Q, \textit{ then return } 0 \\
+& \textit{For } i \in [u] \\
+& \ \ \ \ \ \textit{ If } \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i}, \pi_{\mathit{PoP},i})=0  \textit{ return } 0 \\
+& \mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp}, (\mathit{pk_i})_{i=1}^{u}) \\
+& \textit{Return } \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig})
+\end{align*}
+\noindent and
+\begin{align*}
+& \mathit{OSign}(m_j): \\
+& \sigma_j \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk}^*, m_j) \\
+&  Q \leftarrow Q \cup \{m_j\} \\
+& \textit{Return} \ \sigma_j
+\end{align*}
+
+\noindent and $\mathcal{A}^{\mathit{OSign}}$ denotes the adversary $\mathcal{A}$ with access to oracle $\mathit{OSign}$. \\
+
+\noindent We say an aggregatable signature scheme is unforgeable if for all efficient adversaries
+$\mathcal{A}$ it holds that $\mathit{Adv}^{\mathit{forge}}_{\mathcal{A}}({\lambda}) \leq \mathit{negl}(\lambda)$. 
+\end{definition}
+
+\subsubsection{An Aggregatable Signature Instantiation}
+\label{sec:bls}
+\noindent In the following, we instantiate the aggregatable signature definition given above with a scheme inspired by the BLS signature
+scheme~\cite{BLS_signatures} and its follow-up variants~\cite{proofs_of_posession,boneh_compact_multisig}.
+
+\begin{construction}(Aggregatable Signatures) 
+\label{insta:bls}
+In our implementation we call aggregatable signatures the following 
+instantiation of aggregatable signatures definition. Note that in our implementation we instantiate $\einn$ with BLS12-377~\cite{zexe}.
+\begin{itemize}
+\item $(\ginn{1}, \sginn{1}, \ginn{2}, \sginn{2}, \gtinn, \epinn, \Hinn, \HPoP)$ from $\mathit{pp}$ where 
+$\mathit{pp} \leftarrow  \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}})$, 
+where $\ginn{1}$, $\sginn{1}$, $\ginn{2}$, $\sginn{2}$, $\gtinn$, $\epinn$ were defined in Section~\ref{sec:pairings} and 
+$\Hinn: \{0,1\}^* \rightarrow \ginn{2}$ and $\HPoP: \{0,1\}^* \rightarrow \ginn{2}$ are two hash functions. 
+The auxiliary parameter $\mathit{aux_{\mathit{AS}}}$ is such that there exists $N \in \mathbb{N}$, 
+$N$ is the first component of the vector $\mathit{aux_{\mathit{AS}}}$ and there exists a subgroup of size at least $N$ in the multiplicative group of $\mathbb{F}$, where $\mathbb{F}$ 
+is the base field of $\einn$, but also the size of the subgroup $\in O(N)$.
+
+\item $(\mathit{pk},\mathit{sk}, \pi_{\PoP}) \leftarrow \mathit{AS.GenKeypair}(\mathit{pp})$, where $\mathit{sk} \xleftarrow{\$} \mathbb{Z}_{r}^{*}$  
+and $\mathit{pk} = \mathit{sk} \cdot \sginn{1} \in \ginn{1}$ and $\pi_{\PoP} \leftarrow {\mathit{sk}} \cdot \HPoP(\mathit{pk})$ 
+and $r$ was defined in Section~\ref{sec:pairings} as the characteristic of the scalar field of $\einn$.
+
+\item $0/1 \leftarrow \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk}, \pi_{\PoP})$, where $\mathit{AS.VerifyPoP}$ outputs $1$ if 
+$$\epinn( \sginn{1}, \pi_{\PoP}) = \epinn(\mathit{pk}, \HPoP(\mathit{pk}))$$ holds and $0$ otherwise. Note that implicitly, as part of running \\
+$\mathit{AS.VerifyPoP}$, one checks that $\mathit{pk} \in \ginn{1}$ also holds.
+
+\item $\sigma \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk}, m)$: 
+where $\sigma = \mathit{sk} \cdot \Hinn(m) \in \ginn{2}$.
+
+\item $\mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp}, (\mathit{pk_i})_{i=1}^{u})$, where  $\mathit{apk} = \sum_{i=1}^{u} \mathit{pk_i}$. 
+Note that $\mathit{AS.AggKeys}$ checks whether $((\mathit{pk_i})_{i=1}^{u}) \in \ginn{1}^{u} (\ast)$ and, if that is not the case, it outputs $\bot$; 
+if $(\ast)$ holds, the algorithm $\mathit{AS.AggKeys}$ continues with the computations described above. 
+
+
+\item $\mathit{asig} \leftarrow \mathit{AS.AggSigs}(\mathit{pp}, (\sigma_i)_{i=1}^u)$, where $\mathit{asig}$ = $\sum_{i=1}^{u} \sigma_i$.  
+
+\item $0/1 \leftarrow  \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig})$, where $\mathit{AS.Verify}$ outputs $1$ if $\mathit{apk} \neq \bot$ and
+$\mathit{apk} \in \ginn{1}$ and \\ $\epinn(\mathit{apk}, \Hinn(m)) = \epinn(\sginn{1}, \mathit{asig})$; otherwise, it outputs $0$.
+\end{itemize}
+\end{construction}

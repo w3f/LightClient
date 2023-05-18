@@ -1,0 +1,73 @@
+\section{Compiler for Hybrid Model SNARKs with Mixed Inputs}
+\label{sec_two_step_compiler}
+%\vspace{-0.05in} 
+\subsection{Technical Challenges and Contributions Regarding our Custom SNARKs} 
+\label{sec:technical_challenges}
+%\vspace{-0.1cm}
+
+In order to define and implement our committee key scheme accountable light client systems and in order to design the custom SNARKs that support our efficiency results, 
+we had to tackle some technical challenges and make additional contributions as summarised below.
+
+%\vspace{-0.2cm}
+\paragraph{Extending PLONK Compiler to Mixed Commitment and Vectors NP Relations} Firstly, our custom SNARKs takes inspiration from PLONK \cite{plonk} in terms design of the proof system used, and of the circuits and gates. However, our SNARKs also have differences compared to PLONK. PLONK applies to NP relations  that use  vectors of field elements for 
+public inputs and witnesses.  However we need SNARKs whose defining NP relations also have  polynomial commitments (in our case, the committee key $C$) as part of their public inputs. Hence, the original PLONK compiler does not suffice; we extend it with a second step in which we show that under certain conditions which our protocol fulfils, the SNARKs obtained using the original PLONK compiler are also SNARKs for a mixed type of NP relation containing both vectors and polynomial commitments. The full details and proofs can be found in Section~\ref{sec_two_step_compiler} 
+and we believe this compiler extension to be of independent interest. 
+
+%\vspace{-0.2cm}
+\paragraph{Conditional NP Relations for Efficiency} Secondly, we also require NP relations that have a well-defined subpredicate which is verified outside the SNARKs. In a blockchain instantiation, 
+any current validator set has to come to a consensus, among other things, on the next validator set, represented by a set of public keys. The validator set 
+computes and signs a pair of polynomial commitments to the next set of validators' public keys. Before including a public key in the set, the validators perform several 
+checks on the proposed public key, such as being in a particular subgroup of the elliptic curve. This check is not performed by the SNARKs' constraint system, but is 
+required for the correctness of the statement the SNARKs prove. This design decision makes our SNARKs more efficient, but it also means we have to extend the 
+usual definition of NP relations to conditional NP relations, where in fact, one of the subpredicates that define the conditional relation is checked outside the SNARKs 
+or ensured due to a well-defined assumption. We introduce the general notion of conditional NP relation in Section~\ref{sec:conditional_relations} and describe our 
+concrete conditional NP relations in Section~\ref{sec:snarks}.   
+
+%\vspace{-0.2cm}
+\paragraph{Hybrid Model SNARKs} In line with the two above technical challenges and the solutions we came up with, we extend the existing definitions 
+related to SNARKs~\cite{groth16,plonk} by introducing an algorithm which we call $\mathit{PartInput}$. For our use case, this allows us to separate the public input for the NP relations that define our custom SNARKs in two: a part 
+that is computed by the current set of validators on the blockchain in question and the rest of the public input plus the corresponding SNARK proof are 
+computed by a (possibly malicious) prover interacting with the light client verifier. Our newly introduced notion of hybrid model SNARK (see Section~\ref{sec:snarks_defs}) 
+generalises this public input separation concept and its definition is used to prove the security of our custom SNARKs in Section~\ref{sec_two_step_compiler}.
+
+\subsection{SNARK compiler}
+
+\noindent We present a two-steps PLONK-based compilation technique from 
+ranged polynomial protocols for conditional NP relations (formal definition in Section~\ref{supplementary_poly_protocols_appendix}) to hybrid 
+model SNARKs (Definition~\ref{dfn_snark}) such that the conditional NP relations that define the SNARKs we compile in the 
+second step contain both polynomial commitments and vectors of field elements as public inputs. By using just the first step of our 
+compiler which is equivalent to the original PLONK compiler~\cite{plonk}, one would 
+not be able to obtain SNARKs with mixed public inputs consisting of both vectors of field elements and also poly commitments. 
+In turn, this type of NP relations with mixed inputs is crucial for designing accountable light clients via the use of committee key schemes 
+(see Section~\ref{sec:inst_committee_key}).\\
+\vspace{-0.2in}
+%\subsubsection{Our Compiler: Step 1} 
+\subsection{Our Compiler: Step 1} 
+\label{compiler_step_1}
+\vspace{-0.05in}
+%\input{short_step_1_compiler.tex}
+\input{full_step_1_compiler.tex}
+\vspace{-0.2in}
+%\subsubsection{Our Compiler: Step 2}
+\subsection{Our Compiler: Step 2}
+\label{compiler_step_2}
+\vspace{-0.05in}
+\input{full_step_2_compiler.tex}
+
+\noindent It is straightforward to apply the technique described above to our SNARKs $\Plah$ and $\Pah$ 
+compiled in Step 2 and obtain relations $\Rlacom$ and $\Racom$ as described below such that they fulfil Lemma~\ref{sergey_type_relations}.\footnote{Due to our specific application to proof-of-stake blockchain context in which we make use of our custom SNARKs, 
+the assumption/requirement that  $\mathit{State}_{\mathcal{R}_{\mathit{vec}, \mathit{com}}} \neq \emptyset$ for 
+$\mathcal{R}_{\mathit{vec}, \mathit{com}} \in \{\Rlacom, \Racom \}$ is fulfilled.}
+%\vspace{-0.1in}
+\begin{align*}
+& {\Rlacom} = \{(\mathbf{C} \in \mathcal{C}, \mathbf{bit} \in \mathbb{B}^n, \mathit{apk} \in \mathbb{F}^2; \mathbf{pk}) : 
+\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \\ & | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \} 
+\end{align*}
+%\vspace*{-0.75cm}
+\begin{align*}
+& {\Racom}  = \{(\mathbf{C} \in \mathcal{C}, \mathbf{b'} \in \mathbb{F}_{|\block|}^{\frac{n}{\block}}, \mathit{apk} \in \mathbb{F}^2;\mathbf{pk}, \mathbf{bit}) : 
+\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \\ & | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \ \mathbf{bit} \in \mathbb{B}^n  \wedge b'_{j} = \sum_{i=0}^{\block -1}2^i \cdot \mathit{bit_{\block \cdot j + i}}, \forall j < \frac{n}{\block}  \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \} 
+\end{align*}
+For completeness, we also include the full rolled out SNARK $\Pah$ for relation $\Racom$ in Section~\ref{sec:rolled_out} and we provide a comparison between PLONK universal 
+SNARK and our custom SNARKs in Section~\ref{suplementary_plonk_comparison}.  
+%\vspace*{-0.75cm}
