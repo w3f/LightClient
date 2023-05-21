@@ -1,0 +1,13 @@
+\vspace{-0.05in}
+\subsection{Pairings}
+\label{sec:pairings}
+\begin{comment}
+%\vspace{-0.02in}
+\noindent If $E$ is an elliptic curve defined over a prime field $\mathbb{F}_{p}$ of large characteristic $p$, 
+we denote by $E(\mathbb{F}_{p})$ the abelian group containing all the points $(x, y) \in (\mathbb{F}_{p})^2$ 
+on the curve along with the point at infinity. We will work with pairing friendly curves i.e., those with a secure~\cite{secure_pairings,pairings_for_cryptographers} efficiently computable, bilinear, non-degenerate mapping from a prime order subgroup of $E(\mathbb{F}_{p})$ and a subgroup of the curve over the extension field.
+We will work with a \emph{pairing-friendly two-chain}, i.e., a pair of pairing friendly elliptic curves $\einn=E(\mathbb{F}_{p})$ (\emph{the inner curve}) and $\eout=E'(\mathbb{F}_{r})$ (\emph{the outer curve}), such that the pairing $\epinn$ on $\einn$ works on subgroups of order $r$. $\mathbb{F}_p$ is the \emph{base field} of $\einn=E(\mathbb{F}_{p})$ and $\mathbb{F}_r$ is its \emph{scalar field}. 
+We write $\ginn{1}$, $\ginn{2}$, $\gtinn$, $\gout{1}$, $\gout{2}$, $\gtout$ for cyclic subgroups of $\einn$, $E(\mathbb{F}_{p^l}$),$\mathbb{F}_{p^k}$, $\eout$, $E'(\mathbb{F}_{r^{l'}}$), $\mathbb{F}_{r^{k'}}$ respectively for suitable $l,k,l',k$ with the two pairings $\epinn:\ginn{1} \times \ginn{2} \rightarrow \gtinn$ and by $\epout:\gout{1} \times \gout{2} \rightarrow \gtout$.
+We write $\sginn{1}$, $\sginn{2}$, $\sgtinn$, $\sgout{1}$, $\sgout{2}$, $\sgtout$ respectively for randomly chosen generators of these groups. We use additive notation for group operations and write $[x]_{\indexoneinn} = x \cdot \sginn{1}$, $[x]_{\indextwoinn} = x \cdot \sginn{2}$. Concretely, our implementation uses BLS12-377~\cite{zexe} and BW6-761~\cite{BW6} for $\einn$ and $\eout$.
+\vspace{-0.05in}
+\end{comment}
