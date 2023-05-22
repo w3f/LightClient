@@ -1,20 +1,54 @@
-\subsection{O-SNARKs}
+\section{O-SNARKs}
 \label{sec:short_snarks_defs}
 In the following, we remind the reader the definition of an O-SNARK from~\cite{O_SNARK} and we prove that {\color{red}XXX}.
 In order to do that, we start with a couple building block definitions: i.e., for algebraic adversaries (see, for example~\cite{AGM_model}) 
-and our new definition of AGM respecting oracles.
+and our new definition of AGM respecting oracles. \\
 
-\begin{definition}[Algebraic Adversaries]
-\label{def:algebraic_adv}
-\end{definition}
+\noindent Let $\mathbb{G}$ be a cyclic group of prime order $p$. Informally, an algorithm $A$ is algebraic if it fulfils the following requirement: 
+whenever $A$ outputs a group element $h \in \mathbb{G}$, it also outputs a representation $(s_1, \ldots, s_t) \in \mathbb{Z}^{t}_p$ 
+such that $h = \sum_ {i =1}^t s_i \cdot g_i$, where $(g_1,...,g_t)$ is the list of all group elements that were given to $A$ during its execution so far. \\
+
+\noindent It is easy to see that the property above is equivalent to $A$ outputting  representation $(v_1, \ldots, v_l) \in \mathbb{Z}^{l}_p$ 
+such that $h = \sum_ {i =1}^l v_i \cdot g_i$, where $(g_1,...,g_l)$ is the list of all group elements that were given to $A$ as input. \\
+
+
+\noindent Let $\mathbb{O} = \{ \mathcal{O} \}_{i \in \mathcal{I}}$ be a family of oracles. We denote by $\mathcal{O} \leftarrow \mathbb{O}$ 
+the process of sampling an oracle $\mathcal{O}$ from the family $\mathbb{O}$ according to some (possibly probabilistic) process.
+$\mathbb{O}$ can be a random oracle family or a signing oracle corresponding to a signature scheme. For any oracle family 
+$\mathbb{O}$, we define an O-SNARK $\Pi$ for $\mathbb{O}$ as follows~\cite{O_SNARK}. \\
+
+\begin{definition}[O-SNARKs]
+\label{def:osnarks}
+We say $\Pi$ is a $\mathcal{Z}$-auxiliary input O-SNARK for the oracle family $\mathbb{O}$, 
+if $\Pi$ satisfies the properties of completeness and 
+succinctness as in Definition above {\color{red} ADD THAT} 
+and the following property of adaptive proof of knowledge for $\mathbb{O}$:
+Consider the following experiment for security parameter $\lambda \in \mathbb{N}$, 
+time bound $T \in \mathbb{N}$, adversary $A$, extractor $E_A$, 
+auxiliary input generator $\mathcal{Z}$ and oracle family $\mathbb{O}$:\\
+
+\begin{align*}
+O-AddaptivePoK&(\lambda, T, A, E_A, \mathcal{Z}, \mathbb{O}): \\
+& \mathit{aux} \leftarrow \mathcal{Z}(1^{\lambda}); \mathcal{O} \leftarrow \mathbb{O}; \mathsf{crs} \leftarrow \mathsf{Gen}(1^{lambda},T); \\
+& (y,\pi) \leftarrow A^{\mathcal{O}}(\mathsf{crs},\mathit{aux}); w \leftarrow E_A(\mathsf{crs}, \mathit{aux}, \mathsf{qt}) \\
+& if \ \mathsf{Ver}(\mathsf{crs}, y, \pi) = 1 \wedge (y,w) \in R \ return  \ 1 \\
+& else \ return \ 0
+\end{align*}
+\noindent where $\mathsf{qt} = \{q_i, \mathcal{O}(q_i)\}$ is the transcript of all the oracle queries and answers made and received by $A$ during its execution. 
+
+$\Pi$ satisfies adaptive proof of knowledge with respect to oracle family  $\mathbb{O}$ and auxiliary input from $\mathcal{Z}$ 
+if for every non-uniform oracle prover $A^{\mathcal{O}}$ of sizes $s(\lambda)= \mathsf{poly}(\lambda)$ making at most 
+$Q(\lambda) = \mathsf{poly}(\lambda)$ queries there exists a non-uniform extractor
+$E_A$ of size $t(\lambda)=\mathsf{poly}(\lambda)$ and a negligible function $\mathsf{negl}(\lambda)$ 
+such that for every time bound $T$, 
+$\mathsf{Pr}[$O-AddaptivePoK($\lambda$, $T$, $A$, $E_A$, $\mathcal{Z}$, $\mathcal{O}$) $ \implies  1]\ \leq \mathsf{negl}(\lambda)$. 
+\end{definition} 
+
 
 \begin{definition}[AGM Respecting Oracles]
 \label{def:agm_oracles}
 \end{definition}
 
-\begin{definition}[O-SNARKs]
-\label{def:osnarks}
-\end{definition}
 
 \begin{theorem}[O-SNARKS with AGM Respecting Oracles]
 \label{the:when_osnarks} 
