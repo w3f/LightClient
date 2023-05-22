@@ -4,30 +4,31 @@ two succinct commitments (to the $x$ and $y$ affine coordinates of points) are p
 SNARK ensures that the alleged aggregated public key, in turn, is a scalar product between the entire set of public keys 
 committed as mentioned above and a \emph{bitvector} with one bit associated to each public key 
 (necessary to signal the inclusion or omission of the respective public key w.r.t. the aggregate key).  
-We finally mention how to transform the counting SNARK into a SNARK for building non-accountable light client systems.
+We finally mention how to transform the counting SNARK into a SNARK for building non-accountable light client systems. \\
 
 \noindent To compile our desired SNARK we proceed as follows: in 
-Section~\ref{sec_vt} we define vector-based conditional NP relations $\Rc$ (i.e., counting) and we design a 
+Section~\ref{sec_vt} we define vector-based conditional NP relations $\Rvt$ (i.e., counting) and we design a 
 ranged polynomial protocol for this relation. The ranged polynomial protocol notion originates in~\cite{plonk}; 
 we review it in Section~\ref{supplementary_poly_protocols_appendix} including a refinement introduced in~\cite{LC_paper}.  
 Then we use the two-steps PLONK-based compiler introduced in~\cite{LC_paper} which is necessary to compile the counting 
 ranged polynomial protocol into an O-SNARK for an NP relation based on mixed vector and pair of polynomial commitments; 
-we denote this relation by $\Rccom$. 
+we denote this relation by $\Rvtcom$. \\
 
-\noindent We define our vector based counting NP relation over $\mathbb{F}$, i.e., the base field of an elliptic curve $\einn$. 
+\noindent To start with, we define our vector based counting NP relation over $\mathbb{F}$, i.e., the base field of an elliptic curve $\einn$. 
 Our SNARK prover's circuit is defined as well over $\mathbb{F}$ as the scalar field of a second curve $\eout$. 
-The vector of public keys, which is part of the public input for $\Rc$ and is denoted by 
+The vector of public keys, which is part of the public input for $\Rvt$ and is denoted by 
 $\mathbf{pk} = (\mathit{pk_0}, \ldots, \mathit{pk_{n-2}})$, is a vector of pairs with each component in $\mathbb{F}$. 
-This vector has size $n-1$ (where $n$ is XXX). For $\Rc$ we denote 
+This vector has size $n-1$ (where $n$ is the order of a group $H$ defined below.). For $\Rvt$ we denote 
 the $n$ components bitvector by $\mathbf{bit} = (\mathit{bit_0}, \ldots, \mathit{bit_{n-1}})$ 
 (meaning that each component belongs to the set $\{0,1\} \subset \mathbb{F}$). 
 Each bit signals the inclusion (or exclusion) of the index-wise corresponding public keys 
 into the aggregated public key $\mathit{apk}$. The $n$-th component $\mathit{bit_{n-1}}$ does not correspond to any public key, 
 but, as will become clear in the following, has been included for easier design of constraints. \\ 
+
 \vspace{-0.009in}
 \noindent We denote by $H$ the multiplicative subgroup of $\mathbb{F}$ generated 
 by an $n$-th root of unity $\omega$. We denote by \\ $\mathit{incl}(a_0, \ldots, a_{n-2})$ the inclusion 
-predicate that checks if \\ $(a_0, \ldots, a_{n-2}) \in \ginn{1}^{n-1}$, where $\ginn{1}$ is the XXX. 
+predicate that checks if $(a_0, \ldots, a_{n-2}) \in \ginn{1}^{n-1}$, where $\ginn{1}$ is the XXX. 
 Moreover let $h = (\mathit{h_x}, \mathit{h_y})$ be some fixed, publicly known element in $\einn \setminus \ginn{1}$. 
 We denote by $(a_x, a_y)$ the affine representation in $x$ and $y$ coordinates of $a \in \einn$ and by $\oplus$ 
 the point addition in affine coordinates on the elliptic curve $\einn$. We denote by $\mathbb{B} = \{0,1\} \subset \mathbb{F}$. \\
@@ -40,14 +41,13 @@ the point addition in affine coordinates on the elliptic curve $\einn$. We denot
 $b(X)$ - interpolates the bits of bitvector $\mathit{bit}$; $pkx(X)$, $pky(X)$ - interpolate all public keys' 
 $x$ and $y$ coordinates, respectively; $kaccx(X)$, $kaccy(X)$ - interpolate $x$ and $y$ coordinates, respectively, 
 of the iterative partial aggregate sum of the actual signing validators' public keys. We also define five polynomial identities $id_1(X), \ldots, id_5(X)$ supporting the following intuition: $id_1(X)$, $id_2(X)$ 
-ensure the $x$ and, respectively, the $y$ coordinates of the iterative partial aggregate sums of actual signing validators public keys (up to each index $i \leq n-2$) 
-follow formulas $(\ast)$, $(\ast\ast)$ from Observation 1 which gives all possible cases of 
+ensure the $x$ and, respectively, the $y$ coordinates of the iterative partial aggregate sums of actual signing validators public keys 
+(up to each index $i \leq n-2$) follow formulas $(\ast)$, $(\ast\ast)$ from Observation 1 which gives all possible cases of 
 complete curve point addition when the second curve point is multiplied by a bit; $id_3(X)$, $id_4(X)$ 
-ensure first partial aggregate sum is $h$ and the total aggregate sum is $h + \mathit{apk}$; this is necessary in order to ensure the addition of the public keys (i.e., elliptic curve points) 
-never falls into condition (3) defined in Observation 1, which recursively implies the partial aggregate sum at every step is a well defined curve point, hence, it is a suitable input for the next step; 
+ensure first partial aggregate sum is $h$ and the total aggregate sum is $h + \mathit{apk}$; this is necessary in order to ensure the 
+addition of the public keys (i.e., elliptic curve points) never falls into condition (3) defined in Observation 1, which recursively implies the 
+partial aggregate sum at every step is a well defined curve point, hence, it is a suitable input for the next step; 
 $id_5(X)$ ensures $b(X)$ evaluates to bits over $H$. \\
-
-
 
 \noindent In the following relation, $\mathit{apk}$ is the aggregated public key of at least $s$ and at most $s+1$ public keys. 
 Hence we interpret $s$ as a threshold on the number of public keys included in the aggregated public key. Since $\mathit{bit_{n-1}}$ as the last component of the 
