@@ -14,11 +14,11 @@ Then we use the two-steps PLONK-based compiler introduced in~\cite{LC_paper} whi
 ranged polynomial protocol into an O-SNARK for an NP relation based on mixed vector and pair of polynomial commitments; 
 we denote this relation by $\Rvtcom$. \\
 
-\noindent To start with, we define our vector based counting NP relation over $\mathbb{F}$, i.e., the base field of an elliptic curve $\einn$. 
-Our SNARK prover's circuit is defined as well over $\mathbb{F}$ as the scalar field of a second curve $\eout$. 
-The vector of public keys, which is part of the public input for $\Rvt$ and is denoted by 
+\noindent To start with, we define our vector based counting NP relation over $\mathbb{F}$, i.e., the base field of a pairing friendly 
+elliptic curve $\einn$. Our SNARK prover's circuit is defined as well over $\mathbb{F}$ as the scalar field of a second pairing friendly elliptic 
+curve $\eout$. The vector of public keys, which is part of the public input for $\Rvt$ and is denoted by 
 $\mathbf{pk} = (\mathit{pk_0}, \ldots, \mathit{pk_{n-2}})$, is a vector of pairs with each component in $\mathbb{F}$. 
-This vector has size $n-1$ (where $n$ is the order of a group $H$ defined below.). For $\Rvt$ we denote 
+This vector has size $n-1$ (where $n$ is the order of a group $H$ defined below). For $\Rvt$ we denote 
 the $n$ components bitvector by $\mathbf{bit} = (\mathit{bit_0}, \ldots, \mathit{bit_{n-1}})$ 
 (meaning that each component belongs to the set $\{0,1\} \subset \mathbb{F}$). 
 Each bit signals the inclusion (or exclusion) of the index-wise corresponding public keys 
@@ -28,30 +28,35 @@ but, as will become clear in the following, has been included for easier design 
 \vspace{-0.009in}
 \noindent We denote by $H$ the multiplicative subgroup of $\mathbb{F}$ generated 
 by an $n$-th root of unity $\omega$. We denote by \\ $\mathit{incl}(a_0, \ldots, a_{n-2})$ the inclusion 
-predicate that checks if $(a_0, \ldots, a_{n-2}) \in \ginn{1}^{n-1}$, where $\ginn{1}$ is the XXX. 
-Moreover let $h = (\mathit{h_x}, \mathit{h_y})$ be some fixed, publicly known element in $\einn \setminus \ginn{1}$. 
-We denote by $(a_x, a_y)$ the affine representation in $x$ and $y$ coordinates of $a \in \einn$ and by $\oplus$ 
-the point addition in affine coordinates on the elliptic curve $\einn$. We denote by $\mathbb{B} = \{0,1\} \subset \mathbb{F}$. \\
+predicate that checks if $(a_0, \ldots, a_{n-2}) \in \ginn{1}^{n-1}$, where $\ginn{1}$ is the first source group 
+of pairing function associated with $\einn$. Moreover let $h = (\mathit{h_x}, \mathit{h_y})$ be some fixed, 
+publicly known element in $\einn \setminus \ginn{1}$. We denote by $(a_x, a_y)$ the affine representation in 
+$x$ and $y$ coordinates of $a \in \einn$ and by $\oplus$ the point addition in affine coordinates on the 
+elliptic curve $\einn$. We denote by $\mathbb{B} = \{0,1\} \subset \mathbb{F}$. \\
 \vspace{-0.15in}
 
 \subsection{Counting Ranged Polynomial Protocol}
 \label{sec_vt}
 
-\noindent Next, we introduce the following Lagrange interpolation polynomials of degree at most $n-1 = |H|$ over cyclic group $H$ (Section~\ref{sec:lagrange}): 
+\noindent Next, we introduce the following Lagrange interpolation polynomials of degree at most $n-1 = |H|$ over cyclic group $H$: 
 $b(X)$ - interpolates the bits of bitvector $\mathit{bit}$; $pkx(X)$, $pky(X)$ - interpolate all public keys' 
 $x$ and $y$ coordinates, respectively; $kaccx(X)$, $kaccy(X)$ - interpolate $x$ and $y$ coordinates, respectively, 
-of the iterative partial aggregate sum of the actual signing validators' public keys. We also define five polynomial identities $id_1(X), \ldots, id_5(X)$ supporting the following intuition: $id_1(X)$, $id_2(X)$ 
+of the iterative partial aggregate sum of the actual signing validators' public keys. We also define six polynomial identities 
+$id_1(X)=0, \ldots, id_6(X)=0$ supporting the following intuition: $id_1(X)=0$, $id_2(X)=0$ over $H$ 
 ensure the $x$ and, respectively, the $y$ coordinates of the iterative partial aggregate sums of actual signing validators public keys 
-(up to each index $i \leq n-2$) follow formulas $(\ast)$, $(\ast\ast)$ from Observation 1 which gives all possible cases of 
-complete curve point addition when the second curve point is multiplied by a bit; $id_3(X)$, $id_4(X)$ 
+(up to each index $i \leq n-2$) follow formulas $(\ast)$, $(\ast\ast)$ from Observation 1 below which gives all possible cases of 
+complete curve point addition when the second curve point is multiplied by a bit; $id_3(X)=0$, $id_4(X)=0$ over $H$ 
 ensure first partial aggregate sum is $h$ and the total aggregate sum is $h + \mathit{apk}$; this is necessary in order to ensure the 
-addition of the public keys (i.e., elliptic curve points) never falls into condition (3) defined in Observation 1, which recursively implies the 
+addition of the public keys (i.e., elliptic curve points) never falls into condition (3) defined in Observation 1 below. This recursively implies the 
 partial aggregate sum at every step is a well defined curve point, hence, it is a suitable input for the next step; 
-$id_5(X)$ ensures $b(X)$ evaluates to bits over $H$. \\
+$id_5(X)=0$ over $H$ ensures $b(X)$ evaluates to bits over $H$. $id_6(X)= 0$ over $H$ ensures that the sum of bits in the 
+bitvector $\mathit{bit}$ is $s+1$. \\
 
-\noindent In the following relation, $\mathit{apk}$ is the aggregated public key of at least $s$ and at most $s+1$ public keys. 
-Hence we interpret $s$ as a threshold on the number of public keys included in the aggregated public key. Since $\mathit{bit_{n-1}}$ as the last component of the 
-bitmask witness does not correspond to any public key and we have to account for the fact that $\mathit{bit_{n-1}}$ may be 
+\noindent Intuitively and overall the identities $id_1(X)=0$ to $id_6(X)=0$ over $H$ 
+ensure $\mathit{apk}$ is the aggregated public key of at least $s$ and at most $s+1$ public keys. 
+Hence, we interpret $s$ as a threshold on the number of public keys included in the aggregated public key. 
+Since $\mathit{bit_{n-1}}$ as the last component of the bitmask witness does not correspond to any public 
+key and we have to account for the fact that $\mathit{bit_{n-1}}$ may be 
 $1 \in \mathbb{F}$, relation $\Rvt$ includes the off-by-one constraint $\sum_{i=0}^{n-1} \mathit{bit_i} = s+1$.\\
 
 \noindent \textsf{Conditional Counting Relation $\Rvt$}  
@@ -63,17 +68,35 @@ $1 \in \mathbb{F}$, relation $\Rvt$ includes the off-by-one constraint $\sum_{i=
 \end{split}
 \end{equation*}
 
-\noindent The polynomials and polynomial identities XXX: \\
+\noindent The polynomials and polynomial identities computed and used are: \\
 
 \noindent \textsf{Polynomials as Computed by Honest Parties} 
+
 \begin{align*}
-acc_{vt}(X) & = \sum_{i=0}^{n-1} acc_{vt,i} \cdot L_i(X),
+&\mathsf{b(X)} = \sum_{i=0}^{n-1} \mathit{bit_i} \cdot \mathsf{L_i(X)}; \mathsf{pkx(X)} =  \sum_{i=0}^{n-2} \mathit{pkx_i} \cdot \mathsf{L_i(X)}; 
+\mathsf{pky(X)} =  \sum_{i=0}^{n-2} \mathit{pky_i} \cdot \mathsf{L_i(X)} \\
+&\mathsf{kaccx(X)}  =  \sum_{i=0}^{n-1} \mathit{kaccx_i} \cdot \mathsf{L_i(X)}; \mathsf{kaccy(X)}  = \sum_{i=0}^{n-1} \mathit{kaccy_i} \cdot \mathsf{L_i(X)}; 
+acc_{vt}(X)  = \sum_{i=0}^{n-1} acc_{vt,i} \cdot L_i(X),
 \end{align*}
-where $acc_{vt,i}$ are the components of the vector $(0, \mathit{bit_0}, \mathit{bit_0} + \mathit{bit_1}, \ldots, \sum_{i=0}^{n-2}\mathit{bit_i})$, $\forall i < n$. \\
+\noindent where $(\mathit{pkx_0}, \ldots, \mathit{pkx_{n-2}})$ 
+and $(\mathit{pky_0}, \ldots, \mathit{pky_{n-2}})$ are computed such that $\forall i \in \{0, \ldots, n-2\}$, $\mathit{pk_i}$ 
+is interpreted as a pair $(\mathit{pkx_i}, \mathit{pky_i})$ with its components in $\mathbb{F}$; we also have 
+$(\mathit{kaccx_{0}}, \mathit{kaccy_{0}}) = (\mathit{h_x}, \mathit{h_y})$ and 
+$(\mathit{kaccx_{i+1}}, \mathit{kaccy_{i+1}}) =  (\mathit{kaccx_{i}}, \mathit{kaccy_{i}}) \oplus \mathit{bit_i}(\mathit{pkx_{i}}, \mathit{pky_{i}})$, 
+$\forall i < n-1$. Finally, $acc_{vt,i}$ are the components of the vector 
+$(0, \mathit{bit_0}, \mathit{bit_0} + \mathit{bit_1}, \ldots, \sum_{i=0}^{n-2}\mathit{bit_i})$, $\forall i < n$. \\
 
 \noindent \textsf{Polynomial Identities} 
+
 \begin{align*}
-id_6(X) & = acc_{vt}(\omega \cdot X) - acc_{vt}(X) - b(X) + (s+1) \cdot L_{n-1}(X),   \\
+& id_1(X) = (X-\omega^{n-1}) \cdot [b(X) \cdot ((kaccx(X)-pkx(X))^2 \cdot (kaccx(X)+ pkx(X) +  kaccx(\omega\cdot X)) - \\ 
+& \ \ \ \ \ \ \ \ -(pky(X) - kaccy(X))^2) +  (1-b(X)) \cdot (kaccy(\omega\cdot X) - kaccy(X))]. \\
+& id_2(X)  =  (X-\omega^{n-1})\cdot [b(X) \cdot ((kaccx(X) - pkx(X)) \cdot (kaccy(\omega \cdot X) + kaccy(X)) - \\
+& \ \ \ \ \ \ \ \ - (pky(X) - kaccy(X)) \cdot (kaccx(\omega \cdot X) - kaccx(X))) + (1-b(X)) \cdot (kaccx(\omega \cdot X) - kaccx(X))]. \\
+& id_3(X)  =  (kaccx(X) - h_x)\cdot L_0(X) + (kaccx(X) - (h\oplus apk)_{x}) \cdot L_{n-1}(X). \\ 
+& id_4(X) =  (kaccy(X) - h_y)\cdot L_0(X) + (kaccy(X)  - (h\oplus apk)_{y}) \cdot L_{n-1}(X). \\
+& id_5(X) =  b(X)(1-b(X)). \\
+& id_6(X)  = acc_{vt}(\omega \cdot X) - acc_{vt}(X) - b(X) + (s+1) \cdot L_{n-1}(X).   \\
 \end{align*}
 
 \noindent \textsf{{$H$-ranged Polynomial Protocol for Conditional Counting Relation $\Rvt$}} \\
@@ -87,7 +110,7 @@ $\mathbf{pk} \in (\mathbb{F}^2)^{n-1}$ and $\mathit{apk} \in \mathbb{F}^2$ which
 \item $\mathcal{V}_{poly}$ computes $pkx(X)$, $pky(X)$.
 \item $\mathcal{P}_{poly}$ sends polynomials $b(X)$, $kaccx(X)$, $kaccy(X)$, $acc_{vt}(X)$ to $\mathcal{I}$. 
 \item $\mathcal{V}_{poly}$ asks $\mathcal{I}$ to check whether the following polynomial relations hold over range $H$:
-$$id_i(X) = 0, \forall i \in [5] \textit{ and } id_6(X) = 0.$$ 
+$$id_i(X) = 0, \forall i \in [6].$$ 
 \item $\mathcal{V}_{poly}$ accepts if all of $\mathcal{I}$'s checks verify. 
 \end{enumerate}
 

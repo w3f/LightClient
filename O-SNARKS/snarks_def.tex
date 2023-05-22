@@ -1,0 +1,86 @@
+\section{SNARKs}
+\label{sec:snarks_defs}
+\vspace{-0.02in}
+\noindent The SNARK we design in this work have access to a \emph{structured reference string} (srs) of the form 
+$$(\{[\tau^i]_1\}_{i=0}^{d}, \{[\tau^i]_2\}_{i=0}^{1})$$ where $\tau$ is a random (and allegedly secret) value in $\mathbb{F}$ and $d$ 
+is bounded by a polynomial in $\lambda$. Such an srs is \emph{universal} and \emph{updatable}~\cite{updatable_universal_srs_2018}. 
+We introduce a generalisation of the usual SNARK definition which we call a \emph{hybrid model SNARK}. This is inspired by the notion of online-offline SNARKs~\cite{HP_paper}, 
+however, for our use case we need to further refine it as describe below:                                      
+\begin{definition}(Hybrid Model SNARK)
+\label{dfn_snark}
+A hybrid model \emph{succinct non-interactive argument of knowledge for relation $\mathcal{R}$} is a tuple of PPT algorithms 
+$(\mathit{SNARK.Setup}, \mathit{SNARK.KeyGen}, \mathit{SNARK.Prove}, \\ \mathit{SNARK.Verify}, \mathit{SNARK.PartInputs})$ 
+such that for implicit security parameter $\lambda$: 
+
+\begin{itemize}
+\item $\mathit{srs} \leftarrow \mathit{SNARK.Setup} (\mathit{aux_{\mathit{SNARK}}})$: a setup algorithm that on input auxiliary parameter 
+$\mathit{aux_{\mathit{SNARK}}}$ from some domain $\mathcal{D}$ outputs a universal structured reference string tuple $\mathit{srs}$, 
+
+\item $(\mathit{srs_{pk}}, \mathit{srs_{vk}}) \leftarrow \mathit{SNARK.KeyGen}(\mathit{srs}, \mathcal{R})$: a key generation algorithm that on input a
+universal structured reference string $\mathit{srs}$ and an NP relation $\mathcal{R}$ outputs a \emph{proving key} and 
+a \emph{verification key} pair $(\mathit{srs_{pk}}, \mathit{srs_{vk}})$,
+
+\item $\pi \leftarrow \mathit{SNARK.Prove}(\mathit{srs_{pk}}, (x,w), \mathcal{R})$: a proof generation algorithm that on input a proving key 
+$\mathit{srs_{pk}}$ and a pair $(x,w) \in \mathcal{R}$ outputs \emph{proof} $\pi$, 
+
+\item $0/1 \leftarrow \mathit{SNARK.Verify}(\mathit{srs_{vk}}, x, \pi, \mathcal{R})$: a proof verification algorithm that on input a verification key 
+$\mathit{srs_{vk}}$, an instance $x$ and a proof $\pi$ outputs a bit that signals acceptance (if output is $1$) or rejection (if output is $0$)
+%\item $\pi_{\mathit{Sim}} \leftarrow \mathit{Sim}(R, \sigma, x)$: The simulator $\mathit{Sim}$ takes the relation $R$, the structured reference string 
+%$\mathit{srs}$ and the instance $x$ as input and outputs a simulated proof $\pi_{\mathit{Sim}}$,
+
+\item $(x_1, \mathit{state}_2) \leftarrow \mathit{SNARK.PartInputs}(\mathit{srs}, \mathit{state}_1, \mathcal{R})$: a deterministic 
+public inputs generation algorithm that takes as input a universal structured reference string $\mathit{srs}$, an NP relation $\mathcal{R}$ and 
+some state $\mathit{state}_1$ and outputs some updated state $\mathit{state}_2$ and some partial public input $x_1$,
+
+\end{itemize}
+and satisfies completeness, knowledge soundness w.r.t. $\mathit{SNARK.PartInputs}$ and succinctness as defined below:
+
+\noindent \textbf{Perfect Completeness} holds if an honest prover will always convince an honest verifier: for all  
+$(x,w) \in \mathcal{R}$ and for all $\mathit{aux_{\mathit{SNARK}}} \in \mathcal{D}$
+\begin{align*}
+& \mathit{Pr}[\mathit{SNARK.Verify}(\mathit{srs_{vk}}, x, \pi, \mathcal{R}) = 1 \ | \  
+\mathit{srs} \leftarrow \mathit{SNARK.Setup}(\mathit{aux_{\mathit{SNARK}}}), \\ 
+& (\mathit{srs_{pk}}, \mathit{srs_{vk}})\leftarrow \mathit{SNARK.KeyGen}(\mathit{srs}, \mathcal{R}), \pi \leftarrow \mathit{SNARK.Prove}(\mathit{srs_{pk}}, (x,w), \mathcal{R}) \ ] = 1.
+\end{align*}
+
+\noindent \textbf{Notation} We denote by $\mathit{State_{\mathcal{R}}}$ the set of all states $\mathit{state}_1$ 
+such that given some relation $\mathcal{R}$ and any possible $\mathit{srs}$, 
+for any output $x_1$ of \\ $\mathit{SNARK.PartInputs}(\mathit{srs}, \mathit{state}_1, \mathcal{R})$ 
+with $\mathit{state_1} \in \mathit{State_{\mathcal{R}}}$, there exists $x_2$ and $w$ with $(x=(x_1, x_2), w) \in \mathcal{R}$; 
+we further assume $\mathit{State_{\mathcal{R}}} \neq \emptyset$.\\
+
+\noindent \textbf{Knowledge-soundness with respect to $\mathit{SNARK.PartInputs}$}
+holds if there exists a PPT extractor $\mathcal{E}$ such that for all PPT 
+adversaries $\mathcal{A}$, for all $\mathit{aux_{\mathit{SNARK}}} \in \mathcal{D}$ and for all $\mathit{state_1} \in \mathit{State_{\mathcal{R}}}$
+\begin{align*}
+&\mathit{Pr}[(x = (x_1, x_2), w) \in \mathcal{R} \wedge 1 \leftarrow \mathit{SNARK.Verify}(\mathit{srs_{vk}}, x = (x_1, x_2), \pi, \mathcal{R}) \ | \\
+&\mathit{srs} \leftarrow \mathit{SNARK.Setup}(\mathit{aux_{\mathit{SNARK}}}), (\mathit{srs_{pk}}, \mathit{srs_{vk}})\leftarrow \mathit{SNARK.KeyGen}(\mathit{srs}, \mathcal{R}), \\ 
+& (x_1, \mathit{state}_2) \leftarrow \mathit{SNARK.PartInput}(\mathit{srs}, \mathit{state}_1, \mathcal{R}), (x_2, \pi) \leftarrow \mathcal{A}(\mathit{srs}, \mathit{state}_2, \mathcal{R}), \\
+& w \leftarrow \mathcal{E}^{\mathcal{A}}(srs,\mathit{state_2}, \mathcal{R})]
+\end{align*}
+\noindent is overwhelming in $\lambda$, where by $\mathcal{E}^{\mathcal{A}}$ we denote the extractor $\mathcal{E}$ that has access to all of 
+$\mathcal{A}$'s messages during the protocol with the honest verifier.  \\
+
+\noindent \textbf{Succinctness} holds if the size of the proof $\pi$ is $\mathsf{poly}(\lambda)$ and $\mathit{SNARK.Verify}$ runs in time 
+$\mathsf{poly}(\lambda + |x|)$. % $+ \log{|w|}$ has been removed in both cases.
+\end{definition}
+
+\noindent Firstly, if $x_1$, $\mathit{state_1}$ and $\mathit{state_2}$ are the empty strings, we obtain a more standard SNARK definition.
+\begin{comment}Secondly, $\mathcal{R}$ is not a component of the vector $\mathit{aux_{\mathit{SNARK}}}$ so even if $\mathit{SNARK.Setup}$ has 
+$\mathit{aux_{\mathit{SNARK}}}$ as parameter, it is universal, 
+i.e., it can be used to derive proving and verification keys for circuits of any size up to a polynomial in the security parameter $\lambda$,   
+independently of any specific NP relation. Moreover, for the SNARKs we design, the size of the key used by 
+the honest verifier is much smaller than the size of the honest prover's key. We have made the separation clear between the two keys to be able 
+to better capture this special case; however, a potential adversarial prover has access to the complete $\mathit{srs}$ key. \end{comment}
+Secondly, our custom SNARKs are secure in the $\mathit{AGM}$ model~\cite{AGM_model}, i.e., security is w.r.t. $\mathit{AGM}$ adversaries only 
+and by $\mathcal{E}^{\mathcal{A}}$ we denote the extractor $\mathcal{E}$ that has access to all of 
+$\mathcal{A}$'s messages during the protocol with the honest verifier including the coefficients of the linear combinations of 
+group elements used by the adversary at any protocol step for outputting new group elements at the next step. 
+Moreover, the auxiliary input (i.e., $\mathit{state_2}$) is required to be drawn from a ``benign distribution'' or else extraction may be 
+impossible~\cite{extractability_limits_1,extractability_limits_2}. 
+%Note also that in some SNARKs related work (e.g., PLONK~\cite{plonk}) the length of the public input is not explicitly taken into account in the definition 
+%of succinctness, however we make that explicit in our definition and this is in line with both older and newer work in the 
+%area (\cite{groth16, marlin}). %Moreover, similarly to PLONK (even though not explicitly specified there), the number of 
+%field operations which are part of our SNARK verification depends as well on the length of the public input.
+Finally, we did not include the notion of zero-knowledge since it is not required in the rest of the paper.
+\vspace{-0.07in}

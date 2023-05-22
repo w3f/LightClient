@@ -76,19 +76,7 @@ adversaries $\mathcal{A}$, for all $\mathit{aux_{\mathit{SNARK}}} \in \mathcal{D
 w \leftarrow \mathcal{E}^{\mathcal{A}}(srs,\mathit{state_2}, \mathcal{R})]
 \end{align*}
 is overwhelming in $\lambda$, where by $\mathcal{E}^{\mathcal{A}}$ we denote the extractor $\mathcal{E}$ that has access to all of 
-$\mathcal{A}$'s messages during the protocol with the honest verifier. %(the messages include the coefficients of the linear combinations of 
-%group elements used by $\mathcal{A}$ at any step in order to output new group elements at the next step in the protocol). 
-
-%\noindent \textbf{Knowledge-soundness} holds if there exists a PPT extractor $\mathcal{E}$ such that for all PPT AGM adversaries $\mathcal{A}$
-%\begin{align*}
-%\mathit{Pr}[(x, w) \in \mathcal{R} \wedge \mathit{SNARK.Verify}(\mathit{srs_{vk}}, x, \pi, \mathcal{R}) = 1 \ | \ &
-%\mathit{srs} \leftarrow \mathit{SNARK.Setup}(\lambda) \\ 
-%& (\mathit{srs_{pk}}, \mathit{srs_{vk}})\leftarrow \mathit{SNARK.KeyGen}(\mathit{srs}, \mathcal{R}), \\
-%& (x, \pi) \leftarrow \mathcal{A}(\mathit{srs}, \mathcal{R}), w \leftarrow \mathcal{E}^{\mathcal{A}}(srs)]
-%\end{align*}
-%is overwhelming in $\lambda$, where by $\mathcal{E}^{\mathcal{A}}$ we denote the extractor $\mathcal{E}$ that has access to all of 
-%$\mathcal{A}$'s messages during the protocol with the honest verifier (the messages include the coefficients of the linear combinations of 
-%group elements used by $\mathcal{A}$ at any step in order to output new group elements at the next step in the protocol).
+$\mathcal{A}$'s messages during the protocol with the honest verifier. 
 
 \noindent \textbf{Succinctness} holds if the size of the proof $\pi$ is $\mathsf{poly}(\lambda)$ and $\mathit{SNARK.Verify}$ runs in time 
 $\mathsf{poly}(\lambda + |x|)$. % $+ \log{|w|}$ has been removed in both cases.
