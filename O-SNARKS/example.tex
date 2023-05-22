@@ -62,7 +62,7 @@ $1 \in \mathbb{F}$, relation $\Rvt$ includes the off-by-one constraint $\sum_{i=
 \noindent \textsf{Conditional Counting Relation $\Rvt$}  
 \begin{equation*}
 \begin{split}
- \Rvt = & \{(\mathbf{pk} \in (\mathbb{F}^2)^{n-1}, s \in \mathbb{F}^2, \mathit{apk} \in \mathbb{F}^2; \mathbf{bit}) : 
+ \Rvt = & \{(\mathbf{pk} \in (\mathbb{F}^2)^{n-1}, s \in \mathbb{F}, \mathit{apk} \in \mathbb{F}^2; \mathbf{bit}) : 
  \mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}]  \cdot \mathit{pk_i} \ | \ \mathbf{pk}  \in \ginn{1}^{n-1} \ \wedge \\ 
 & \wedge \ \mathbf{bit} \in \mathbb{B}^n \ \wedge \ \sum_{i=0}^{n-1} \mathit{bit_i} = s+1\} 
 \end{split}
@@ -155,22 +155,43 @@ Combining the two proof steps above, we obtain the desired conclusion.
 \noindent One can use the standard PLONK compiler (see Lemma 4.7~\cite{plonk}) to compile the 
 counting ranged polynomial protocol for relation $\Rvt$ introduced in Section~\ref{sec_vt} 
 into a SNARK $\Pi_{\Rvt}$ for the same relation. More precisely, let $\mathbb{O}$ be an 
-AGM respecting oracle as per Definition~\ref{def:agm_oracles} and let $Z_{\mathbb{O}}$ be {\color{red} fill in}. 
-Then according to the PLONK compiler, $Z_{\mathbb{O}}$ auxiliary input $\Pi_{\Rvt}$ is a SNARK.
+AGM respecting oracle as per Definition~\ref{def:agm_oracles} and let $\mathcal{Z}_{\mathbb{O}}$ be defined as in the statement of Theorem~\ref{the:when_osnarks}. 
+Then according to the PLONK compiler, $\mathcal{Z}_{\mathbb{O}}$ auxiliary input $\Pi_{\Rvt}$ is a SNARK.
 Next, invoking Theorem~\ref{the:when_osnarks}, one can prove that $\Pi_{\Rvt}$ is an O-SNARK for $\mathbb{O}$. \\
 
 \noindent In fact, what we have described so far corresponds to the first step of the compiler for the two-step compiler 
 introduced in~\cite{LC_paper}.\footnote{As a reminder, the first compilation step in~\cite{LC_paper} uses a standard PLONK compiler.}
 {\color{red} DOES this really hold?} Next, using a similar technique as the one employed in the proof of Theorem~\ref{the:when_osnarks}, one can show that 
-$Z_{\mathbb{O}}$ auxiliary input $\Pi_{\Rvtcom}$ is an O-SNARK for relation $\Rvtcom$, where
+$\mathcal{Z}_{\mathbb{O}}$ auxiliary input $\Pi_{\Rvtcom}$ is an O-SNARK for relation $\Rvtcom$, where
 
-$$\Rvtcom = {\color{red}Fill \ in. \ }$$
+%$$\Rvtcom = {\color{red}Fill \ in. \ }$$
 
-\noindent In turn, by using $\Pi_{\Rvtcom}$ as an $Z_{\mathbb{O}}$ auxiliary input O-SNARK and an aggregatable signature 
-scheme as defined also in~\cite{LC_paper}, one can construct a non-accountable light client scheme which is the very close analog 
-of the accountable light client schemes introduced in~\cite{LC_paper}. While the perfect completeness for the non-accountable scheme 
+%\begin{align*}
+%& {\Rlacom} = \{(\mathbf{C} \in \mathcal{C}, \mathbf{bit} \in \mathbb{B}^n, \mathit{apk} \in \mathbb{F}^2; \mathbf{pk}) : 
+%\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \\ & | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \} 
+%\end{align*}
+
+\begin{align*}
+ {\Rvtcom} = \{&(\mathbf{C} \in \mathcal{C}, \mathit{apk} \in \mathbb{F}^2, s \in \mathbb{F}; \mathbf{pk}, \mathbf{bit}) : 
+                       \mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \  | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \  \\
+                       & \wedge \ \mathbf{bit} \in \mathbb{B}^n \ \wedge \ \sum_{i=0}^{n-1} \mathit{bit_i} = s+1 \ \wedge \ \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \} 
+\end{align*}
+%\begin{equation*}
+%\begin{split}
+% \Rvt = & \{(\mathbf{pk} \in (\mathbb{F}^2)^{n-1}, s \in \mathbb{F}, \mathit{apk} \in \mathbb{F}^2; \mathbf{bit}) : 
+% \mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}]  \cdot \mathit{pk_i} \ | \ \mathbf{pk}  \in \ginn{1}^{n-1} \ \wedge \\ 
+%& \wedge \ \mathbf{bit} \in \mathbb{B}^n \ \wedge \ \sum_{i=0}^{n-1} \mathit{bit_i} = s+1\} 
+%\end{split}
+%\end{equation*}
+\noindent where $\mathit{Com}$ denotes the KZG polynomial commitment, 
+$\mathcal{C}$ is the set of all $\mathit{KZG}$ poly commitments or vectors of such poly commitments and $\mathbf{C}$ is an alleged tuple of such commitments.
+
+
+\noindent In turn, by using $\Pi_{\Rvtcom}$ as an $\mathcal{Z}_{\mathbb{O}}$ auxiliary input O-SNARK and an aggregatable signature 
+scheme as defined also in~\cite{LC_paper}, one can construct a non-accountable light client scheme which is a very close analog 
+to the accountable light client schemes introduced in~\cite{LC_paper}. While the perfect completeness for the non-accountable light client scheme 
 can easily be reduced to {\color{red} fill in}, the soundness of the non-accountable scheme makes direct use of the knowledge-soundness 
-property of the O-SNARK $Z_{\mathbb{O}}$ auxiliary input $\Pi_{\Rvtcom}$. For more details on why is crucial we use an O-SNARK 
+property of the $\mathcal{Z}_{\mathbb{O}}$ auxiliary input O-SNARK for $\Pi_{\Rvtcom}$. For more details on why is crucial we use an O-SNARK 
 for the soundness security proof, please read Section~\ref{sec:discussion}.
 
 \subsection{Discussion}
