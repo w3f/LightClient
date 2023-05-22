@@ -1,0 +1,84 @@
+\section{Delayed Proofs from Section~\ref{sec_apk_proofs}}
+\label{sec:delayed}
+
+The following statements and proofs are taken over from~\cite{LC_paper} and included below for convenience. They are delayed from Section~\ref{sec_apk_proofs}. \\
+
+
+\noindent First, we remind the reader the incomplete addition formulae for curve points in affine coordinates, over elliptic curve in short Weierstrasse form and state:\\ 
+
+\noindent \textit{Observation 1:} \label{obs} Suppose that $\mathit{bit} \in \{0,1\}$, $(x_1,y_1)$ is a point on an elliptic curve in 
+short Weierstrasse form, and, if $\mathit{bit} = 1$, so is $(x_2,y_2)$. We claim that the following equations: 
+\begin{align*}
+&\mathit{bit}((x_1 - x_2)^2 (x_1 + x_2 + x_3) - (y_2 - y_1)^2 ) + (1 - \mathit{bit})(y_3 - y_1)  =0 \ (\ast)\\
+&\mathit{bit}((x_1 - x_2)(y_3 + y_1) - (y_2 - y_1)(x_3 - x_1)) + (1 - \mathit{bit})(x_3 - x_1)  =0 \ (\ast\ast)
+\end{align*}
+
+\noindent hold if and only if one of the following three conditions hold 
+
+\begin{enumerate}
+\item \label{cond1} $\mathit{bit}=1$ and $(x_1,y_1)\oplus(x_2,y_2)=(x_3,y_3)$ and $x_1 \neq x_2$
+\item \label{cond2} $\mathit{bit}=0$ and $(x_3,y_3)=(x_1,y_1)$ 
+\item  \label{cond3} $\mathit{bit}=1$ and $(x_1,y_1)=(x_2,y_2)$\footnote{Note that under condition~\ref{cond3}, $(x_3,y_3)$ 
+can be any point whatsoever, maybe not even on the curve. The same holds true for $(x_2, y_2)$ under the condition~\ref{cond2}.}.
+\end{enumerate}
+
+\noindent It is easy to see that each of the conditions~\ref{cond1},\ref{cond2},\ref{cond3} above implies equations $(\ast)$ and $(\ast \ast)$.
+\noindent For the implication in the opposite direction, if we assume that $(\ast)$ and $(\ast \ast)$ hold, then \\
+\vspace{-0.1in}
+
+\noindent \textit{Case a:} For $\mathit{bit}=0$, the first term of each equation $(\ast)$ and $(\ast \ast)$ vanishes, 
+leaving us with $y_3-y_1=0$ and $x_3-x_1=0$ which are equivalent to condition~\ref{cond2}. \\
+\vspace{-0.1in}
+
+\noindent \textit{Case b:} For $\mathit{bit}=1$ and $x_1=x_2$, by simple substitution in $(\ast)$ and $(\ast \ast)$, 
+we obtain $y_1 = y_2$, i.e., condition~\ref{cond3}.  \\
+\vspace{-0.1in}
+
+\noindent \textit{Case c:} For $\mathit{bit}=1$ and $x_1 \neq x_2$, then we can substitute
+$\beta=\frac{y_2-y_1}{x_2-x_1}$ into equations $(\ast)$ and $(\ast \ast)$, leaving us with
+$$x_1+x_2+x_3=\beta^2 \textrm{ and } y_3+y_1=\beta(x_3-x_1).$$
+which are the usual formulae for short Weierstrass form addition of affine coordinate points when $x_1 \neq x_2$ 
+so this is equivalent to Condition~\ref{cond1}. \\
+\vspace{-0.1in}
+
+
+\begin{test_claim} Assume that $\forall i < n-1$ such that $\mathit{bit}_i = 1$, $pk_i = (pkx_i, pky_i) \in \ginn{1}$. 
+If polynomial identities $id_i(X) = 0, \forall i \in [5],$ hold over range 
+$H$ and the polynomial $b(X)$ has been constructed via interpolation on $H$ such that $b(\omega^i) = \mathit{bit}_i, \forall i <n$ then $\mathit{bit}_i \in \mathbb{B} = \{0,1\} \subset \mathbb{F}, \forall i <n$ \\
+$(kaccx_{0}, kaccy_{0}) = (h_x, h_y)$, $(kaccx_{n-1}, kaccy_{n-1}) = (h_x, h_y)\\ \oplus (apk_x, apk_y)$, 
+$(kaccx_{i+1}, kaccy_{i+1}) =  (kaccx_{i}, kaccy_{i}) \oplus \mathit{bit}_i(pkx_{i}, pky_{i})$, $\forall i < n-1$.
+%where in the last relation $\mathit{bit_i}$ should not be interpreted as a field element but as a binary bit
+\label{claim:keys_affine_comm}
+\end{test_claim}
+\vspace{-0.08in}
+
+\begin{proof} Everything but the last property in the claim is easy to derive from polynomial identities 
+$id_3(X) =0, id_4(X )= 0, id_5(X) = 0$ holding over $H$. To prove the remaining property, we apply 
+the above \textit{Observation} 1 by noticing that if $id_1(X)$ and $id_2(X)$ hold over $H$, 
+then $(\ast)$ and $(\ast \ast)$ hold with $(x_1, y_1)$ substituted by $(kaccx_i,kaccy_i)$, $(x_2, y_2)$ 
+substituted by $(pkx_i, pky_i)$, $(x_3, y_3)$ substituted by $(kaccx_{i+1},kaccy_{i+1})$ and 
+$\mathit{bit}$ substituted by $\mathit{bit}_i$ for $0 \leq i \leq n-2$. %, where $\mathit{bit_i}$ should not be interpreted as a field element but as binary  bit
+Moreover, since $(kaccx_{0}, kaccy_{0}) = (h_x, h_y) \in \einn \setminus \ginn{1}$ 
+and if $(pkx_i, pky_i) \in \ginn{1}$ whenever $\mathit{bit}_i = 1$, then $\forall i < n-1$ 
+equations $(\ast)$ and $(\ast \ast)$ obtained after the substitution defined above are equivalent to either 
+condition~\ref{cond1} or condition~\ref{cond2}, but never condition~\ref{cond3}, so the result of the sum (i.e., $(kaccx_{i+1}, kaccy_{i+1})$, $0\leq i \leq n-2$) is, 
+by induction, at each step a well-defined point on the curve.% and this concludes our proof.
+\end{proof}
+\vspace{-0.1in}
+
+\begin{corollary} Assume $\forall i < n-1$ 
+such that $\mathit{bit}_i = 1$, $pk_i = (pkx_i, pky_i) \in \ginn{1}$. 
+If the polynomial identities $id_i(X) = 0, \forall i \in [4],$ hold over range $H$ and 
+$\mathit{bit_i} \in \mathbb{B}$, $\forall i < n-1$ and $b(X) = \sum_{i=0}^{n-1} \mathit{bit_i} \cdot L_i(X)$
+then:  \\
+$(kaccx_{0}, kaccy_{0}) = (h_x, h_y)$, \\
+$(kaccx_{n-1}, kaccy_{n-1}) = (h_x, h_y) \oplus (apk_x, apk_y)$, \\
+$(kaccx_{i+1}, kaccy_{i+1}) =  (kaccx_{i}, kaccy_{i}) \oplus \mathit{bit_i}(pkx_{i}, pky_{i})$, $\forall i < n-1$.
+%where in the last relation $\mathit{bit_i}$ should not be interpreted as a field element but as a binary bit.
+\label{corollary:keys_affine_comm}
+\end{corollary}
+\vspace{-0.2in}
+
+\begin{proof}The proof follows trivially from the general result stated by Claim~\ref{claim:keys_affine_comm}. 
+\end{proof}
+\vspace{-0.1in}

@@ -10,7 +10,7 @@ We finally mention how to transform the counting SNARK into a SNARK for building
 Section~\ref{sec_vt} we define vector-based conditional NP relations $\Rvt$ (i.e., counting) and we design a 
 ranged polynomial protocol for this relation. The ranged polynomial protocol notion originates in~\cite{plonk}; 
 we review it in Section~\ref{supplementary_poly_protocols_appendix} including a refinement introduced in~\cite{LC_paper}.  
-Then we use the two-steps PLONK-based compiler introduced in~\cite{LC_paper} which is necessary to compile the counting 
+In Section~\ref{sec:interesting} we use the two-steps PLONK-based compiler introduced in~\cite{LC_paper} which is necessary to compile the counting 
 ranged polynomial protocol into an O-SNARK for an NP relation based on mixed vector and pair of polynomial commitments; 
 we denote this relation by $\Rvtcom$. \\
 
@@ -44,11 +44,11 @@ $x$ and $y$ coordinates, respectively; $kaccx(X)$, $kaccy(X)$ - interpolate $x$ 
 of the iterative partial aggregate sum of the actual signing validators' public keys. We also define six polynomial identities 
 $id_1(X)=0, \ldots, id_6(X)=0$ supporting the following intuition: $id_1(X)=0$, $id_2(X)=0$ over $H$ 
 ensure the $x$ and, respectively, the $y$ coordinates of the iterative partial aggregate sums of actual signing validators public keys 
-(up to each index $i \leq n-2$) follow formulas $(\ast)$, $(\ast\ast)$ from Observation 1 below which gives all possible cases of 
+(up to each index $i \leq n-2$) follow formulas $(\ast)$, $(\ast\ast)$ from Observation 1 (see Appendix~\ref{sec:delayed}) which gives all possible cases of 
 complete curve point addition when the second curve point is multiplied by a bit; $id_3(X)=0$, $id_4(X)=0$ over $H$ 
 ensure first partial aggregate sum is $h$ and the total aggregate sum is $h + \mathit{apk}$; this is necessary in order to ensure the 
-addition of the public keys (i.e., elliptic curve points) never falls into condition (3) defined in Observation 1 below. This recursively implies the 
-partial aggregate sum at every step is a well defined curve point, hence, it is a suitable input for the next step; 
+addition of the public keys (i.e., elliptic curve points) never falls into condition (3) defined in Observation 1 (see Appendix~\ref{sec:delayed}). 
+This recursively implies the partial aggregate sum at every step is a well defined curve point, hence, it is a suitable input for the next step; 
 $id_5(X)=0$ over $H$ ensures $b(X)$ evaluates to bits over $H$. $id_6(X)= 0$ over $H$ ensures that the sum of bits in the 
 bitvector $\mathit{bit}$ is $s+1$. \\
 
@@ -146,7 +146,13 @@ acc_{vt,0} &= acc_{vt,n-1} + \mathit{bit}_{n-1} - (s+1).
 \noindent By summing together the LHS and, respectively, the RHS of the equalities above and 
 reducing the equal terms, we obtain $s+1 = \sum_{i=0}^{n-1}\mathit{bit}_i$. \\ 
 Second, since it holds over $H$ that $id_i(X) = 0$, $\forall i \in [5]$ and $b(\omega^i) = \mathit{bit_i}, \forall i<n$ (by the definition 
-of $\mathcal{E}$), the properties concluded in Claim~\ref{claim:keys_affine_comm} hold. Combining the two proof steps above, we obtain the desired conclusion.
+of $\mathcal{E}$), the properties concluded in Claim~\ref{claim:keys_affine_comm} from Appendix~\ref{sec:delayed} hold. 
+Combining the two proof steps above, we obtain the desired conclusion.
 \end{proof}
 
+\subsection{From a Polynomial Protocol to an O-SNARK}
+\label{sec:interesting}
+
+\subsection{Discussion}
+\label{sec:discussion}
 

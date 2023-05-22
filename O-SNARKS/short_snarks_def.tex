@@ -1,9 +1,31 @@
-\subsection{SNARKs}
+\subsection{O-SNARKs}
 \label{sec:short_snarks_defs}
-\noindent For proving some security properties in this work, we define and use an extension of commonly employed SNARKs definitions. We call our new notion \emph{hybrid model SNARK}. It is related to the notion of SNARKs with online-offline verifiers~\cite{HP_paper} where the verifier's computation 
-is split into two parts; however it differs from that since in our case the second part of the verifier's computation is replaced by some portion of public input. 
-In turn, the public input portion may depend on the witness of some NP relation, hence that portion cannot be calculated by the respective verifier himself, and, is computed instead by some (deterministic) process, external to both the prover and the verifier involved. We describe hybrid model SNARKs in full in Appendix~\ref{sec:snarks_defs}. %and we use them for the security proof in Appendix~\ref{sec_two_step_compiler}.
+In the following, we remind the reader the definition of an O-SNARK from~\cite{O_SNARK} and we prove that XXX.
+In order to do that, we start with a couple building block definitions: i.e., for algebraic adversaries (see, for example~\cite{AGM_model}) 
+and our new definition of AGM respecting oracles.
 
+\begin{definition}[Algebraic Adversaries]
+\label{def:algebraic_adv}
+\end{definition}
 
+\begin{definition}[AGM Respecting Oracles]
+\label{def:agm_oracles}
+\end{definition}
+
+\begin{definition}[O-SNARKs]
+\label{def:osnarks}
+\end{definition}
+
+\begin{theorem}[O-SNARKS with AGM Respecting Oracles]
+\label{the:when_osnarks} 
+Every $Z$ auxiliary input SNARK $\Pi$ secure in the AGM model is an 
+O-SNARK for $\mathbb{O}$ if $\mathbb{O}$ is AGM respecting and 
+$Z$ is defined as the probability distribution of all the public parameters that define 
+$\mathbb{O}$ together with all the polynomial number $Q$ of queries and answers that 
+the adversarial prover in the O-SNARK makes to the oracle $\mathbb{O}$.
+\end{theorem}
+
+\begin{proof}
+\end{proof}
 
 
