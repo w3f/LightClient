@@ -202,8 +202,15 @@ keys in plain. Our committee key scheme, in turn, uses a custom designed SNARK w
 key scheme can be used in an accountable light client system as the main cryptographic core for building bridges between 
 proof of stake blockchains. Finally, we implement a prototype of our custom SNARK for which we provide benchmarks.}
 \end{comment}
-     
 
+\abstract{\color{red} IS THIS OK?} In this work we revisit the notion of O-SNARKs in relation with a wide class of oracles which we call AGM 
+respecting oracles corresponding to operations that are independent from the operations performed on the 
+elliptic curve that the SNARK prover operates on. On one hand, this is a wide class of oracles, which includes oracles 
+that appear often when modelling practical applications. Our result shows that many modern SNARKs 
+(i.e., PLONK~\cite{plonk}, Marlin~\cite{marlin}, Groth16~\cite{groth16}, etc.) 
+are in fact O-SNARKs when combined with AGM respecting oracles. On the other hand, we shade more light via a concrete 
+example where and how O-SNARK security is useful for practical and more complex real-world applications.
+     
 \section{Introduction} \label{sec_intro}
 \input{intro.tex}
 
@@ -225,8 +232,8 @@ proof of stake blockchains. Finally, we implement a prototype of our custom SNAR
 %\section{Implementation} \label{sec_implementation}
 %\input{implementation}
 
-\section{Conclusions}\label{conclusions}
-\input{conclusions}
+%\section{Conclusions}\label{conclusions}
+%\input{conclusions}
 
 \bibliography{bibliography} 
 \bibliographystyle{ieeetr}

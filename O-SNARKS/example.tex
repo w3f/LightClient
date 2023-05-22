@@ -152,7 +152,31 @@ Combining the two proof steps above, we obtain the desired conclusion.
 
 \subsection{From a Polynomial Protocol to an O-SNARK}
 \label{sec:interesting}
+\noindent One can use the standard PLONK compiler (see Lemma 4.7~\cite{plonk}) to compile the 
+counting ranged polynomial protocol for relation $\Rvt$ introduced in Section~\ref{sec_vt} 
+into a SNARK $\Pi_{\Rvt}$ for the same relation. More precisely, let $\mathbb{O}$ be an 
+AGM respecting oracle as per Definition~\ref{def:agm_oracles} and let $Z_{\mathbb{O}}$ be {\color{red} fill in}. 
+Then according to the PLONK compiler, $Z_{\mathbb{O}}$ auxiliary input $\Pi_{\Rvt}$ is a SNARK.
+Next, invoking Theorem~\ref{the:when_osnarks}, one can prove that $\Pi_{\Rvt}$ is an O-SNARK for $\mathbb{O}$. \\
+
+\noindent In fact, what we have described so far corresponds to the first step of the compiler for the two-step compiler 
+introduced in~\cite{LC_paper}.\footnote{As a reminder, the first compilation step in~\cite{LC_paper} uses a standard PLONK compiler.}
+{\color{red} DOES this really hold?} Next, using a similar technique as the one employed in the proof of Theorem~\ref{the:when_osnarks}, one can show that 
+$Z_{\mathbb{O}}$ auxiliary input $\Pi_{\Rvtcom}$ is an O-SNARK for relation $\Rvtcom$, where
+
+$$\Rvtcom = {\color{red}Fill \ in. \ }$$
+
+\noindent In turn, by using $\Pi_{\Rvtcom}$ as an $Z_{\mathbb{O}}$ auxiliary input O-SNARK and an aggregatable signature 
+scheme as defined also in~\cite{LC_paper}, one can construct a non-accountable light client scheme which is the very close analog 
+of the accountable light client schemes introduced in~\cite{LC_paper}. While the perfect completeness for the non-accountable scheme 
+can easily be reduced to {\color{red} fill in}, the soundness of the non-accountable scheme makes direct use of the knowledge-soundness 
+property of the O-SNARK $Z_{\mathbb{O}}$ auxiliary input $\Pi_{\Rvtcom}$. For more details on why is crucial we use an O-SNARK 
+for the soundness security proof, please read Section~\ref{sec:discussion}.
 
 \subsection{Discussion}
 \label{sec:discussion}
+
+{\color{red} Fill in.}
+
+{\color{red} Comparison between the soundness proofs with and without O-SNARKs.}
 
