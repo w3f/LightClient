@@ -190,9 +190,10 @@ $\mathcal{C}$ is the set of all $\mathit{KZG}$ poly commitments or vectors of su
 \noindent In turn, by using $\Pi_{\Rvtcom}$ as an $\mathcal{Z}_{\mathbb{O}}$ auxiliary input O-SNARK and an aggregatable signature 
 scheme as defined also in~\cite{LC_paper}, one can construct a non-accountable light client scheme which is a very close analog 
 to the accountable light client schemes introduced in~\cite{LC_paper}. While the perfect completeness for the non-accountable light client scheme 
-can easily be reduced to {\color{red} fill in}, the soundness of the non-accountable scheme makes direct use of the knowledge-soundness 
-property of the $\mathcal{Z}_{\mathbb{O}}$ auxiliary input O-SNARK for $\Pi_{\Rvtcom}$. For more details on why is crucial we use an O-SNARK 
-for the soundness security proof, please read Section~\ref{sec:discussion}.
+can requires perfect completeness of the O-SNARK (which, in turn, is identical to the perfect completeness for a SNARK scheme), 
+the soundness of the non-accountable scheme makes direct use of the knowledge-soundness 
+property of the $\mathcal{Z}_{\mathbb{O}}$ auxiliary input O-SNARK for $\Pi_{\Rvtcom}$ which is specific for O-SNARKs. 
+For more details on why is crucial we use an O-SNARK for the soundness security proof, please read Section~\ref{sec:discussion}.
 
 \subsection{Discussion}
 \label{sec:discussion}
