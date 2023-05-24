@@ -1,17 +1,25 @@
 %\vspace{-0.2cm}
-\noindent We implemented and benchmarked the protocol. The implementation allows us to evaluate the performance of our protocol and serve as prototype for future deployment. The implementation 
-is open source and publicly available at \url{https://github.com/w3f/apk-proofs}. It is written in Rust and uses the Arkworks library. \\
+\noindent We implemented and benchmarked our counting custom SNARK. 
+The implementation allows us to evaluate the performance of our protocol 
+and serve as prototype for future deployment. The implementation 
+is open source and publicly available at \url{https://github.com/w3f/apk-proofs}. 
+It is written in Rust and uses the Arkworks library. \\
 
 %\vspace{-0.1cm}
-\noindent Table \ref{tab:benchmarks} gives the prover and verifier time for the two SNARK schemes (basic accountable and  packed accountable, see Section~\ref{sec:snarks}) with $v = n-1 = 2^{10}-1$, $v = n-1 = 2^{16}-1$ 
-and $v=n-1=2^{20}-1$ signers. The benchmarks were run on commodity hardware, with an 2.2 GHz i7 and 16GB RAM. We remind the reader that by $v$ we denote the maximum number of validators in our system and that $n$ was defined in Section~\ref{sec:lagrange}.\\
+\noindent Table \ref{tab:benchmarks} gives the prover and verifier time for three very related custom 
+SNARK schemes: basic accountable and  packed accountable as described in 
+full in~\cite{LC_paper} and the counting custom SNARK introduced in this work 
+with $v = n-1 = 2^{10}-1$, $v = n-1 = 2^{16}-1$ and $v=n-1=2^{20}-1$ signers. 
+The benchmarks were run on commodity hardware, with an 2.2 GHz i7 and 16GB RAM. 
+We remind the reader that by $v$ we denote the maximum number of validators in our 
+system and that $n$ was defined in Section~\ref{sec_apk_proofs}.\\
 
 %\begin{center}
 \begin{table*}[h!]
 \hfill
 \begin{tabular}{| l | l | l | l | l |l | l |}
 \hline
- Scheme & \multicolumn{2}{|c|}{$v = 2^{10}-1$} & \multicolumn{2}{|c|}{$v = 2^{16}-1$} & \multicolumn{2}{|c|}{$v = 2^{20}-1$}     \\
+ Custom SNARK & \multicolumn{2}{|c|}{$v = 2^{10}-1$} & \multicolumn{2}{|c|}{$v = 2^{16}-1$} & \multicolumn{2}{|c|}{$v = 2^{20}-1$}     \\
 \cline{2-7}
  &  prover & verifier & prover & verifier &  prover & verifier \\
 \hline
