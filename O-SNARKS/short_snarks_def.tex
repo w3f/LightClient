@@ -1,8 +1,10 @@
 \section{O-SNARKs}
 \label{sec:short_snarks_defs}
-In the following, we remind the reader the definition of an O-SNARK from~\cite{O_SNARK} and we prove that {\color{red}XXX}.
-In order to do that, we start with a couple building block definitions: i.e., for algebraic algorithms (see, for example~\cite{AGM_model}) 
-and our new definition of AGM respecting oracles. \\
+In the following, we remind the reader the definition of an O-SNARK from~\cite{O_SNARK} and we prove that 
+SNARKs such as PLONK~\cite{plonk}, Marlin~\cite{marlin} or Groth16~\cite{groth16} on which a flurry of 
+both under development or in production practical applications are based, fulfil this definition for a commonly occurying 
+and well-defined class of oracles. In order to do that, we start with a couple of building block definitions: we give a 
+reminder of algebraic algorithms (see, for example~\cite{AGM_model}) and introduce our new notion of AGM respecting oracles. \\
 
 \noindent Let $\mathbb{G}$ be a cyclic group of prime order $p$. Informally, an algorithm $A$ is algebraic with respect to $\mathbb{G}$ if it fulfils the following requirement: 
 whenever $A$ outputs a group element $h \in \mathbb{G}$, it also outputs a representation $(s_1, \ldots, s_t) \in \mathbb{Z}^{t}_p$ 

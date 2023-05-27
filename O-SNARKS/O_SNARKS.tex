@@ -192,24 +192,13 @@
 \begin{document}
    \maketitle
 
-\begin{comment}
-\abstract{A major challenge for blockchain interoperability is having an on-chain light client protocol that is both efficient and 
-secure. We present a protocol that provides short proofs about the state of a decentralised consensus protocol while being 
-able to detect misbehaving parties. To do this naively, a verifier would need to maintain an updated list of all participants' public 
-keys which makes the corresponding proofs long. In general, existing solutions either lack accountability or are not efficient. 
-We define and design a committee key scheme with short proofs that do not include any of the individual participants' public 
-keys in plain. Our committee key scheme, in turn, uses a custom designed SNARK which has a fast prover time. Our committee 
-key scheme can be used in an accountable light client system as the main cryptographic core for building bridges between 
-proof of stake blockchains. Finally, we implement a prototype of our custom SNARK for which we provide benchmarks.}
-\end{comment}
-
-\abstract{\color{red} IS THIS OK?} In this work we revisit the notion of O-SNARKs in relation with a wide class of oracles which we call AGM 
-respecting oracles corresponding to operations that are independent from the operations performed on the 
-elliptic curve that the SNARK prover operates on. On one hand, this is a wide class of oracles, which includes oracles 
-that appear often when modelling practical applications. Our result shows that many modern SNARKs 
-(i.e., PLONK~\cite{plonk}, Marlin~\cite{marlin}, Groth16~\cite{groth16}, etc.) 
-are in fact O-SNARKs when combined with AGM respecting oracles. On the other hand, we shade more light via a concrete 
-example where and how O-SNARK security is useful for practical and more complex real-world applications.
+\abstract{\color{red} IS ABSTRACT OK?} In this work we revisit the notion of O-SNARKs in relation to a wide class of 
+oracles which we call AGM respecting. These oracles support operations that are independent from the operations 
+performed on the elliptic curve on which a SNARK prover runs. Our main result shows that many modern SNARKs 
+(e.g., PLONK~\cite{plonk}, Marlin~\cite{marlin}, Groth16~\cite{groth16}) are in fact O-SNARKs when combined 
+with AGM respecting oracles. On one hand, from a theoretical perspective, AGM respecting oracles is a wide class 
+which includes oracles often used when modelling practical applications. On the other hand, via a concrete example, 
+we shed more light on the subtleties on where and how O-SNARK security is useful for complex real-world applications.
      
 \section{Introduction} \label{sec_intro}
 \input{intro.tex}
