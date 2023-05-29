@@ -27,35 +27,35 @@ $\mathbb{O}$ can be a random oracle family or a signing oracle corresponding to 
 $\mathbb{O}$, we define an O-SNARK $\Pi$ for $\mathbb{O}$ as follows~\cite{O_SNARK}. \\
 
 \begin{comment}
-\begin{definition}[O-SNARKs]
-\label{def:osnarks}
-We say $\Pi$ is a $\mathcal{Z}$-auxiliary input O-SNARK for the oracle family $\mathbb{O}$, 
-if $\Pi$ satisfies the properties of completeness and 
-succinctness as in Definition above {\color{red} ADD THAT} 
-and the following property of adaptive proof of knowledge for $\mathbb{O}$:
-Consider the following experiment for security parameter $\lambda \in \mathbb{N}$, 
-time bound $T \in \mathbb{N}$, adversary $\mathcal{A}$, extractor $\mathcal{E}_{\mathcal{A}}$, 
-auxiliary input generator $\mathcal{Z}$ and oracle family $\mathbb{O}$:\\
+%\begin{definition}[(O-)SNARKs]
+%\label{def:osnarks}
+%We say $\Pi$ is a $\mathcal{Z}$-auxiliary input (O-)SNARK (for the oracle family $\mathbb{O})$, 
+%if $\Pi$ satisfies the properties of completeness and 
+%succinctness as in Definition above {\color{red} ADD THAT} 
+%and the following property of adaptive proof of knowledge for $\mathbb{O}$:
+%Consider the following experiment for security parameter $\lambda \in \mathbb{N}$, 
+%time bound $T \in \mathbb{N}$, adversary $\mathcal{A}$, extractor $\mathcal{E}_{\mathcal{A}}$, 
+%auxiliary input generator $\mathcal{Z}$ and oracle family $\mathbb{O}$:\\
 
-\begin{align*}
-O-AddaptivePoK&(\lambda, T, A, E_A, \mathcal{Z}, \mathbb{O}): \\
-& \mathit{aux} \leftarrow \mathcal{Z}(1^{\lambda}); \mathcal{O} \leftarrow \mathbb{O}; \mathsf{crs} \leftarrow \mathsf{Gen}(1^{\lambda},T); \\
-& (y,\pi) \leftarrow A^{\mathcal{O}}(\mathsf{crs},\mathit{aux}); w \leftarrow E_A(\mathsf{crs}, \mathit{aux}, \mathsf{qt}); \\
-& if \ \mathsf{Ver}(\mathsf{crs}, y, \pi) = 1 \wedge (y,w) \in R \ return  \ 1 \\
-& else \ return \ 0
-\end{align*}
-\noindent where $\mathsf{qt} = \{q_i, \mathcal{O}(q_i)\}$ is the transcript of all the oracle queries and answers made and received by $A$ during its execution. 
+%\begin{align*}
+%O-AddaptivePoK&(\lambda, T, A, E_A, \mathcal{Z}, \mathbb{O}): \\
+%& \mathit{aux} \leftarrow \mathcal{Z}(1^{\lambda}); \mathcal{O} \leftarrow \mathbb{O}; \mathsf{crs} \leftarrow \mathsf{Gen}(1^{\lambda},T); \\
+%& (y,\pi) \leftarrow A^{\mathcal{O}}(\mathsf{crs},\mathit{aux}); w \leftarrow E_A(\mathsf{crs}, \mathit{aux}, \mathsf{qt}); \\
+%& if \ \mathsf{Ver}(\mathsf{crs}, y, \pi) = 1 \wedge (y,w) \in R \ return  \ 1 \\
+%& else \ return \ 0
+%\end{align*}
+%\noindent where $\mathsf{qt} = \{q_i, \mathcal{O}(q_i)\}$ is the transcript of all the oracle queries and answers made and received by $A$ during its execution. 
 
-$\Pi$ satisfies adaptive proof of knowledge with respect to oracle family  $\mathbb{O}$ and auxiliary input from $\mathcal{Z}$ 
-if for every non-uniform oracle prover $A^{\mathcal{O}}$ of sizes $s(\lambda)= \mathsf{poly}(\lambda)$ making at most 
-$Q(\lambda) = \mathsf{poly}(\lambda)$ queries there exists a non-uniform extractor
-$E_A$ of size $t(\lambda)=\mathsf{poly}(\lambda)$ and a negligible function $\mathsf{negl}(\lambda)$ 
-such that for every time bound $T$, 
-$$\mathsf{Pr}[ \mathit{O-AddaptivePoK}(\lambda, T, A, E_A, \mathcal{Z}, \mathcal{O})  \implies  1]\ \leq \mathsf{negl}(\lambda).$$
-\end{definition} 
+%$\Pi$ satisfies adaptive proof of knowledge with respect to oracle family  $\mathbb{O}$ and auxiliary input from $\mathcal{Z}$ 
+%if for every non-uniform oracle prover $A^{\mathcal{O}}$ of sizes $s(\lambda)= \mathsf{poly}(\lambda)$ making at most 
+%$Q(\lambda) = \mathsf{poly}(\lambda)$ queries there exists a non-uniform extractor
+%$E_A$ of size $t(\lambda)=\mathsf{poly}(\lambda)$ and a negligible function $\mathsf{negl}(\lambda)$ 
+%such that for every time bound $T$, 
+%$$\mathsf{Pr}[ \mathit{O-AddaptivePoK}(\lambda, T, A, E_A, \mathcal{Z}, \mathcal{O})  \implies  1]\ \leq \mathsf{negl}(\lambda).$$
+%\end{definition} 
 \end{comment}
 
-\begin{definition}[$\mathcal{Z}$-auxiliary input O-SNARK for oracle family $\mathbb{O}$]
+\begin{definition}[$\mathcal{Z}$-auxiliary input (O-)SNARK (for oracle family $\mathbb{O}$)]
 \label{def:osnarks}
 %A succinct non-interactive argument of knowledge (SNARK) for a relation $\mathcal{R}$ is a triple of algorithms 
 A $\mathcal{Z}$-auxiliary input with oracle access succinct non-interactive argument of knowledge for a relation $\mathcal{R}$ 
@@ -71,7 +71,7 @@ a common reference string $\mathsf{crs}$ and a pair $(x,w) \in \mathcal{R}$ and 
 a common reference string $\mathsf{crs}$, some public input $x$ and an alleged proof $\pi$ and if it accepts, 
 it outputs 1 and if it rejects, it outputs 0. 
 \end{itemize}
-\noindent that fulfils perfect completeness, succinctness and adaptive knowledge soundness as defined below.
+\noindent that fulfils perfect completeness, succinctness and (oracle access) adaptive knowledge soundness (for oracle family $\mathbb{O}$) as defined below.
 
 \paragraph{Perfect Completeness:} For every $(x,w) \in \mathcal{R}$ we have
 $$\mathit{Pr}[ \mathsf{Verify}(\mathsf{crs}, x, \pi, \mathcal{R})=1 \  | \  \mathsf{Gen}(1^{\lambda},\mathcal{R}) \rightarrow \mathsf{crs} \ \wedge \  \mathsf{Prove}(\mathsf{crs}, x, w, \mathcal{R}) \rightarrow \pi ] = 1. $$
@@ -80,8 +80,25 @@ $$\mathit{Pr}[ \mathsf{Verify}(\mathsf{crs}, x, \pi, \mathcal{R})=1 \  | \  \mat
 and every $x \in \mathcal{L}_{\mathcal{R}}$, we have that 
 $\mathsf{Gen}$ runs in $\mathsf{poly}(\lambda)$ time, $\mathsf{Prove}$ runs in $\mathsf{poly}(\lambda + |M|+ |x|)$ time,  
 $\mathsf{Verify}$ runs in $\mathsf{poly}(\lambda + |x|)$ time and an honestly generated proof has size $\mathsf{poly}(\lambda)$. 
-\paragraph{Adaptive proof of knowledge for $\mathbb{O}$:} Consider the following experiment for security parameter $\lambda \in \mathbb{N}$, 
-adversary $\mathcal{A}$, extractor $\mathcal{E}_{\mathcal{A}}$, auxiliary input generator $\mathcal{Z}$ and oracle family $\mathbb{O}$:\\
+\paragraph{Adaptive knowledge soundness:} Consider the following experiment for security 
+parameter $\lambda \in \mathbb{N}$, adversary $\mathcal{A}$, extractor $\mathcal{E}_{\mathcal{A}}$, auxiliary 
+input generator $\mathcal{Z}$ :\\
+\begin{align*}
+\mathit{AddaptPoK}&(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}): \\
+& \mathsf{aux} \leftarrow \mathcal{Z}(1^{\lambda}); \mathsf{crs} \leftarrow \mathsf{Gen}(1^{\lambda}); \\
+& (y,\pi) \leftarrow \mathcal{A}(\mathsf{crs},\mathsf{aux}); w \leftarrow \mathcal{E}_{\mathcal{A}}(\mathsf{crs}, \mathsf{aux}); \\
+& if \ \mathsf{Verify}(\mathsf{crs}, y, \pi) = 1 \wedge (y,w) \in R \ return  \ 1 \\
+& else \ return \ 0
+\end{align*}
+\noindent $\Pi$ satisfies adaptive proof of knowledge soundness with respect to auxiliary input from $\mathcal{Z}$ if 
+for every non-uniform oracle prover $\mathcal{A}$ making at most 
+$Q(\lambda) = \mathsf{poly}(\lambda)$ queries there exists a non-uniform extractor $\mathcal{E}_{\mathcal{A}}$ 
+and a negligible function $\mathsf{negl}(\lambda)$ such that 
+$$\mathsf{Pr}[\mathit{AddaptPoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}) \implies  1]\ \leq \mathsf{negl}(\lambda).$$
+
+\paragraph{Oracle-access Adaptive knowledge soundness for oracle family $\mathbb{O}$:} Consider the following experiment for security 
+parameter $\lambda \in \mathbb{N}$, adversary $\mathcal{A}$, extractor $\mathcal{E}_{\mathcal{A}}$, auxiliary 
+input generator $\mathcal{Z}$ and oracle family $\mathbb{O}$:\\
 \begin{align*}
 \mathit{OAddaptPoK}&(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}, \mathbb{O}): \\
 & \mathsf{aux} \leftarrow \mathcal{Z}(1^{\lambda}); \mathcal{O} \leftarrow \mathbb{O}; \mathsf{crs} \leftarrow \mathsf{Gen}(1^{\lambda}); \\
@@ -90,11 +107,11 @@ adversary $\mathcal{A}$, extractor $\mathcal{E}_{\mathcal{A}}$, auxiliary input 
 & else \ return \ 0
 \end{align*}
 \noindent where $\mathsf{qt} = \{q_i, \mathcal{O}(q_i)\}$ is the transcript of all the oracle queries and answers made and received by 
-$\mathcal{A}$ during its execution. $\Pi$ satisfies adaptive proof of knowledge with respect to oracle family  $\mathbb{O}$ and auxiliary 
-input from $\mathcal{Z}$ if for every non-uniform oracle prover $\mathcal{A}^{\mathcal{O}}$ of sizes $s(\lambda)= \mathsf{poly}(\lambda)$ 
+$\mathcal{A}$ during its execution. $\Pi$ satisfies oracle-access adaptive proof of knowledge with respect to oracle family  $\mathbb{O}$ and auxiliary 
+input from $\mathcal{Z}$ if for every non-uniform oracle prover $\mathcal{A}^{\mathcal{O}}$  
 making at most $Q(\lambda) = \mathsf{poly}(\lambda)$ queries there exists a non-uniform extractor $\mathcal{E}_{\mathcal{A}}$ 
-of size $t(\lambda)=\mathsf{poly}(\lambda)$ and a negligible function $\mathsf{negl}(\lambda)$ such that 
-$\mathsf{Pr}[\mathit{OAddaptPoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}, \mathcal{O}) \implies  1]\ \leq \mathsf{negl}(\lambda)$. 
+and a negligible function $\mathsf{negl}(\lambda)$ such that 
+$$\mathsf{Pr}[\mathit{OAddaptPoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}, \mathcal{O}) \implies  1]\ \leq \mathsf{negl}(\lambda).$$ 
 \end{definition} 
 
 \begin{definition}[AGM Respecting Oracles]
