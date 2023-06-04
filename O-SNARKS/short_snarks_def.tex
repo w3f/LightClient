@@ -114,10 +114,12 @@ and a negligible function $\mathsf{negl}(\lambda)$ such that
 $$\mathsf{Pr}[\mathit{OAddaptPoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}, \mathcal{O}) \implies  1]\ \leq \mathsf{negl}(\lambda).$$ 
 \end{definition} 
 
+\noindent The following definition is inspired by the definition of the AGM model itself introduced in ~\cite{DBLP:phd/dnb/Loss19}, and, in particular the formalism and 
+concrete examples and counterexamples introduced at the end of Section 5.2.1.  
+
 \begin{definition}[AGM Respecting Oracles]
 \label{def:agm_oracles}
-Let $\mathbb{G}$ be a cyclic group of prime order $p$ and let $\mathit{AlgAdv}_{\mathbb{G}}$ be the set of all algebraic 
-adversaries with respect to $\mathbb{G}$. We say that a family of oracles $\mathbb{O}$ is AGM respecting relative to 
+Let $\mathbb{G}$ be a cyclic group of prime order $p$. We say that a family of oracles $\mathbb{O}$ is AGM respecting relative to 
 $\mathbb{G}$ if the probability of any oracle $\mathcal{O} \in \mathbb{O}$ outputting an element of $\mathbb{G}$ or outputting 
 an element which can be transformed via an efficient algorithm into an element of $\mathbb{G}$ is $0$. 
 \end{definition}
@@ -153,4 +155,14 @@ input SNARK $\Pi$ secure in the AGM model with respect to $\mathbb{G}$ is an O-S
 \end{comment}
 \end{proof}
 
+\begin{corollary}[O-SNARKs from Pairing-based SNARKs]
+Let $\mathbb{G}_1$ and  $\mathbb{G}_2$ be two cyclic groups of prime order $p$ and let $\mathbb{O}$ be 
+an AGM respecting oracle family relative to both $\mathbb{G}_1$ and $\mathbb{G}_2$ as per Definition~\ref{def:agm_oracles}. 
+If $\Pi$ is a $\mathcal{Z}$-auxiliary input SNARK secure in the AGM model for any benign 
+distribution $\mathcal{Z}$, then $\Pi_{\mathbb{O}}$ which follows $\Pi$ with the exception that the prover has oracle access 
+to $\mathbb{O}$, is a $\mathcal{Z}$-auxiliary input O-SNARK for $\mathbb{O}$. 
+\end{corollary}
+
+\begin{proof} TO DO
+\end{proof}
 
