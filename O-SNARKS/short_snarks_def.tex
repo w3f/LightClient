@@ -116,23 +116,41 @@ $$\mathsf{Pr}[\mathit{OAddaptPoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}
 
 \begin{definition}[AGM Respecting Oracles]
 \label{def:agm_oracles}
-Let $\mathbb{G}$ be a cyclic group of prime order $p$ and let $\mathit{AlgAdv}_{\mathbb{G}}$ be the set of all algebraic adversaries with 
-respect to $\mathbb{G}$. We say that a family of oracles $\mathbb{O}$ is AGM respecting relative to $\mathbb{G}$ if 
-the probability of any oracle $\mathcal{O} \in \mathbb{O}$ to perform a group operation from $\mathbb{G}$ 
-(i.e., output an element of $\mathbb{G}$) is $0$. 
+Let $\mathbb{G}$ be a cyclic group of prime order $p$ and let $\mathit{AlgAdv}_{\mathbb{G}}$ be the set of all algebraic 
+adversaries with respect to $\mathbb{G}$. We say that a family of oracles $\mathbb{O}$ is AGM respecting relative to 
+$\mathbb{G}$ if the probability of any oracle $\mathcal{O} \in \mathbb{O}$ outputting an element of $\mathbb{G}$ or outputting 
+an element which can be transformed via an efficient algorithm into an element of $\mathbb{G}$ is $0$. 
 \end{definition}
 
+\begin{comment}
 \begin{theorem}[O-SNARKS for AGM Respecting Oracles]
 \label{the:when_osnarks} 
 Let $\mathbb{G}$ be a cyclic group of prime order $p$ and let $\mathbb{O}$ be an AGM respecting oracle 
 relative to $\mathbb{G}$ as per Definition~\ref{def:agm_oracles}. We denote by $\mathcal{Z}_{\mathbb{O}}$ the 
 probability distribution of all the public parameters that define a member of $\mathbb{O}$ together with some 
 polynomial number $Q$ of queries and answers to $\mathbb{O}$. More formally: 
-$\mathcal{Z}_{\mathbb{O}} = (\mathit{pp}, \{\mathcal{O}(q_i), q_i\}_{i=1}^Q)$, $Q = \mathsf{poly}(\lambda)$, $(\mathit{pp}, \mathcal{O}) \leftarrow \mathbb{O}$. 
-Then every $\mathcal{Z}_{\mathbb{O}}$-auxiliary input SNARK $\Pi$ secure in the AGM model with respect to $\mathbb{G}$ is an O-SNARK for $\mathbb{O}$.
+$\mathcal{Z}_{\mathbb{O}} = (\mathit{pp}, \{\mathcal{O}(q_i), q_i\}_{i=1}^Q)$, 
+$Q = \mathsf{poly}(\lambda)$, $(\mathit{pp}, \mathcal{O}) \leftarrow \mathbb{O}$. Then every $\mathcal{Z}_{\mathbb{O}}$-auxiliary 
+input SNARK $\Pi$ secure in the AGM model with respect to $\mathbb{G}$ is an O-SNARK for $\mathbb{O}$.
+\end{theorem}
+\end{comment}
+
+\begin{theorem}[O-SNARKS for AGM Respecting Oracles]
+\label{the:when_osnarks} 
+Let $\mathbb{G}$ be a cyclic group of prime order $p$ and let $\mathbb{O}$ be an AGM respecting oracle family relative to $\mathbb{G}$ 
+as per Definition~\ref{def:agm_oracles}. If $\Pi$ is a $\mathcal{Z}$-auxiliary input SNARK secure in the AGM model for any benign 
+distribution $\mathcal{Z}$, then $\Pi_{\mathbb{O}}$ which follows $\Pi$ with the exception that the prover has oracle access to $\mathbb{O}$, 
+is a $\mathcal{Z}$-auxiliary input O-SNARK for $\mathbb{O}$.
 \end{theorem}
 
 \begin{proof}TO DO
+\begin{comment} Write a proof inspired by We denote by $\mathcal{Z}_{\mathbb{O}}$ the 
+probability distribution of all the public parameters that define a member of $\mathbb{O}$ together with some 
+polynomial number $Q$ of queries and answers to $\mathbb{O}$. More formally: 
+$\mathcal{Z}_{\mathbb{O}} = (\mathit{pp}, \{\mathcal{O}(q_i), q_i\}_{i=1}^Q)$, 
+$Q = \mathsf{poly}(\lambda)$, $(\mathit{pp}, \mathcal{O}) \leftarrow \mathbb{O}$. Then every $\mathcal{Z}_{\mathbb{O}}$-auxiliary 
+input SNARK $\Pi$ secure in the AGM model with respect to $\mathbb{G}$ is an O-SNARK for $\mathbb{O}$.
+\end{comment}
 \end{proof}
 
 
