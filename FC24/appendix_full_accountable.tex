@@ -1,0 +1,220 @@
+\section{Rolled out Protocol $\Pah$ for Relation $\Racom$}
+\label{sec:rolled_out}
+
+\noindent We give below the full rolled-out hybrid model protocol $\Pah$ for conditional NP relation $\Racom$. This is obtained by applying 
+our two-steps compiler from Section~\ref{sec_two_step_compiler} to polynomial protocol $\Pa$. In order to obtain the non-interactive version 
+(i.e., the N from SNARK) we have additionally applied the Fiat-Shamir transform. In the following, by \textbf{transcript} at a certain point in time we denote the concatenation 
+of the global constant, verification key, trusted public input, other public input and the proof elements created by the prover up to that point in time.
+\noindent $\mathcal{H}$ is a hash function, $\mathcal{H}: \{0, 1\} \rightarrow \mathbb{F}$ and it emulates the random oracle.  
+In the following, $\oplus$ is the addition operation on $\einn$ in affine coordinates. Note that in our implementation we instantiate 
+$\einn$ with BLS12-377~\cite{zexe} and $\eout$ with BW6-761~\cite{BW6}, while we choose $\block$ to be $256$ as this is the largest power of 2 smaller 
+than the size of a field element in $\mathbb{F}$ (i.e., the base field for BLS12-377 which is the same as the scalar field of BW6-761). 
+Finally, $n$ has been defined as per Section~\ref{sec:lagrange}, i.e., $n$ is a large enough power of 2; 
+moreover, we let $v= n-1$ and we let $N = n$. This, in turn, ensures that $N$ has been chosen according to the properties stated in 
+instantiation~\ref{sec:bls}, in particular when defining $\mathit{AS.Setup}$. \\
+
+\noindent \textbf{Public Parameters:} \\
+$(\ginn{1}, \sginn{1}, \ginn{2}, \sginn{2}, \gtinn, \epinn, \Hinn, \HPoP)$ from $\mathit{pp}$ 
+where $\mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}= n)$ \\
+
+\noindent \textbf{Global constant:} $h \in \einn \setminus \ginn{1}$ \\ 
+
+\noindent \textbf{Trusted Setup:} $\mathit{srs} \leftarrow \mathit{SNARK.Setup}(\mathit{aux_{\mathit{SNARK}}} = (n, 3n-3))$,  
+where $\mathit{srs} =([1]_{\indexoneout}, [\tau]_{\indexoneout}, [\tau^2]_{\indexoneout}, \ldots, [\tau^{3n-3}]_{\indexoneout}, [1]_{\indextwoout}, [\tau]_{\indextwoout})$ \\
+
+\noindent \textbf{Proving and Verifying Key Generation:} $(\mathit{srs}_{\mathit{pk}}, \mathit{srs}_{\mathit{vk}}) \leftarrow \mathit{SNARK.KeyGen}(\mathit{srs}, \Racom)$, \\
+where $(\mathit{srs}_{\mathit{pk}}, \mathit{srs}_{\mathit{vk}}) = 
+(([1]_{\indexoneout}, [\tau]_{\indexoneout}, [\tau^2]_{\indexoneout}, \ldots, [\tau^{3n-3}]_{\indexoneout}), ([1]_{\indexoneout}, [1]_{\indextwoout}, [\tau]_{\indextwoout}))$ \\
+
+\noindent \textbf{Partial Input:} $(x_1, \mathit{state_2}) \leftarrow \mathit{SNARK.PartInput}(\mathit{srs}, \mathit{state_1}, \Racom)$, 
+where $(\mathit{pk_0}, \ldots, \mathit{pk_{n-2}})$ is part of $\mathit{state_1}$; \\ 
+if $(\mathit{pk_0}, \ldots, \mathit{pk_{n-2}}) \notin \ginn{1}^{n-1}$, $\mathit{SNARK.PartInput}(\mathit{srs}, \mathit{state_1}, \Racom)$ outputs the empty string, otherwise 
+$\mathit{SNARK.PartInput}$ outputs $x_1 = ([pkx]_{\indexoneout}$, $[pky]_{\indexoneout})$ and $\mathit{state_2} = \mathit{state_1} \cup \{ x_1\}$, where $\forall i \in \{0, \ldots, n-2\}$, $\mathit{pk_i}$ as an element of the curve $\einn$ 
+has the affine representation $(\mathit{pkx_i}, \mathit{pky_i})$. The polynomials $pkx(X)$ and $pky(X)$ are computed as $pkx(X) = \sum_{i=0}^{n-2} \mathit{pkx_i} \cdot L_i(X)$ 
+and $pky(X) = \sum_{i=0}^{n-2} \mathit{pky_i} \cdot L_i(X)$ and finally, the polynomial commitments are computed as 
+$[pkx]_{\indexoneout} = pkx(\tau) \cdot [1]_{\indexoneout}$ and $[pky]_{\indexoneout} = pky(\tau) \cdot [1]_{\indexoneout}$.\\
+
+\noindent \textbf{Public input:} $x_1 = ([pkx]_{\indexoneout}, [pky]_{\indexoneout})$, $x_2 = ((\mathit{b'_{0}}, \ldots, \mathit{b'_{\frac{n}{\block}-1}}), \mathit{apk})$\\
+
+\noindent \textbf{Witness:}
+$w = ((\mathit{pk_0}, \ldots, \mathit{pk_{n-2}})$, $(\mathit{bit}_0, \ldots, \mathit{bit_{n-1}}))$ \\
+
+\noindent \textbf{Prover's Algorithm:} $ \pi \leftarrow \mathit{SNARK.Prove}(\mathit{srs_{pk}}, ((x_1, x_2), w), \Racom)$, where\\
+
+\noindent \textbf{Step 1:} \\
+\noindent Compute the affine representation $h = (h_x, h_y)$ and  $apk \oplus h = ((apk \oplus h)_{x}, (apk \oplus h)_{y})$. \\
+
+\noindent Compute $\mathbf{pkx} = (\mathit{pkx_0}, \ldots, \mathit{pkx_{n-2}})$ and $\mathbf{pky} = (\mathit{pky_0}, \ldots, \mathit{pky_{n-2}})$ s.\ t.\  
+$\forall i \in \{0, \ldots, n-2\}$, $\mathit{pk_i}$ as an element of the curve $\einn$ has the affine representation $(\mathit{pkx_i}, \mathit{pky_i})$. \\
+
+\noindent Let $(kaccx_{0}, kaccy_{0}) = (h_x, h_y)$ and 
+compute $(kaccx_{i+1}, kaccy_{i+1}) =  (kaccx_{i}, kaccy_{i}) \oplus \mathit{bit_i}(pkx_{i}, pky_{i})$, $\forall i < n-1$. \\ 
+
+\noindent Compute polynomials 
+
+$$b(X) = \sum_{i=0}^{n-1} \mathit{bit_i} \cdot L_i(X),$$
+
+$$kaccx(X) = \sum_{i=0}^{n-1} kaccx_i \cdot L_i(X),$$
+
+$$kaccy(X) = \sum_{i=0}^{n-1} kaccy_i \cdot L_i(X),$$
+
+$$pkx(X) = \sum_{i=0}^{n-2} pkx_i \cdot L_i(X),$$
+
+$$pky(X) = \sum_{i=0}^{n-2} pky_i \cdot L_i(X).$$
+
+\noindent Compute $[b]_{\indexoneout} = b(\tau)\cdot[1]_{\indexoneout}$, $[kaccx]_{\indexoneout} = kaccx(\tau) \cdot [1]_{\indexoneout}$, $[kaccy]_{\indexoneout} = kaccy(\tau)\cdot [1]_{\indexoneout}$. \\
+
+\noindent The first output of the prover is ($[b]_{\indexoneout}$, $[kaccx]_{\indexoneout}$, $[kaccy]_{\indexoneout}$). \\
+
+\noindent \textbf{Step 2:} \\
+\noindent Compute the sum challenge $r = \mathcal{H}(\mathbf{transcript})$. \\
+
+\noindent Compute $sum = \sum_{j=0}^{\frac{n}{\block}-1} b'_{j} r^j$.\\
+
+\noindent Compute: $\frac{r}{2^{\block -1}}, r^{\frac{n}{\block}}$. \\
+
+\noindent Compute polynomials 
+
+$$c(X) = \sum_{i=0}^{n-1} c_i \cdot L_{i}(X),$$ 
+where $c_i =  2^{i\mod \block}\cdot r^{i\div \block}, 0 \leq i \leq n-1 $. 
+
+$$acc(X) = \sum_{i=0}^{n-1} acc_i \cdot L_{i}(X),$$ 
+where $acc_0 = 0$ and $acc_i = \sum_{j=0}^{i-1} \mathit{bit_j} \cdot c_j, 0 < i \leq n-1$. 
+$$aux(X) = \sum_{i=0}^{n-1} aux_i \cdot L_{i}(X),$$
+where $aux_{i} = 1$ if $i$ is divisible with $\block$ and $aux_{i} = 0$ otherwise, $\forall i < n$ \\
+
+\noindent Compute $[c]_{\indexoneout} = c(\tau) \cdot [1]_{\indexoneout}$, $[acc]_{\indexoneout} = acc(\tau) \cdot [1]_{\indexoneout}$. \\
+
+\noindent The second output of the prover is $([c]_{\indexoneout}, [acc]_{\indexoneout})$. \\
+
+\noindent \textbf{Step 3:} \\
+\noindent Compute the quotient challenge $\alpha = \mathcal{H}(\mathbf{transcript})$. \\
+
+\noindent Compute the polynomial $t(X)$ of degree at most $3\cdot n - 3$  where 
+\begin{align*}
+&t(X)(X^n-1)  = \\  
+&(X-\omega^{n-1}) \cdot [b(X) \cdot ((kaccx(X)-pkx(X))^2 \cdot (kaccx(X)+ pkx(X) + kaccx(\omega\cdot X)) - (pky(X)-kaccy(X))^2) + \\ 
+& + (1-b(X))\cdot (kaccy(\omega\cdot X) - kaccy(X))] + \\
+& +\alpha (X-\omega^{n-1})\cdot [b(X) \cdot ((kaccx(X) - pkx(X)) \cdot (kaccy(\omega \cdot X) + kaccy(X)) - (pky(X) - kaccy(X)) \cdot \\
+&\cdot (kaccx(\omega \cdot X) - kaccx(X))) + (1-b(X)) \cdot (kaccx(\omega \cdot X) - kaccx(X))] + \\
+& +\alpha^2 \cdot [b(X) \cdot (1-b(X))] + \\
+& +\alpha^3 \cdot [c(\omega \cdot X) - c(X)\cdot (2+ (\frac{r}{2^{\block -1}} -2) \cdot aux(\omega \cdot X))- (1 - r^{\frac{n}{\block}}) \cdot L_{n-1}(X)] + \\ 
+& +\alpha^4 \cdot [(kaccx(X) - h_x)\cdot L_0(X) + (kaccx(X) - (h + apk)_{x}) \cdot L_{n-1}(X)] + \\ 
+& +\alpha^5 \cdot [(kaccy(X) - h_y)\cdot L_0(X) + (kaccy(X) - (h + apk)_{y}) \cdot L_{n-1}(X)] + \\
+& +\alpha^6 \cdot [ acc(\omega \cdot X) - acc(X) - b(X)\cdot c(X) + \mathit{sum} \cdot L_{n-1}(X)] \; .
+\end{align*}
+
+\noindent Compute $[t]_{\indexoneout} = t(\tau) \cdot [1]_{\indexoneout}$.  \\
+
+\noindent The third output of the prover is $[t]_{\indexoneout}$. \\
+
+\noindent \textbf{Step 4:} \\
+\noindent Compute evaluation challenge $\zeta = \mathcal{H}(\mathbf{transcript})$. \\
+
+\noindent Compute evaluations: 
+$\overline{pkx} = pkx(\zeta)$, $\overline{pky}=pky(\zeta)$, $ \overline{b}=b(\zeta)$, $\overline{kaccx}=kaccx(\zeta)$, $\overline{kaccy}=kaccy(\zeta)$, 
+$\overline{c}=c(\zeta)$, $\overline{acc}=acc(\zeta)$, $\overline{t}=t(\zeta)$. \\
+
+\noindent Compute linearisation polynomial: 
+\begin{align*}
+&r(X) = (\zeta - \omega^{n-1}) \cdot [\bar{b} \cdot (\overline{kaccx} - \overline{pkx})^2 \cdot kaccx( X) + (1 - \bar{b})\cdot kaccy(X)]+ \\
+&+ \alpha \cdot (\zeta - \omega^{n-1}) \cdot [\bar{b} \cdot ((\overline{kaccx} - \overline{pkx}) \cdot kaccy(X) - (\overline{pky} - \overline{kaccy}) \cdot kaccx(X)) + (1 - \bar{b}) \cdot kaccx(X)]+ \\
+&+\alpha^3 \cdot c(X)+ \\
+&+\alpha^6 \cdot acc(X).
+\end{align*}
+
+\noindent Compute evaluation of linearisation polynomial $\overline{r_{\omega}} = r(\omega \cdot \zeta)$. \\
+
+\noindent The fourth output of the prover is $(\overline{pkx}, \overline{pky}, \overline{b}, \overline{kaccx}, \overline{kaccy}, \overline{c}, \overline{acc},\overline{r_{\omega}})$. \\
+
+\noindent \textbf{Step 5:} \\
+\noindent Compute opening challenge $\nu = \mathcal{H}(\mathbf{transcript})$.  \\
+
+\noindent Compute first opening proof polynomial
+
+\begin{align*} 
+W_{\zeta}(X) = \frac{1}{X-\zeta}&(t(X) - \bar{t}+ \\ 
+&+ \nu(pkx(X) - \overline{pkx}) +\\
+&+  \nu^2(\cdot pky(X) - \overline{pky}) + \\ 
+&+ \nu^3 (b(X) - \bar{b}) + \\
+&+ \nu^4( kaccx(X) - \overline{kaccx}) + \\  
+&+ \nu^5(kaccy(X) - \overline{kaccy}) +  \\ 
+&+ \nu^6 (c(X) -\bar{c}) + \\ 
+&+ \nu^7 (acc(X) - \overline{acc}))
+\end{align*}
+
+\noindent and second opening proof polynomial
+
+\begin{align*}
+W_{\zeta \cdot \omega}(X) = \frac{1}{X-\zeta \cdot \omega}&(r(X) - \overline{r_{\omega}}).
+\end{align*}
+
+\noindent Compute $[W_{\zeta}]_{\indexoneout} = W_{\zeta}(\tau) \cdot [1]_{\indexoneout}$ and $[W_{\zeta \cdot \omega}]_{\indexoneout} = W_{\zeta \cdot \omega}(\tau) \cdot [1]_{\indexoneout}.$ \\
+
+\noindent The fifth output of the prover is $([W_{\zeta}]_{\indexoneout}, [W_{\zeta \cdot \omega}]_{\indexoneout})$. \\
+
+\noindent Compute the multipoint evaluation challenge $u = \mathcal{H}(transcript)$. \\
+
+\noindent Return $\pi$ = ($[b]_{\indexoneout}$, $[kaccx]_{\indexoneout}$, $[kaccy]_{\indexoneout}$, $[c]_{\indexoneout}$, $[acc]_{\indexoneout}$, $[t]_{\indexoneout}$, $[W_{\zeta}]_{\indexoneout}$, 
+$[W_{\zeta \cdot \omega}]_{\indexoneout}$,  $\overline{pkx}$, $\overline{pky}$, $\overline{b}$, $\overline{kaccx}$, $\overline{kaccy}$, $\overline{c}$, 
+$\overline{acc}$, $\overline{r}_{\omega}$) \\  
+
+\noindent \textbf{Verifier's Algorithm:} $0/1 \leftarrow \mathit{SNARK.Verify}(\mathit{srs_{vk}}, (x_1, x_2), \pi, \Racom)$, where\\ 
+
+\noindent \textbf{Step 1:} \\
+\noindent Compute the affine representation $h = (h_x, h_y)$ and  $apk \oplus h = ((apk \oplus h)_{x}, (apk \oplus h)_{y})$.\\
+
+\noindent \textbf{Step 2:} \\
+\noindent Validate proof elements ($[b]_{\indexoneout}$, $[kaccx]_{\indexoneout}$, $[kaccy]_{\indexoneout}$, $[c]_{\indexoneout}$, $[acc]_{\indexoneout}$, $[t]_{\indexoneout}$, 
+$[W_{\zeta}]_{\indexoneout}$, $[W_{\zeta \cdot \omega}]_{\indexoneout}$) $ \in \gout{1}^{8}$. \\ 
+
+\noindent \textbf{Step 3:} \\
+\noindent Validate proof elements ($\overline{pkx}$, $\overline{pky}$, $\overline{b}$, $\overline{kaccx}$, 
+$\overline{kaccy}$, $\overline{c}$, $\overline{acc}$, $\overline{r}_{\omega}$) $\in \mathbb{F}^{8}$. \\
+
+\noindent \textbf{Step 4:} \\
+\noindent Compute challenges $(r, \alpha, \zeta, \nu, u)$ as in the prover $P_{\mathit{pa, com}}^{\mathit{SNARK}}$ description from the common input, trusted public input, public input and respective necessary parts of the $\mathbf{transcript}$ using elements of $\pi_{\mathit{pa}}$. \\
+
+\noindent \textbf{Step 5:} \\
+\noindent Compute: $sum = \sum_{j=0}^{\frac{n}{\block}-1} b'_{j} r^j$. \\
+
+\noindent Compute: $\frac{r}{2^{\block -1}}, r^{\frac{n}{\block}}$. \\
+
+\noindent \textbf{Step 6:} \\
+\noindent Compute polynomial evaluations $\zeta^{n} -1$ and $\overline{aux}_{\omega} = aux(\omega \cdot \zeta)$\footnote{We have $aux(\omega \cdot \zeta)= 1$ if $(\omega\cdot \zeta)^{\frac{n}{\block}} =1$ and $aux(\omega \cdot \zeta) = \frac{1}{\block} \cdot \frac{\zeta^n -1}{(\omega\cdot\zeta)^{\frac{n}{\block}} -1}$ otherwise.} and Lagrange basis polynomials 
+$L_0(\zeta)= \frac{\zeta^n - 1}{n \cdot (\zeta-1)}$ and $L_{n-1}(\zeta)= \frac{(\zeta^n - 1) \cdot \omega^{n-1}}{n \cdot (\zeta - \omega^{n-1})}$. \\
+
+\noindent \textbf{Step 7\footnote{This step can be optimised in obvious ways in order to reduce the number of field operations necessary to compute $\bar{t}$. We choose to include the non-compact formula in this write-up such that the reader is able to follow the linearisation process to a larger extent than via a more compact formula.}:} \\
+\noindent Compute quotient polynomial evaluation $$\bar{t} = 
+\frac{\overline{r_{\omega}} + [\bar{b}((\overline{kaccx} - \overline{pkx})^2 \cdot (\overline{kaccx} + \overline{pkx})- (\overline{pky} - \overline{kaccy})^2) - (1-\bar{b})\cdot \overline{kaccy}]\cdot (\zeta - \omega^{n-1})}{\zeta^{n} - 1} +$$
+
+$$+ \frac{\alpha \cdot [\bar{b} \cdot ((\overline{kaccx} - \overline{pkx}) \cdot \overline{kaccy} + (\overline{pky} - \overline{kaccy}) \cdot \overline{kaccx}) - (1 - \bar{b}) \cdot \overline{kaccx}] \cdot (\zeta - \omega^{n-1})}{\zeta^{n} - 1}+$$
+
+$$+\frac{\alpha^2 \cdot \bar{b} \cdot (1 - \bar{b})}{\zeta^{n} - 1} +$$
+
+$$-\frac{\alpha^3 \cdot[(1 - r^{\frac{n}{\block}}) \cdot L_{n-1}(\zeta)]}{\zeta^{n}-1}  \ - \alpha^3 \cdot  \bar{c} \cdot (2+ (\frac{r}{2^{\block -1 }} - 2)) \cdot \overline{aux}_{\omega} + $$
+
+$$+\frac{\alpha^4 \cdot [(\overline{kaccx} - h_x) \cdot L_0(\zeta) + (\overline{kaccx} - (h + apk)_x) \cdot L_{n-1}(\zeta)]}{\zeta^{n} - 1} +$$
+
+$$+\frac{\alpha^5 \cdot[(\overline{kaccy} - h_y) \cdot L_0(\zeta) + (\overline{kaccy} - (h + apk)_y) \cdot L_{n-1}(\zeta)]}{\zeta^{n} - 1} +$$
+
+$$+\frac{\alpha^6 \cdot [- \overline{acc} - \bar{b} \cdot \bar{c} + \mathit{sum} \cdot L_{n-1}(\zeta)]}{\zeta^{n} - 1}.$$
+
+\noindent \textbf{Step 8:} \\
+\noindent Compute full batched polynomial commitment $[F]_{\indexoneout}$. 
+\begin{align*}
+[F]_{\indexoneout} =&  [t]_{\indexoneout} + \nu \cdot [pkx]_{\indexoneout} + \nu^2 \cdot [pky]_{\indexoneout} + \nu^3 \cdot [b]_{\indexoneout} \ + \\
+& + (u \cdot (\zeta - \omega^{n-1})\cdot (\bar{b} \cdot ((\overline{kaccx} - \overline{pkx})^2 + \alpha \cdot (\overline{pky} - \overline{kaccy}))+\alpha \cdot (1 - \bar{b})) + \nu^4) \cdot [kaccx]_{\indexoneout} \ + \\  
+& +(u \cdot (\zeta - \omega^{n-1})(\alpha \cdot \bar{b}(\overline{kaccx} - \overline{pkx})+ (1- \bar{b})) + \nu^5) \cdot [kaccy]_{\indexoneout} \ + \\  
+& +(u\cdot \alpha^3+ \nu^6) \cdot [c]_{\indexoneout} \ + \\  
+& +(u\cdot \alpha^6+ \nu^7)\cdot [acc]_{\indexoneout}. \ \\ 
+\end{align*}
+
+\noindent \textbf{Step 9:} \\
+\noindent Compute group-encoded batch evaluation $[E]_{\indexoneout}$ 
+$$[E]_{\indexoneout} = (\bar{t} + \nu \cdot \overline{pkx} + \nu^2 \cdot \overline{pky} + \nu^3 \cdot \bar{b} +
+\nu^4 \cdot \overline{kaccx} + \nu^5 \cdot \overline{kaccy} + \nu^6 \cdot \bar{c} + \nu^7 \cdot \overline{acc} + u \cdot  \overline{r_{w}}) \cdot [1]_{\indexoneout}$$
+
+\noindent \textbf{Step 10:} \\
+\noindent Batch validate all evaluations by checking that the following holds \\
+$$\epout([W_{\zeta}]_{\indexoneout} + u \cdot [W_{\zeta \cdot \omega}]_{\indexoneout},[\tau]_{\indextwoout}) = \epout(\zeta \cdot [W_{\zeta}]_{\indexoneout} + u \cdot \zeta \cdot \omega \cdot [W_{\zeta \cdot \omega}]_{\indexoneout} + [F]_{\indexoneout} - [E]_{\indexoneout}, [1]_{\indextwoout}).$$

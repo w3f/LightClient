@@ -1,0 +1,91 @@
+\section{Postponed Security Proof for Accountable Light Client Systems}
+\label{supplementary_proof_sec_accountability}
+
+\noindent In this section we prove the following theorem:
+
+\begin{theorem} 
+\label{th:accountability_results}
+If $\mathit{AS}$ is the secure aggregatable signature scheme defined in instantiation~\ref{insta:bls} and if 
+$\mathit{CKS_{\mathcal{R}}}$ is the secure committee key scheme defined in instantiation~\ref{inst:cks}, then, together 
+with the assumptions stated at the beginning of Section~\ref{sec:assumptions} and for $\mathcal{R} \in \{ \Rlacom, \Racom \}$, the tuple 
+($\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$, $\mathit{LC.VerifyProof}$, $\mathit{LC.DetectMisbehaviour}$, 
+$\mathit{LC.VerifyMisbehaviour}$) as instantiated in Section~\ref{sec:instantiation} is an accountable light client system.
+\end{theorem}
+\begin{proof}
+\noindent Due to theorem~\ref{th:soundness}, the tuple 
+($\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$, $\mathit{LC.VerifyProof}$, \\ $\mathit{LC.DetectMisbehaviour}$, 
+$\mathit{LC.VerifyMisbehaviour}$) as instantiated in Section~\ref{sec:instantiation} is already a light client system. 
+It is only left to show that both accountability completeness and accountability soundness also hold. Indeed: \\
+
+\noindent \textit{Accountability Completeness:} %This follows immediately from the description of $\mathit{LC.DetectMisbehaviour}$ 
+%and $\mathit{LC.VerifyMisbehaviour}$, from the fact that $$\mathit{LC.VerifyProof}(\pi, m, \mathcal{R}) = \mathit{acc}$$ 
+%and $$\mathit{CheckValidConsensus}(C)=1$$ and from the existence of a message $\mathit{aux}$ in $C$ that has 
+%been decided and is incompatible with the message $m$ supported by $\pi$. \\
+Let $\mathcal{A}$ be an efficient adversary that on input $\mathit{pp_{\mathit{LC}}}$ and $\mathcal{R}$ outputs 
+ $\pi$, $m$ and $C$. It is easy to see that if the descriptions of $\mathit{LC.DetectMisbehaviour}$ and $\mathit{LC.VerifyMisbehaviour}$ are followed honestly,  
+then the predicate $S_{m''} \cap S_{m'} = S$ checked in the end of $\mathit{LC.VerifyMisbehaviour}$ is fulfilled. Moreover, due to the satisfied predicate
+$$\mathit{LC.VerifyProof}(\mathit{pp}, \mathit{rs_{\mathit{vk}}}, \LCseed, \pi, m, \mathcal{R}) = 1 \ \ \ \ \ \ (1)$$ %{\color{blue} due to the description of 
+%$\mathit{LC.DetectMisbehaviour}$ plus the fact that $C$ is a valid consensus view as per the definition of accountability security challenge, }
+it holds that all $m_j, j \in [i]$ (as defined in $\mathit{LC.VerifyProof}$) are decided in $C$. Due to the way $m'$ and $m''$ are computed 
+by $\mathit{LC.DetectMisbehaviour}$ from the messages $(m_j)_{j=1}^i$, this implies $|S_{m'}| \geq t$, $|S_{m''}| \geq t$ and $(\mathit{m'}, d_{\mathit{m'}}) \in_{\mathit{decided}} C$ and 
+ $$\mathit{Incompatible(m'', m', d_{m'})} = 1.$$ We are only left to show that 
+ $$\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m'', \sigma) =1 \ \ \ \ (*)$$ 
+\noindent holds with overwhelming probability. Indeed, since $(1)$ holds then, for every epoch $j \in [i]$ it holds that 
+$$\mathit{CKS_{\mathcal{R}}.Verify}(\mathit{pp},  \mathit{rs_{\mathit{vk}}}, \mathit{com_j}, m_j,  \mathbf{\Sigma}(j), (\mathbf{\pi_{j}},\mathit{apk_j}), 
+\mathbf{bit_j}) = 1 \ \ \ \ (2).$$
+\noindent In particular, $(2)$ holds for $j = \mathit{index}$. Due to soundness property of the committee key scheme $\mathit{CKS_{\mathcal{R}}}$, 
+since $\mathit{com_{\mathit{index}}} = \mathbf{Com}(\mathbf{pk_{\mathbf{index}}})$ by the definition of $\mathit{index}$ and 
+$\mathit{LC.DetectMisbehaviour}$, since $\mathit{apk_{\mathit{index}}} = \mathit{AS.AggKeys}(\mathit{pp}, 
+(\mathbf{bit_{\mathbf{index}}}(k) \cdot \mathbf{pk_{\mathbf{index}}}(k))_{k=1}^v)$ as computed by $\mathit{LC.DetectMisbehaviour}$, 
+since also $m'' = m_{\mathit{index}}$ (with $m_j, \forall j \in [i]$ defined in $\mathit{LC.VerifyProof}$ and $\mathit{index}$ defined 
+in \\ $\mathit{LC.DetectMisbehaviour}$) and, finally, since $\mathbf{\Sigma}(\mathit{index}) = \sigma$, as defined in $\mathit{LC.DetectMisbehaviour}$, 
+it follows that $(*)$ holds with overwhelming probability (q.e.d.). \\
+ 
+\noindent \textit{Accountability Soundness:} Let $\mathcal{A}$ be an efficient adversary who interacts with an honest validator. If $\mathit{LC.VerifyMisbehaviour}(\mathit{pp}, i, S, \mathbf{bit}, \sigma, m'', m', C)$ 
+outputs $\mathit{acc}$ $(\ast)$, its checks together with completeness for aggregation imply 
+$$\mathit{AS.Verify}(\mathit{pp}, \sigma', m', \mathit{apk_S}) = 1 \ \ (\ast\ast),$$
+where 
+\begin{equation*}
+  \mathbf{\sigma_i}(j) =
+    \begin{cases}
+      \mathit{sig} & \text{if }  \exists \ \mathit{sig} \in C, \mathit{AS.Verify}(\mathit{pp}, \mathit{sig}, m', \mathbf{pk_i}(j)) \\
+      \_ & \text{otherwise} \\
+    \end{cases}       
+\end{equation*}
+\begin{equation*}
+  \mathbf{b_{S}}(j) =
+    \begin{cases}
+      1 & \text{if }  \mathbf{pk_i}(j) \in S \\
+      0 & \text{otherwise} \\
+    \end{cases}       
+\end{equation*}
+$$ \sigma' \leftarrow  \mathit{AS.AggSigs}(\mathit{pp}, (\mathbf{b_{S}}(j) \cdot \mathbf{\sigma_i}(j))_{j=1}^v),$$
+$$\mathit{apk_S} \leftarrow \mathit{AS.AggKeys}(\mathit{pp},(\mathbf{b_{S}}(j) \cdot \mathbf{pk_i}(j))_{j=1}^v),$$
+
+\noindent Additionally, since $(\ast)$ holds and for $\mathit{apk}$ as defined in $\mathit{LC.VerifyMisbehaviour}$, we obtain
+$$\mathit{AS.Verify}(\mathit{pp}, \sigma, m'', \mathit{apk}) = 1 \ \ (\ast \ast').$$
+%Note that $m'$, $m''$, $\sigma$ are part of the input of $\mathit{LC.VerifyMisbehaviour}$ and 
+%\noindent Note that $(\ast)$ holds due to perfect completeness of aggregation 
+%and $(\ast')$ holds as part of the checks that $\mathit{LC.VerifyMisbehaviour}$ outputs $1$. \\
+\noindent Since $\mathit{CheckValidConsensus}(C) = 1$ holds and $m'$ has been decided in epoch $i$ of $C$ 
+and $d_{m'}$ is the required data associated with $m'$, due to assumptions (I.5.), (I.4.) and (I.2.) we have 
+that $d_{m'}$ contains correct proofs of possession for all keys in $\mathbf{pk_i}$ \ $(\ast\ast\ast)$. \\ 
+\noindent We assume by contradiction that $S \cap Q_{\mathit{pks}}$ is non-empty with more than negligible probability. 
+Since the following check (which is part of $\mathit{LC.VerifyMisbehaviour}$) passes:  
+$$S_{m''} \cap S_{m'} =S,$$ any $\mathit{pk} \in S$ is aggregated into $\mathit{apk}$ and also into $\mathit{apk_S}$; 
+this includes $\mathit{pk^*}$. Since the aggregate signature instantiation $\mathit{AS}$ is unforgeable 
+(see Definition~\ref{def:aggregate_signatures} plus the assumption (S.1.)), due to $(\ast\ast)$, $(\ast\ast')$, $(\ast\ast\ast)$ and 
+$(\ast\ast\ast\ast)$ we have that, with more than negligible probability, both $m'$ and $m''$ have 
+been signed by the honest validator. However, this contradicts that 
+$\mathit{Incompatible}(m', m'', d_{m'}) = 1$ which is ensured by assumption (B.2.). Hence, our assumption is false and $S \cap \mathit{Q_{pks}} = \emptyset$, so the 
+probability defined in the accountability soundness property is indeed negligible. 
+
+%If $\mathit{LC.VerifyMisbehaviour}$ outputs $1$, its checks imply that the 
+%aggregate signature $\sigma$ (used as input by $\mathit{LC.VerifyMisbehaviour}$) on $m''$ passes the verification of 
+%$\mathit{AS.Verify}$; analogously, since $m'$ with required data $d_m'$ was decided in $C$, there is an aggregate 
+%signature of at least $t$ individual signatures on $m'$ that pass verification of $\mathit{AS.Verify}$. Moreover, each 
+%of the public keys in $S$ sign both $m'$ and $m''$ (relation we denote by $(\ast)$) and 
+%$\mathit{Incompatible}(m', m'', d_m') = 1$ and $\mathit{epoch_{id}}(m') = \mathit{epoch_{id}}(m'') = i$ hold (two 
+%relations we together denote by $(\ast\ast)$). 
+%We assume by contradiction that with more than a negligible probability $S \cap \mathit{Q_{keys}} \neq \emptyset$.  
+\end{proof}
