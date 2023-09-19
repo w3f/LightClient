@@ -71,28 +71,29 @@ and \emph{unforgeability} as defined below.
 $\mathit{AS.AggregateSignatures}$, $\mathit{AS.Verify}$) has perfect completeness if for any message $m \in \{0,1\}^*$ and any 
 $n\in\mathbb{N}$ it holds that:
 \begin{align*}
-& \mathit{Pr} [\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig})=1 \ \wedge \ \forall  i \in [n]\ \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i},\mathit{\pi_{\mathit{PoP},i}})=1\ |\\
+ \mathit{Pr} & [\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig})=1 \ \wedge \ \\
+ & \wedge \  \forall  i \in [n]\ \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i},\mathit{\pi_{\mathit{PoP},i}})=1\ |\\
 & \mathit{pp} \leftarrow \mathit{AS.Setup(\lambda)}, \\
 & ((pk_{i},\pi_{\mathit{PoP}, i}), sk_{i} ) \leftarrow \mathit{AS.GenerateKeypair}(\mathit{pp}),\ i=1,\ldots,n\\
-&\mathit{apk} \leftarrow \mathit{AggregateKeys}(\mathit{pp}, (\mathit{pk}_{i})_{i=1}^{n}), \\
-& \sigma_i \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk_i}, m),\ i=1,\ldots,n, \\
-& \mathit{asig} \leftarrow \mathit{AS.AggregateSignatures(\mathit{pp}, (\sigma_{i})_{i=1}^{n})}] = 1.
+&  \mathit{apk} \leftarrow \mathit{AggregateKeys}(\mathit{pp}, (\mathit{pk}_{i})_{i=1}^{n}), \\
+&  \sigma_i \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk_i}, m),\ i=1,\ldots,n, \\
+&  \mathit{asig} \leftarrow \mathit{AS.AggregateSignatures(\mathit{pp}, (\sigma_{i})_{i=1}^{n})}] = 1.
 \end{align*}
 \noindent We note that an aggregatable signature scheme with perfect completeness implies the underlying signature scheme
 has perfect completeness when aggregation of keys and aggregation of signatures for $n=1$ are given as the listing of the key and 
 the individual signature, and where the verification of the aggregate signature for $n=1$ is the same as the verification of individual signatures. \\
 
 \noindent \textbf{Completeness for Aggregation} An aggregatable signature scheme 
-($\mathit{AS.Setup}$, $\mathit{AS.GenerateKeypair}$, $\mathit{AS.Verify}$, $\mathit{AS.Sign}$,
+($\mathit{AS.Setup}$, $\mathit{AS.GenerateKeypair}$, $\mathit{AS.VerifyPoP}$, $\mathit{AS.Sign}$,\\
 $\mathit{AS.AggregateKeys}$, $\mathit{AS.AggregateSignatures}$, $\mathit{AS.Verify}$)
 has completeness for aggregation if, for every adversary $\mathcal{A}$
 \begin{align*}
-&\mathit{Pr}[\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 \ (\ast\ast\ast\ast) \ | \ \mathit{pp} \leftarrow \mathit{AS.Setup}(\lambda), \\
+\mathit{Pr} & [\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 \ (\ast\ast\ast\ast) \ | \ \mathit{pp} \leftarrow \mathit{AS.Setup}(\lambda), \\
 & ((\mathit{pk_i}, \pi_{\mathit{PoP},i})_{i=1}^n, m, (\sigma_i)_{i=1}^{n}) \leftarrow \mathcal{A}(\mathit{\mathit{pp})}, \\
 & \forall i \in [n], \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i}, \pi_{\mathit{PoP},i}) = 1 \ \ \ \ (\ast), \\
 & \forall i \in [n], \mathit{AS.Verify}(\mathit{pp}, \mathit{pk_i}, m, \sigma_i) = 1 \ \ \ \ (\ast\ast),\\
 & \mathit{apk} \leftarrow \mathit{AS.AggregateKeys}(\mathit{pp},  (\mathit{pk}_{i})_{i=1}^{n}), \\
-&  \mathit{asig} \leftarrow \mathit{AS.AggregateSignatures}(\mathit{pp}, (\sigma_i)_{i=1}^n) (\ast\ast\ast)] = 1- \negl(\lambda).
+& \mathit{asig} \leftarrow \mathit{AS.AggregateSignatures}(\mathit{pp}, (\sigma_i)_{i=1}^n) (\ast\ast\ast)] = 1- \negl(\lambda).
 \end{align*}
 
 \noindent \textbf{Unforgeable Aggregatable Signature}
@@ -130,7 +131,7 @@ $\mathcal{A}$ it holds that $\mathit{Adv}^{\mathit{forge}}_{\mathcal{A}}({\lambd
 scheme~\cite{BLS_signatures} and its follow-up variants~\cite{proofs_of_posession,boneh_compact_multisig}.
 Because, in general, multisignatures are susceptible to so-called ``rogue-key attacks'' which can be
 mounted whenever the adversary is allowed to choose his public keys arbitrarily, in order to protect against such
-rogue-key attacks, we enhance our multisignature instantiation with proofs-of-possessio as defined in~\cite{proofs_of_posession}.
+rogue-key attacks, we enhance our multisignature instantiation with proofs-of-possession as defined in~\cite{proofs_of_posession}.
 In turn, we instantiate our proofs-of-possession with BLS signatures in the first source group.  
 % the non-interactive version of Chaum-Pedersen proofs for showing 
 %the equality of discrete logarithm (i.e., the secret key or DLEQ proof) corresponding to a pair of distinct public keys.
@@ -185,19 +186,21 @@ give full details for the argument system $\PSsig = (\Gensig, \Provsig, \\ \Veri
 %where  $\mathit{apk_1} = \sum_{i=1}^{n} \mathit{pk_1^i}$ and $\mathit{apk_2} = \sum_{i=1}^{n} \mathit{pk_2^i}$. 
 
 \item $\mathit{apk}_1 \leftarrow \mathit{AS.AggregateKeys}(\mathit{pp}, (\mathit{pk_1^{(i)}}, \mathit{pk_2^{(i)}})_{i=1}^{n})$, 
-where $\mathit{apk}_1 = \sum_{i=1}^{n} \mathit{pk_1^{(i)}}$. 
+where $$\mathit{apk}_1 = \sum_{i=1}^{n} \mathit{pk_1^{(i)}}.$$ 
 
 %\item $\mathit{asig} \leftarrow \mathit{AS.AggregateSignatures}(\mathit{pp}, (\sigma_i, \pi_i)_{i=1}^n)$, 
 %where \\ $\mathit{asig} = (\sigma_1, \pi_1)$  if $n=1$ and $\mathit{asig} = (\sum_{i=1}^{n} \sigma_i, \bot)$ if $n>1$. 
 
 \item $\mathit{asig} \leftarrow \mathit{AS.AggregateSignatures}(\mathit{pp}, (\mathit{pk_1^{(i)}}, \mathit{pk_2^{(i)}})_{i=1}^{n}, (\sigma^{(i)}, \pi_i)_{i=1}^n)$, 
 where \\ $\mathit{asig} = (\sigma^{(1)}, \pi_1)$  if $n=1$ and $\mathit{asig} = (\sum_{i=1}^{n} \sigma^{(i)}, \mathit{apk_2}, \bot)$ if $n>1$, where 
-$\mathit{apk}_2 = \sum_{i=1}^{n} \mathit{pk_2^{(i)}}$. 
+$$\mathit{apk}_2 = \sum_{i=1}^{n} \mathit{pk_2^{(i)}}.$$
 
-\item $0/1 \leftarrow  \mathit{AS.Verify}(\mathit{pp}, \mathit{apk_1}, m, \mathit{asig})$, where $\mathit{AS.Verify}$ outputs $1$ if either 
-$\mathit{asig}_3 = \bot$ and $e(\mathit{asig}_1 + t \cdot \mathit{apk_1}, \gtwoBLS) = e(H(m) + t \cdot \goneBLS, \mathit{asig}_2)$, 
-with $t \xleftarrow{\$} \mathbb{Z}_{r}^{*}$ or there exists no component $\mathit{asig}_3$ and \\
-$\Verisig(\goneBLS, m, \mathit{apk_1}, \mathit{asig}_1, \mathit{asig}_2) = 1$; in all other cases, it outputs $0$. 
+\item $0/1 \leftarrow  \mathit{AS.Verify}(\mathit{pp}, \mathit{apk_1}, m, \mathit{asig})$, where $\mathit{AS.Verify}$ outputs $1$ iff either 
+(100) or (200) hold; in all other cases, it outputs $0$. \\
+ (100) $\mathit{asig}_3 = \bot \ \wedge \ e(\mathit{asig}_1 + t \cdot \mathit{apk_1}, \gtwoBLS) = e(H(m) + t \cdot \goneBLS, \mathit{asig}_2)$, 
+where $$t \xleftarrow{\$} \mathbb{Z}_{r}^{*}.$$ 
+(200) There exists no component $\mathit{asig}_3$ and $$\Verisig(\goneBLS, m, \mathit{apk_1}, \mathit{asig}_1, \mathit{asig}_2) = 1.$$ 
+
 \end{itemize}
 Above we have used the following argument system %systems 
 \begin{comment}
@@ -246,9 +249,9 @@ and $\GoneBLS$ is generated by $\goneBLS$.
 %and $H$, $\Hpop$ $\Hpk$ and $\Hsig$ are modelled as random oracles, then instantiation~\ref{insta_bls} 
 %is an aggregatable signature scheme as per definition~\ref{def:aggregate}. 
 %\end{theorem}
-\begin{theorem} Assuming that co-CDH holds for $e$ (see Appendix for a reminder of this assumption) 
-and $H$, $\Hpop$ and $\Hsig$ are modelled as random oracles, then instantiation~\ref{insta_bls} 
-is an aggregatable signature scheme as per definition~\ref{def:aggregate}. 
+\begin{theorem} Assuming that co-CDH holds for $e$ (see Appendix~\ref{sec:appendix} for a reminder of this assumption) 
+and $H$, $\Hpop$ and $\Hsig$ are modelled as random oracles, then Instantiation~\ref{insta_bls} 
+is an aggregatable signature scheme as per Definition~\ref{def:aggregate}. 
 \end{theorem}
 \begin{proof} The \emph{perfect completeness} property is very easy to prove. \\ 
 
@@ -270,17 +273,17 @@ $\mathit{asig}_1 = (\sum_{i=1}^n \mathit{sk}_i) \cdot \HBLS(m)$. This, in turn, 
 holds, except with negligible probability. \\ 
 
 \noindent Regarding \emph{unforgeability}, let $\mathcal{A}_2$ be an efficient adversary trying to break this property 
-(see definition~\ref{def:aggregate}). %Without loss of generality, we assume that whenever $\mathcal{A}_2$ outputs 
+(see Definition~\ref{def:aggregate}). %Without loss of generality, we assume that whenever $\mathcal{A}_2$ outputs 
 %a potential forgery, and, in particular a set of public keys and their PoPs, $\mathcal{A}_2$ has already queried the random 
 %oracle $\Hsig$ for all the hash values involved in the proofs and in the individual alleged signatures corresponding to the output 
 %public keys and message of $\mathcal{A}_2$. Indeed, adding this constraint on the forger, does not decrease its probability of success. 
-Next, we follow a similar proof technique as detailed for theorem 15.2, part b in~\cite{dabo_book} where given a successful adversary 
+Next, we follow a similar proof technique as detailed for Theorem 15.2, part b in~\cite{dabo_book} where given a successful adversary 
 $\mathcal{A}_2$ against unforgeability one can construct a successful adversary $\mathcal{B}$ against the co-CDH assumption as follows:
 %For brevity, below we only state the differences and modifications in our proof: 
 
 Adversary $\mathcal{B}$ is given a tuple $(u_1 = \alpha \cdot \goneBLS, u_2 = \alpha \cdot \gtwoBLS, v_1 = \beta \cdot \goneBLS)$ 
-where $\alpha,\beta \xleftarrow{\$} \mathbb{Z}_{r}$, as in the co-CDH attack game (see Appendix); $\mathcal{B}$ needs to compute 
-$ z_1 = \alpha\beta \cdot \goneBLS = \alpha \cdot v_1$. 
+where $\alpha,\beta \xleftarrow{\$} \mathbb{Z}_{r}$, as in the co-CDH attack game (see Appendix~\ref{sec:appendix}); 
+$\mathcal{B}$ needs to compute $z_1 = \alpha\beta \cdot \goneBLS = \alpha \cdot v_1$. 
 %First, their $g_0$ is replaced in our case by $\goneBLS$ and their $g_1$ by our $\gtwoBLS$.  
 First, $\mathcal{B}$ sends the public key $(\mathit{pk}^* = (u_1, u_2), \sigma^{*}_{\mathit{PoP}})$ to the forger 
 $\mathcal{A}_2$, where $\sigma^{*}_{\mathit{PoP}} = \delta^* \cdot u_1$ and 
@@ -358,7 +361,7 @@ that $\mathcal{B}$ needs to output in the co-CDH game is $\sigma^*$, so $\mathca
 with the help of $\mathcal{A}_2$. This concludes the proof in this case.
 
 \item Case 2: $ n > 1$. To conclude the proof, $\mathcal{B}$ uses a similar technique 
-as in theorem 15.2 part b in~\cite{dabo_book} for computing the first component $\sigma^*$ of signature 
+as in Theorem 15.2 part b in~\cite{dabo_book} for computing the first component $\sigma^*$ of signature 
 which corresponds to public key $\mathit{pk}^*$ by dividing out of $\mathit{asig_1}$ all the first components of every 
 individual signature (corresponding to every public key $\mathit{pk^{(i)}} \neq \mathit{pk^*}$). Note that  
 there are two types of signatures: type I corresponding to public key $\mathit{pk^{(i)}} =  \mathit{pk^*} = (u_1, u_2)$ and type II
@@ -384,4 +387,5 @@ Finally, using also the definitions of $H(m)$, $\mathit{pk_2}^{\ast}$ and $z_1$ 
 \noindent Hence, $ d \cdot \sigma^{*} = \mathit{asig} - s = d \cdot z_1$. The value $z_1$ that $\mathcal{B}$ 
 needs to output is computable as $d^{-1} \cdot (\mathit{asig} - s)$. 
 \end{itemize}
+\qed
 \end{proof}
