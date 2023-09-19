@@ -7,7 +7,7 @@ pairing~\cite{secure_pairings,pairings_for_cryptographers}.
 \begin{itemize}
 \item The challenger computes $\alpha, \beta \xleftarrow{\$} \mathbb{Z}_r$, $u_1 \leftarrow \goneBLS^{\alpha}$, $u_2 \leftarrow \gtwoBLS^{\alpha}$,   
 $v_1 \leftarrow \goneBLS^{\beta}$, $z_1 \leftarrow \goneBLS^{\alpha\beta}$ and gives the tuple $(u_1, u_2, v_1)$ to $\mathcal{A}$; $\alpha$ is used twice, 
-once in $\GoneBLS$ and in $\GtwoBLS$. 
+once in $\GoneBLS$ and once in $\GtwoBLS$. 
 \item The adversary $\mathcal{A}$ outputs some $\hat{z_1} \in \GoneBLS$.
 \end{itemize}
 \noindent $\mathcal{A}$'s advantage in solving the co-CDH problem for $e$, denoted by $$\mathit{Adv}^{\mathit{coCDH}}[\mathcal{A},e]$$ is the probability 

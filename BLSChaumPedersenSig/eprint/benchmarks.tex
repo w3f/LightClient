@@ -1,15 +1,16 @@
 \section{Benchmarks}
 \label{sec:benchmarks}
 
-The implementation of the scheme proposed in this paper using Rust programming language can be found as part of the Web3 Foundation BLS Library~\cite{web3.bls.2022}. The BLS library uses Arkworks Framework~\cite{arkworks.2022} 
-as the backend to perform curve and arithmetic operations. The curve used in for benchmarking is the BLS12-377 curve introduced in~\cite{bowe20_zexe}.
+The implementation of the scheme proposed in this paper is using Rust programming language and can be found as part of the Web3 Foundation BLS Library~\cite{web3.bls.2022}. 
+The BLS library uses Arkworks Framework~\cite{arkworks.2022} as the backend to perform curve and arithmetic operations. The curve used for benchmarking is the BLS12-377 curve introduced in~\cite{bowe20_zexe}.
 
 The benchmarks have been measured using a `cargo bench` running on a single thread on an `Intel(R) Xeon(R) E5-2440 0 @ 2.40GHz` CPU.
 
-\subsection{Verification using aggregated $\GoneBLS$ public keys}
+\subsection{Verification using Aggregated $\GoneBLS$ Public Keys}
 \label{sec:benchmark_aggregate_verify}
 
-Table~\ref{tab:aggregated_signature_bench} lays out the details of times needed to perform operations related to aggregate the signers' public keys and verifying the aggregated signature signed by 100 signers or 1000 signers respectively. In both scenarios we assume that an aggregated signature in $\GoneBLS$ and a list of signers' public keys is handed to the verifier. \\
+Table~\ref{tab:aggregated_signature_bench} lays out the details of time needed to perform operations related to aggregate the signers' public keys and verifying the aggregated signature signed by 1000 signers or 10000 
+signers, respectively. In both scenarios we assume that an aggregated signature in $\GoneBLS$ and a list of signers' public keys is handed to the verifier. \\
 
 In the first case, in accordance with aggregated BLS signature verification, the verifier has the list of signers' public keys in $\GtwoBLS$ and aggregates them to check the validity of the given signature.
 In the second case the aggregated public key of the signers in $\GtwoBLS$ is additionally handed to the verifier. The verifier has the list of signers' public keys in $\GoneBLS$ and aggregates them to check the validity of the signature using the scheme proposed in this work.
@@ -19,40 +20,43 @@ In the second case the aggregated public key of the signers in $\GtwoBLS$ is add
 
 \hline
 
- Scheme & \textbf {1000 Signers} & \textbf{10000 Signers} 	 \\
+\textbf {Scheme} & \textbf {1000 Signers} & \textbf{10000 Signers} 	 \\
 \hline
-Aggregate Public keys in $\GtwoBLS$ and Verify (standard BLS) & 10.815 ms & 69.062 ms \\
+Aggregate public keys in $\GtwoBLS$ and verify (standard BLS) & 10.815 ms & 69.062 ms \\
 \hline
-Aggregate Public keys in $\GoneBLS$ and Verify (our scheme)  & 6.815 ms & 22.159 ms \\
+Aggregate public keys in $\GoneBLS$ and verify (our scheme)  & 6.815 ms & 22.159 ms \\
 \hline
 \end{tabular}
-\caption{Verification time for 1000/10000 aggregated signatures using public keys in $\GoneBLS$ and $\GtwoBLS$ on BLS12-377 Curve.}
+\caption{Verification time for 1000/10000 aggregated signatures using public keys in $\GoneBLS$ and $\GtwoBLS$, respectively, on BLS12-377 curve.}
 \label{tab:aggregated_signature_bench}
 \end{table}
 
-The benchmarks in Table~\ref{tab:aggregated_signature_bench} demonstrate that when the number of signers increases, the advantage of performing the aggregation of public keys in $\GoneBLS$ becomes more prominent. This result is expected because the scheme presented in this work performs only two extra scalar multiplications in $\GoneBLS$ compared to standard BLS verification with aggregate public key in $\GtwoBLS$. %However, when the number of signers increases, so does the number of elliptic curve additions performed in the faster $\GoneBLS$ group compared to operations in the slower $\GtwoBLS$ %(performed by standard BLS verification). 
+The benchmarks in Table~\ref{tab:aggregated_signature_bench} demonstrate that when the number of signers increases, the advantage of performing the aggregation of public keys in $\GoneBLS$ becomes more prominent. 
+This result is expected because the scheme presented in this work performs only two extra scalar multiplications in $\GoneBLS$ compared to standard BLS verification with aggregate public key in $\GtwoBLS$. 
+%However, when the number of signers increases, so does the number of elliptic curve additions performed in the faster $\GoneBLS$ group compared to operations in the slower $\GtwoBLS$ 
+%(performed by standard BLS verification). \
 Thus, when the number of signers increases, the benefit from having to perform a large number of elliptic curve additions in the faster $\GoneBLS$ group compared to the same number of 
 additions in the slower $\GtwoBLS$ group overcompensates for the overhead cost of two extra scalar multiplications in the case of our scheme. 
 %Eventually, the efficiency improvement w.r.t verification for our new scheme outperforms the overhead cost of the two extra scalar multiplications.  
 
-\subsection{Verification of individual  BLS signatures via verification of Chaum-Pedersen Proofs}
+\subsection{Verification of Individual  BLS Signatures via Verification of Chaum-Pedersen Proofs}
 \label{sec:benchmark_chaum_pederson_verify}
 
-Table~\ref{tab:individual_signature_bench} illustrates the efficiency of verification when using additional Chaum-Pedersen proofs that accompany the BLS signatures and the BLS public keys in the first source group $\GoneBLS$.
+Table~\ref{tab:individual_signature_bench} illustrates the efficiency of verification when using additional Chaum-Pedersen proofs that accompany the individual BLS signatures and the BLS public keys in the first source group $\GoneBLS$.
 
 \begin{table}[h!]
 \begin{tabular}{| l | l |}
 
 \hline
 
-Scheme & \textbf{1000 Signatures} 	 \\
+\textbf{Scheme} & \textbf{1000 Signatures} 	 \\
 \hline
-BLS Verification (applying pairings with each individual signature)   & 4534 ms \\
+BLS verification (applying pairings with each individual signature)   & 4534 ms \\
 \hline
 Chaum-Pedersen verification for BLS signature and key (our scheme)   & 2480 ms \\
 \hline
 \end{tabular}
-\caption{Verification time for 1000 signatures verified individually (non-aggregated) using  BLS Verification vs using the Chaum-Pedersen proofs.}
+\caption{Verification time for 1000 signatures verified individually (non-aggregated) using  BLS verification vs using the Chaum-Pedersen proofs.}
 \label{tab:individual_signature_bench}
 \end{table}
 
