@@ -1,0 +1,110 @@
+\begin{comment}
+Aggregation of BLS signatures simplifies some distributed systems,
+usually by being an exportable proofs of byzantine agreement.
+After agreement and aggregation occurs, the aggregate signature saves
+foreign aggregate verifiers both compute and bandwidth over checking
+numerous faster signature, especially as scales like Ethereum's hundreds of thousands of signers.
+
+We do however handle individual BLS signatures before aggregation occurs.
+Individual BLS signatures have extremely slow verification compared to alternatives
+like Schnorr or ECDSA signatures dut to using pairings.
+So either most nodes incur this high verification costs for every other node's
+signatures, or else system designers choose more centralized gossip
+flavors, which then harms liveness.
+\end{comment}
+
+\paragraph{Problem Statement} Aggregation of BLS signatures simplifies some distributed systems,
+usually by being exportable proofs of byzantine agreement. After agreement and aggregation occurs, 
+the aggregate signature saves foreign aggregate verifiers both compute and bandwidth over checking
+numerous slow signatures, especially at the scale of Ethereum's hundreds of thousands of signers.
+Indeed, individual BLS signatures have very slow verification, so either most nodes incur this high verification 
+costs for every other node's signatures, or, else, system designers choose more centralised gossip
+flavours which may harm liveness.
+
+\begin{comment}
+We suggest that gossip messages containing individual BLS signatures carry
+a Chaum-Pedersen DLEQ proofs of their correctness, so that verifying
+individual signatures no longer requires pairings.
+%
+We avoid complex bisection logic in aggregation this way too, but increase
+signature message size by 32 bytes.
+% meh..  We need a second group $G_f$ in which scalar multiplication 
+\end{comment}
+
+\paragraph{Our Solution} We suggest that gossip messages containing individual 
+BLS signatures carry Chaum-Pedersen~\cite{ChaumPedersen} DLEQ proofs of their correctness, so that 
+verifying individual signatures no longer require pairings. Moreover, a classical BLS signature 
+places the public key and signature on opposite source groups of the pairing (that is for the type III pairings that 
+are preferred for modern cryptographic systems due to efficiency considerations), 
+but the choice of which of the groups is used for the keys or signatures creates trade offs. 
+We mitigate these trade offs by proposing the following:
+
+
+\paragraph{Protocol:}
+
+We adopt standard notation for pairing friendly curves throughout.
+
+% The original BLS protocol was written for Type 1 pairings, where there is only one elliptic curve and prime order subgroup.
+As a rule, one always does BLS signatures on curves with type III pairings
+today, such as BLS12-381, so there are two groups $\GoneBLS$ and $\GtwoBLS$,
+with $\GtwoBLS$ having much slower arithmetic and hash-to-curve, due to
+being defined over an extension field.  In fact, recent progress
+\cite{TNFS} against the discrete log problem in extension fields
+could precipitate adopting pairings with an higher embedding degree,
+which would slow $\GtwoBLS$ further.
+
+A classical BLS signature places the public key and signature on opposite
+curves, but the choice of which creates trade offs.  We mitigate these
+trade offs:
+
+First, we provide the public key on both curve,
+ like $\pk = (\sk \goneBLS, \sk \gtwoBLS)$.
+We enforce this public key structure during the public key validation
+phase present in many aggregate BLS protocols e.g. from 
+imposing proof-of-possession checks~\cite{proofs_of_posession}.  % or $e(-\pk_1, \pk_2) = \gTBLS$
+
+Second, we create BLS signatures $\sigma = \sk H(m)$ using the much
+faster $\GoneBLS$ hash-to-curve $H(m)$, but also provide
+ $\pi = \mathit{DLEQ}( \sigma / H(m) = \pk_1 / \goneBLS)$.
+Now $\pi$ proves correctness of $\sigma$, by
+ assuming public key validation.
+% Interestingly, $\pi$ permits signing an extra message besides $m$.
+
+\def\apk{\mathit{apk}}
+
+Third, an aggregator node provides both the aggregate BLS signature,
+as well as aggregate signer keys $\apk_1 \in \GoneBLS$ and
+$\apk_2 \in \GtwoBLS$, by summing the $\sigma$s, $\pk_1$s, and $\pk_2$s.
+
+At this point, aggregate verifiers check that $\apk_1$ and $\apk_2$ were
+identically computed with only two scalar multiplications in $\GoneBLS$.
+In the end, aggregate verifiers save time despite these multiplications
+because their hash-to-curve runs on $\GoneBLS$, far faster than on $\GtwoBLS$.
+Also, verifiers have fast additions when checking if $\apk_1$ represents
+a suitable signer set, which speeds up zk proofs of $\apk_1$ like \cite{ourLC} too.
+
+
+
+We formalize signature aggregation so that we can prove security for above
+construction, including our public key structure, and aggregator nodes
+supplying aggregate public key. 
+
+We remark that a natural variation on our protocol exists in which
+one finds an even faster non-pairing curve $\mathcal{S}$ having the same
+group order as $\GoneBLS$,  publishes triplet public keys like
+$\pk = (\sk \goneBLS, \sk \gtwoBLS, \sk S)$, in which $S$ generates
+$\mathcal{S}$, and then DLEQ proofs use $\pk_3$ for performance.
+We do not discuss this variant because it falls under our security
+arguments without additional mathematical complexities,
+ aside from choosing curve parameters for $\mathcal{S}$.
+ 
+ 
+\paragraph{Other Related Work:} Alternative constructions for BLS signatures as well as other defence mechanisms against 
+rogue key attacks~\cite{proofs_of_posession}, exist and we briefly review both below. First, aggregation of BLS signatures for different messages have been studied before
+(e.g.,~\cite{aggregate_BLS_signatures}). In this case, rouge-key attacks are not a threat anymore (and, hence, PoPs are not a necessity anymore), 
+but signature verification is computationally more expensive than in our case, requiring $O(n)$ parings for $n$ different messages. Second, alternative aggregatable 
+BLS signatures exist (e.g.,~\cite{boneh_compact_multisig}) where both the aggregated public key have their size independent 
+of the number of signers and the signature verification is as fast as in our variant. However, for the blockchain use case we envision 
+(see section~\ref{sec:use_case} and~\cite{ourLC}) we prefer our scheme detailed in section~\ref{sec:bls}: its corresponding key aggregation is a simple sum 
+of the individual signers' public keys, while, in~\cite{boneh_compact_multisig} the key aggregation operation involves more expensive scalar 
+multiplications every time the key aggregation is performed.

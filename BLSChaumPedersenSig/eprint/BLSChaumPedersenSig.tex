@@ -1,0 +1,163 @@
+\documentclass{llncs}
+\pagestyle{plain}
+
+\usepackage{xspace}   
+\usepackage{url}   
+\usepackage{graphicx} 
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb} %\therefore
+\usepackage{hyperref}
+\usepackage{cryptocode}
+\usepackage{framed} 
+% \usepackage[parfill]{parskip} % activate to begin paragraphs with an empty line rather than an indent
+    
+ %%% packages
+\usepackage{booktabs} 
+\usepackage{array} 
+\usepackage{paralist} 
+\usepackage{verbatim} 
+\usepackage{subfig}     
+\usepackage{mathrsfs}
+\usepackage[normalem]{ulem}
+\usepackage{soul}
+
+\newcommand{\Avec}{\ensuremath{\mathbf{A}}\xspace}
+
+\newcommand{\negl}{\ensuremath{\mathit{negl}}\xspace}
+%\newcommand{\key}[1]{\ensuremath{\mathsf{ck}_{#1}}\xspace}
+\newcommand{\einn}{\ensuremath{\mathit{E}_{\mathit{inn}}}\xspace}
+\newcommand{\eout}{\ensuremath{\mathit{E}_{\mathit{out}}}\xspace}
+\newcommand{\ginn}[1]{\ensuremath{\mathbb{G}_{\mathit{#1,inn}}}\xspace}
+\newcommand{\gout}[1]{\ensuremath{\mathbb{G}_{\mathit{#1,out}}}\xspace}
+\newcommand{\epinn}{\ensuremath{\mathit{e}_{\mathit{inn}}}\xspace}
+\newcommand{\epout}{\ensuremath{\mathit{e}_{\mathit{out}}}\xspace}
+\newcommand{\block}{\ensuremath{\mathsf{block}}\xspace}
+
+%%% end article customizations
+ \newcommand{\code}[1]{\texttt{#1}}
+\newcommand\tstrut{\rule{0pt}{2.6ex}}         % = `top' strut
+\newcommand\bstrut{\rule[-0.9ex]{0pt}{0pt}}   % = `bottom' strut
+\newcommand{\bgamma}{\boldsymbol{\gamma}}
+\newcommand{\bsigma}{\boldsymbol{\sigma}}
+
+\newcommand{\al}[2]{{\uline{#1}}\textcolor{cyan}{(#2)}}
+\newcommand{\sergey}[2]{{\uline{#1}}\textcolor{magenta}{(#2)}}
+
+
+\newcommand{\GoneBLS}{\mathbb{G}_{1}\xspace}
+\newcommand{\GtwoBLS}{\mathbb{G}_{2}\xspace}
+\newcommand{\GTBLS}{\mathbb{G}_{T}\xspace}
+
+\newcommand{\goneBLS}{\mathit{g}_{1}\xspace}
+\newcommand{\gtwoBLS}{\mathit{g}_{2}\xspace}
+\newcommand{\gTBLS}{\mathit{g}_{T}\xspace}
+
+\newcommand{\eBLS}{\mathit{e}\xspace}
+\newcommand{\HBLS}{\mathit{H}\xspace}
+\newcommand{\Hpop}{\mathit{H}_{\mathit{PoP}}\xspace}
+\newcommand{\sigpop}{\sigma_{\mathit{PoP}}\xspace}
+\newcommand{\pistar}{\pi^{*}_{\mathit{PoP}}\xspace}
+\newcommand{\Hpk}{\mathit{H}_{\mathit{DLEQ}, \mathit{pk}}\xspace}
+\newcommand{\Hsig}{\mathit{H}_{\mathit{DLEQ},  \mathit{sig}}\xspace}
+
+\newcommand{\Genpk}{\mathit{KeyGen}_{\mathit{DLEQ}, \mathit{pk}}\xspace}
+\newcommand{\Provpk}{\mathit{Prove}_{\mathit{DLEQ}, \mathit{pk}}\xspace}
+\newcommand{\Veripk}{\mathit{Verify}_{\mathit{DLEQ}, \mathit{pk}}\xspace}
+
+\newcommand{\Gensig}{\mathit{KeyGen}_{\mathit{DLEQ}, \mathit{sig}}\xspace}
+\newcommand{\Provsig}{\mathit{Prove}_{\mathit{DLEQ}, \mathit{sig}}\xspace}
+\newcommand{\Verisig}{\mathit{Verify}_{\mathit{DLEQ}, \mathit{sig}}\xspace}
+
+\newcommand{\pipk}{\pi_{\mathit{DLEQ}, \mathit{pk}}\xspace}
+\newcommand{\pisig}{\pi_{\mathit{DLEQ}, \mathit{sig}}\xspace}
+
+\newcommand{\PSpk}{\mathcal{PS}_{\mathit{DLEQ}, \mathit{pk}}\xspace}
+\newcommand{\PSsig}{\mathcal{PS}_{\mathit{DLEQ}, \mathit{sig}}\xspace}
+
+
+\newcommand{\Rpk}{\mathcal{R}_{\mathit{DLEQ},\mathit{pk}}\xspace}
+\newcommand{\Rsig}{\mathcal{R}_{\mathit{DLEQ},\mathit{sig}}\xspace}
+
+\newcommand{\Epk}{\mathcal{E}_{\mathit{DLEQ},\mathit{pk}}\xspace}
+\newcommand{\Esig}{\mathcal{E}_{\mathit{DLEQ},\mathit{sig}}\xspace}
+\newcommand{\apk}[1]{\ensuremath{\mathit{apk}_{\mathit{#1}}}\xspace}
+
+
+\newcommand{\PoP}{\mathit{DLEQ}\xspace}
+
+\newcommand{\sk}{\mathit{sk}\xspace}
+\newcommand{\pk}{\mathit{pk}\xspace}
+
+
+\spnewtheorem{construction}[theorem]{Instantiation}{\bfseries}{\itshape}
+\spnewtheorem{assumption}[theorem]{Assumption}{\bfseries}{\itshape}
+\spnewtheorem{test_claim}[theorem]{Claim}{\bfseries}{\itshape}
+\newenvironment{sketch}{{\bfseries}{\itshape}\paragraph{Proof Sketch}}{\hfill$\square$}
+
+\usepackage{dashrule}
+
+\newcommand{\ewnp}{e.w.n.p.\ }
+
+
+\begin{document}
+   
+
+\title{Efficient Aggregatable BLS Signatures \\ with Chaum-Pedersen Proofs}
+\author{Jeff Burdges \and Oana Ciobotaru \and Syed Lavasani \and Alistair Stewart}
+\institute{Web3 Foundation}
+\date{ \today} % activate to display a given date or no date (if empty), otherwise the current date is printed 
+%\date{}
+ 
+ \maketitle
+
+\abstract{%
+% Aggregate BLS signatures promise simpler logic and better
+% performance, but only after aggregation occurs when some distributed
+% exports a ``light client proof''.  Individual BLS signatures have
+% abysmally slow verification times.  % Not concise enough for an introduction
+
+BLS signatures have fast aggregated signature verification but slow individual signature verification.
+We propose a three part optimisation that dramatically reduces CPU time in
+large distributed systems using BLS signatures:  
+%
+First, public keys should be given in both source groups
+$\GtwoBLS$ and $\GoneBLS$, with a proof-of-possession~\cite{proofs_of_posession} check for correctness.
+%
+Second, aggregated BLS signatures should carry their
+particular aggregate public key in $\GtwoBLS$, so that verifiers can
+do both hash-to-curve and aggregate public key checks in $\GoneBLS$. 
+%
+Third, individual non-aggregated BLS signatures should carry short
+Chaum-Pedersen DLEQ proofs of correctness~\cite{ChaumPedersen}, so that verifying
+individual signatures no longer requires pairings, 
+which makes their verification much faster. We prove security for these optimisations. 
+The proposed scheme is implemented and benchmarked to compare with classical BLS scheme.
+}
+
+\section{Introduction} \label{sec:intro}
+\input{intro.tex}
+% \vspace{-0.1in}
+% \section{Preliminaries} \label{sec:conventions}
+% \input{preliminaries}
+% \vspace{-0.1in}
+% \input{elliptic_curves_and_pairings.tex}
+
+\section{Our Aggregatable Signature Scheme} \label{sec:aggregate}
+\input{aggregatable_def.tex}
+
+% \section{Example Use Case} \label{sec:use_case}
+% \input{use_case}
+
+\input{benchmarks.tex}
+\section{Conclusion} \label{sec:conclusion}
+\input{conclusion}
+
+\bibliography{bibliography} 
+\bibliographystyle{ieeetr}
+
+\appendix
+\section{Appendix} \label{sec:appendix}
+\input{appendix_assumption.tex} 
+
+\end{document}        

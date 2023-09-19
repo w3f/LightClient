@@ -1,0 +1,391 @@
+\subsection{Accountable Light Client System Instantiation}
+\label{sec:LCinstantiation} 
+
+\noindent We motivate our light client model from~\ref{sec:LCformal_model} by detailing below instantiations 
+for a light client system that is accountable light client system. Both are 
+compatible with proof-of-stake based blockchains and, in particular, Polkadot.
+
+\subsubsection{Conventions and Assumptions}
+\label{sec:conventions}
+
+\noindent Before listing our light client systems' algorithms, we make several notational conventions:
+
+\begin{itemize}
+\item We use boldface font for denoting vectors. Furthermore, whenever necessary to avoid confusion, 
+we denote by $\mathbf{Vec_i}(k)$ the $k$-th component of vector $\mathbf{Vec_i}$. 
+
+\item In the following, unless otherwise stated, when we use $\mathcal{R}$, we mean one of the conditional relations from the set 
+$\{ \Rlacom, \Racom\}$.% , \Rvtcom\}$.}
+
+\item Given a valid consensus view $C$ over $i$ epochs, we assume there is a well-defined order on the set $\mathit{PK_j}$  
+of public keys included in $C$, $\forall j \in [i]$; hence, in the following, we rename this set by $\mathbf{pk_j}$, $\forall j \in [i]$ 
+and interpret it as a vector. Moreover, we instantiate honestly generated keys in $\mathbf{pk_j}$ with keys generated using 
+$\mathit{AS.GenerateKeypair}$ as described in instantiation~\ref{insta:bls}.
+  
+\item We remind the reader that by $\mathbf{Com}(\mathbf{pk})$ we denote the set of two computationally binding polynomial 
+commitments to the polynomials obtained by interpolating the $x$ components of $\mathbf{pk}$ and, respectively, the $y$ 
+components of $\mathbf{pk}$ over a range $H$ of size at least $v+1$, where $v$ is some maximum number of validators that the system allows. 
+In our instantiations for (accountable) light client systems, we use the KZG polynomial commitments, but, as mentioned also in 
+Section~\ref{sec_two_step_compiler}, the general results stated in this section hold for any binding polynomial commitments with a knowledge-soundness property.
+
+\item We assume there is a fixed upper bound $v$ on the number of validators in each epoch and we use $v$ in the description of our algorithms. 
+At the same time, for compatibility with the SNARKs that we build for relations $\Rlacom$ and $\Racom$ as defined 
+in \ref{compiler_step_2}, when specifically using our instantiation~\ref{inst:cks} of $\mathit{CKS_{\mathcal{R}}}$ or when proving our results in this section, we 
+let $v$ equal $n-1$, where $n$ was defined in Section~\ref{sec:lagrange}. 
+
+\item $\mathit{Parse}$ and $\mathit{Transform}$ denote functions performing the respective operations on the 
+(accountable) light client algorithms' input in order to obtain the necessary components. $\mathit{Parse}$ and $\mathit{Transform}$ 
+may additionally depend on the (conditional) relation $\mathcal{R}$ under consideration. If that is the case, we explicitly include 
+$\mathcal{R}$. In particular, $\mathit{Parse}$ and $\mathit{Transform}$ functions which are part of $\mathit{LC.DetectMisbehaviour}$ 
+work only for $\mathcal{R} \in \{ \Rlacom, \Racom \}$. 
+
+\item The accountable light client systems use functions $f_x$ (deriving the public inputs), 
+$\mathit{f_{\mathit{threshold}}}$ (deriving the Hamming weight), $\mathit{HammingWeight}$ (deriving the Hamming 
+weight from consensus view elements) and $f_{\mathit{bit}}$ (deriving the bitmask corresponding to public keys that 
+signed a given message). Before providing these functions' definitions, we make the convention that, 
+whenever used as parameters/input to these functions, $\mathbf{bit}$, $\mathit{apk}$, $\mathbf{b'}$ and $s$ have 
+the meaning and definition provided in Section~\ref{sec:snarks}. 
+
+\begin{equation*}
+ f_x (\mathbf{Com}(\mathbf{pk}), \mathbf{bit}, s,\mathit{apk}, \mathcal{R}) =
+   \begin{cases}
+    (\mathbf{Com}(\mathbf{pk}), \mathbf{bit}, \mathit{apk}) & \text{if } \mathcal{R} = \Rlacom \\
+     (\mathbf{Com}(\mathbf{pk}), \mathbf{b'}, \mathit{apk}) & \text{if } \mathcal{R} = \Racom \\
+   % (\mathbf{Com}(\mathbf{pk}), s, \mathit{apk}) & \text{if } \mathcal{R} = \Rvtcom \\
+  \end{cases}       
+\end{equation*}
+
+%%\begin{equation*}
+%% f_w (\mathbf{pk}, \mathbf{bit}, \mathcal{R}) =
+%%   \begin{cases}
+%%      \mathbf{pk} & \text{if } \mathcal{R} = \Rlacom \\
+%%      (\mathbf{pk}, \mathbf{bit}) & \text{if } \mathcal{R} =  \Racom \\
+%%     ( \mathbf{pk}, \mathbf{bit}) & \text{if } \mathcal{R} =  \Rvtcom \\
+%%   \end{cases}       
+%%\end{equation*}
+
+\begin{equation*}
+\mathit{HammingWeight^*}(\mathbf{vec}) = \mathit{HammingWeight}(\mathbf{vec}_{1}, \ldots, \mathbf{vec}_{|\mathit{vec}| - 1})
+\end{equation*}
+
+%\begin{equation*}
+%\mathit{HammingWeight}(\mathbf{bit}, \mathcal{R}) =
+%  \begin{cases}
+%   \mathit{HammingWeight^*}(\mathbf{bit}) & \text{if } \mathcal{R} \in \{ \Rlacom, \Racom\} \\
+%      \mathit{HammingWeight}(\mathbf{bit}) -1 & \text{if } \mathcal{R} =  \Rvtcom \\
+%  \end{cases}     
+%\end{equation*}
+
+\begin{equation*}
+ \mathit{f_{\mathit{threshold}}} (\mathbf{x}, \mathcal{R}) =
+    \begin{cases}
+      \mathit{HammingWeight^*}(\mathbf{bit}) & \text{if } \mathcal{R} = \Rlacom \\
+     \sum_{j=1}^{\frac{v+1}{|\mathit{block}|}-1}\mathit{HammingWeight}(\mathbf{b'}_{j}) \ + \ \mathit{HammingWeight^*}(\mathbf{b'}_{\frac{v+1}{|\mathit{block}|}}) & \text{if } \mathcal{R} =  \Racom \\
+      %s & \text{if } \mathcal{R} =  \Rvtcom \\
+    \end{cases}      
+\end{equation*}
+
+
+\begin{equation*}
+ \mathit{f_{\mathit{bit}}} (C, m, v) = ((\mathbf{bit_i}(k))_{k=1}^{v} ||\ 0, \mathbf{\sigma_i}),
+\end{equation*}
+\noindent where $i = \mathit{epoch}_{\mathit{id}}(m)$ and $\forall  \ k = 1, \ldots, v$, if  there exists 
+$\sigma \in C \ \wedge \ \mathit{AS.Verify}(\mathit{pp}, \mathbf{pk_i}(k), \mathit{m}, \sigma) = 1$, 
+we set $\mathbf{bit_i}(k) = 1$ and $\mathbf{\sigma_i}(k) = \sigma$, otherwise, we set $\mathbf{bit_i}(k) = 0$ and  $\mathbf{\sigma_i}(k) = \_$. 
+
+\noindent Note that for each of our relations $\Rlacom$ and $\Racom$, $\mathit{apk}$ and $\mathbf{Com}(\mathbf{pk})$ 
+are public inputs and $\mathbf{pk}$ is a witness. Moreover, for these relations $\Rlacom$ and $\Racom$, we build an accountable light client system. 
+%\noindent Note that for each of our relations $\Rlacom$, $\Racom$, $\Rvtcom$, $\mathit{apk}$ and $\mathbf{Com}(\mathbf{pk})$ 
+%are public inputs and $\mathbf{pk}$ is a witness. Moreover, for relations $\Rlacom$ and $\Racom$, we build an accountable light client system 
+%while for relation $\Rvtcom$ we build a light client system that is not accountable.
+\item We make the following instantiations: $\mathsf{genstate}$ is the set of public keys in $\mathbf{pk_1}$ and their alleged proofs of possession; 
+$\mathit{LC.seed} = \mathbf{Com}(\mathbf{pk_1})$.
+\end{itemize}
+
+%\noindent We have a parametrisation convention:
+
+%\begin{itemize}
+%\item We assume there is a fixed upper bound $v$ on the number of validators in each epoch. In particular, for 
+%compatibility with the SNARKs that we build for relations $\Rlacom$, $\Racom$ and $\Rvtcom$ as defined 
+%in \ref{compiler_step_2}, we let $v$ equal $n-1$, where $n$ was defined in Section~\ref{sec:lagrange}.  
+%\end{itemize}
+
+%\noindent Finally, we have security definition convention:
+%\begin{itemize}
+%\item Our instantiation algorithms $\mathit{LC.DetectMisbehaviour}$, $\mathit{LC.VerifyMisbehaviour}$ and $\mathit{GenerateProof}$ 
+%as described below may also return no values, usually in case $\mathit{CheckValidConsensus}(C)=0$. However, this does not affect the 
+%security definitions in Section~\ref{sec:LCformal_model} since in completeness and both the accountability related definitions we assume 
+%$\mathit{CheckValidConsensus}(C) = 1$, while our soundness definition does not involve the above three algorithms. Moreover, we use 
+%the implicit convention that all properties fail if one of the algorithms that are part of its definition return no value.
+%\end{itemize}
+
+\subsubsection{The Algorithms}
+\label{sec:instantiation}
+
+\noindent The setup algorithm used by the accountable light client system is: 
+\begin{itemize}
+\item $\mathit{LC.Setup(\mathcal{R})}$
+\begin{align*}
+%& \mathit{pp} \leftarrow \mathit{AS.Setup}(\lambda) \\
+%& \mathit{srs} \leftarrow \mathit{SNARK.Setup}(\lambda) \\
+%& (\mathit{rs_{\mathit{pk}}}, \mathit{rs_{\mathit{vk}}}) \leftarrow \mathit{SNARK.KeyGen}(\mathit{srs}, \mathcal{R}) \\
+%& \mathit{Return} \ (\mathit{pp}, \mathit{rs_{\mathit{pk}}}, \mathit{rs_{\mathit{vk}}})
+(\mathit{pp}, \mathit{rs_{\mathit{pk}}}, \mathit{rs_{\mathit{vk}}}) \leftarrow \mathit{CKS_{\mathcal{R}}.Setup}(v) \\ 
+\mathit{Return} \ (\mathit{pp}, \mathit{rs_{\mathit{pk}}}, \mathit{rs_{\mathit{vk}}})
+\end{align*}
+\end{itemize}
+
+\noindent The four algorithms that are part of the accountable light client system are: 
+\begin{itemize}
+\item $\mathit{LC.GenerateProof}(\mathit{pp}, \mathit{rs_{\mathit{pk}}}, C, m, \mathcal{R})$
+\begin{align*}
+&\ \ \ \ \mathbf{\Pi} = (); \ \mathbf{\Sigma} = () \\
+&\ \ \ \ i = \mathit{epoch_{id}}(m) \\
+&\ \ \ \ \mathit{For} \ j = 1, \ldots, i \\
+&\ \ \ \ \ \ \ \ \mathit{If} \  j < i  \\
+&\ \ \ \ \ \ \ \ \ \ \ \ \mathit{m_j}= (j,\mathbf{Com}(\mathbf{pk_{j+1}})) \\
+&\ \ \ \ \ \ \ \ \mathit{Else} \\
+&\ \ \ \ \ \ \ \ \ \ \ \ \mathit{m_j} = m  \\
+&\ \ \ \ \ \ \ \ (\mathbf{bit_j}, \mathbf{\sigma_j}) = \mathit{f_{bit}}(C, m_j, v) \\
+%&\ \ \ \ \ \ \ \ \mathit{For} \ k = 1, \ldots, v \\
+%&\ \ \ \ \ \ \ \ \ \ \ \ \textit{If exists }  \ \sigma  \in C \ \wedge \ \mathit{AS.Verify}(\mathit{pp}, \mathbf{pk_j}(k), \mathit{m_j}, \sigma) = 1 \\
+%& \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mathbf{bit_j}(k) = 1 \ \wedge \ \mathbf{\sigma_j}(k) = \sigma \\
+%&\ \ \ \ \ \ \ \ \ \ \ \ \textit{Else} \\ 
+%& \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mathbf{bit_j}(k) = 0 \ \wedge \ \mathbf{\sigma_j}(k) = \_ \\
+%&\ \ \ \ \ \ \ \ s = \mathit{HammingWeight}(\mathbf{bit_j}, \mathcal{R}) \\
+%&\ \ \ \ \ \ \ \ \mathit{apk_{j}} = \mathit{AS.AggregateKeys}(\mathit{pp}, (\mathbf{bit_j}(k) \cdot \mathbf{pk_j}(k))_{k=1}^v) \\
+&\ \ \ \ \ \ \ \ \mathbf{\Sigma}(j) \leftarrow \mathit{AS.AggregateSignatures}(\mathit{pp}, (\mathbf{\sigma_j}(k))_{k=1}^v) \\ 
+%&\ \ \ \ \ \ \ \ \mathbf{x_j} = f_x(\mathbf{Com}(\mathbf{pk_j}), \mathbf{bit_j}, s,  \mathit{apk_{j}}, \mathcal{R}) ; \ \mathbf{w_j} = f_w( \mathbf{pk_j}, \mathbf{bit_j}, \mathcal{R}) \\
+%&\ \ \ \ \ \ \ \ \mathbf{\pi_{j}} = \mathit{SNARK.Prove}(\mathit{srs}_{pk} , (\mathbf{x_j}, \mathbf{w_j}), \mathcal{R})\\
+&\ \ \ \ \ \ \ \ (\mathit{\pi_{\mathit{SNARK},j}}, \mathit{apk_j}) \leftarrow \mathit{CKS_{\mathcal{R}}.Prove}(\mathit{rs}_{pk}, \mathbf{Com}(\mathbf{pk_{j}}), (\mathbf{pk_{j}}(k))_{k=1}^{v}, (\mathbf{bit_j}(k))_{k=1}^{v})\\
+&\ \ \ \ \ \ \ \ \mathbf{x_j} = f_x(\mathbf{Com}(\mathbf{pk_j}), \mathbf{bit_j}, s,  \mathit{apk_{j}}, \mathcal{R}) \\
+%&\ \ \ \ \ \ \ \ \mathbf{\Pi}(j) = (\mathbf{x_j},\mathbf{\pi_{j}}); \ \mathbf{\Sigma}(j) = \mathit{\Sigma}_{j} \\
+&\ \ \ \ \ \ \ \ \mathbf{\Pi}(j) = (\mathbf{x_j}, \mathit{\pi_{\mathit{SNARK}, j}}) \\
+&\ \ \ \ \mathit{Return} \ (\mathbf{\Pi}, \mathbf{\Sigma})  
+\end{align*}
+\end{itemize}
+%\vspace{-0.5cm}
+%\noindent The two algorithms that are only part of the accountable light client system are: 
+\begin{itemize}
+\item $\mathit{LC.VerifyProof}(\mathit{pp}, \mathit{rs_{\mathit{vk}}}, \LCseed, \pi, m, \mathcal{R})$
+\begin{align*}
+& i = \mathit{epoch_{id}}(m) \\
+& (\mathbf{\Pi}, \mathbf{\Sigma}) = \mathit{Parse}(\pi);  \\
+& \mathit{For} \ j = 1, \ldots, i \\
+& \ \ \ \ (\mathbf{x_j}, \mathbf{\pi_{\mathit{SNARK},j}}) = \mathbf{\Pi}(j); \ (\mathit{com_j}, \mathbf{bit_j}, \mathit{apk_j}) = \mathit{Parse}(\mathbf{x_j}, \mathcal{R}) \\
+& \mathit{If} \ \LCseed \neq \mathit{com_1} \\
+& \ \ \ \ \mathit{Return} \ \mathit{rej} \\
+& \mathit{For} \ j = 1, \ldots, i \\
+& \ \ \ \ \mathit{If} \ j < i\\
+& \ \ \ \ \ \ \ \ \ \mathit{m_j} = (j, \mathit{com_{j+1}}) \\
+& \ \ \ \ \mathit{Else}\\
+& \ \ \ \ \ \ \ \ \ \mathit{m_j} = m \\
+& \ \ \ \ \mathit{threshold_j} = \mathit{f_{\mathit{threshold}}}(\mathbf{x_j}, \mathcal{R})  \\
+%& \ \ \ \ \mathit{If} \ (\mathit{SNARK.Verify}(\mathit{srs_{vk}}, \mathbf{x_j}, \mathbf{\pi_j}, \mathcal{R}) = 0)  \ \vee  \ (\mathit{AS.Verify}(\mathit{pp}, \mathit{apk_j}, \mathit{m_j}, \mathbf{\Sigma}(j)) = 0) \ \vee (s < t) \\
+& \ \ \ \ \mathit{If} \ (\mathit{CKS_{\mathcal{R}}.Verify}(\mathit{pp},  \mathit{rs_{\mathit{vk}}}, \mathit{com_j}, m_j,  \mathbf{\Sigma}(j), (\mathbf{\pi_{\mathit{SNARK},j}},\mathit{apk_j}), 
+\mathbf{bit_j}) = 0)  \vee (\mathit{threshold_j} < t) \\
+& \ \ \ \ \ \ \ \ \ \mathit{Return} \ \mathit{rej} \\
+& \mathit{Return} \ \mathit{acc} \\
+\end{align*}
+\end{itemize}
+%\vspace{-0.5cm}
+\begin{itemize}
+\item $\mathit{LC.VerifyMisbehaviour}(\mathit{pp}, i, S, \mathbf{bit}, \sigma, m'', m', C)$
+\begin{align*}
+%& \mathit{If} \ (\mathit{CheckValidConsensus}(C) =1) \\
+& \ \ \ \ \mathit{apk} = \mathit{AS.AggregateKeys}(\mathit{pp}, (\mathbf{bit}(k) \cdot \mathbf{pk_i}(k))_{k=1}^v) \\
+&\ \ \ \ (\mathbf{bit'}, \_ ) = \mathit{f_{bit}}(C, m', v) \\ 
+%& \ \ \ \ \mathit{For} \ k = 1, \ldots, v \\
+%& \ \ \ \ \ \ \ \ \textit{If exists }  \ (\mathit{sig}  \in C) \ \wedge \ (\mathit{AS.Verify}(\mathit{pp}, \mathbf{pk_{\mathbf{i}}}(k), m', \mathit{sig}) = 1) \\
+%& \ \ \ \ \ \ \ \ \ \ \ \mathbf{bit'}(k) = 1 \\
+%& \ \ \ \ \ \ \ \ \textit{Else} \\ 
+%& \ \ \ \ \ \ \ \ \ \ \ \mathbf{bit'}(k) = 0 \\
+& \ \ \ \ \mathit{Compute} \ S_{m''} = \{ \mathbf{pk}_{\mathbf{i}}(k) \ | \ \mathbf{bit}(k) = 1, k \in [v] \} \\
+& \ \ \ \ \mathit{Compute} \ S_{m'} =  \{ \mathbf{pk}_{\mathbf{i}}(k) \ | \ \mathbf{bit'}(k) = 1, k \in [v] \} \\
+& \ \ \ \ \mathit{If} \ (\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m'', \sigma) = 1) \ \wedge (S_{m''} \cap S_{m'} = S) \ \wedge \ (|S_{m'}| \geq t) \ \wedge \
+ (|S_{m''}| \geq t) \ \wedge \\
+%& \hspace{1cm} \wedge \ {\color{red}(m' \in C )} \ \wedge \ {\color{red} (\exists \ d_{m'} \in C\cap D, \mathit{VerifyData}(m', d_{m'})=1)} \ \wedge\ \\
+& \hspace{1cm} \wedge ((\mathit{m'}, d_{\mathit{m'}}) \in_{\mathit{decided}} C) \ \wedge \ \\
+& \hspace{1cm} \wedge \ (i = \mathit{epoch_{id}}(m'') = \mathit{epoch_{id}}(m')) \ \wedge \ (\mathit{Incompatible(m'', m', d_{m'})} = 1)  \\
+& \ \ \ \ \ \ \ \ \mathit{Return} \ \mathit{acc} \\
+& \ \ \ \ \mathit{Else} \\
+& \ \ \ \ \ \ \ \ \mathit{Return} \ \mathit{rej} 
+%& \mathit{Else} \\
+%& \ \ \ \ \mathit{Return} 
+\end{align*}
+
+\item $\mathit{LC.DetectMisbehaviour}(\mathit{pp}, \mathit{rs_{\mathit{vk}}}, \pi, m, C, \mathcal{R})$
+\begin{align*}
+& (\mathbf{\Pi}, \mathbf{\Sigma}) = \mathit{Parse}(\pi)  \\
+& i = \mathit{epoch_{id}}(m) \\
+& \mathit {index} = i \\
+& m'' = m \\
+& \mathit{For} \ j = 1, \ldots, i \\
+& \ \ \ \ (\mathbf{x_j}, \mathit{\pi_{\mathit{SNARK},j}}) = \mathbf{\Pi}(j); \ (\mathit{apk_j}, \mathit{com_j}) = \mathit{Parse}(\mathbf{x_j}) \\
+& \mathit{If} \ (\mathit{LC.VerifyProof}(\mathit{pp}, \mathit{rs_{\mathit{vk}}}, \LCseed, \pi, m, \mathcal{R}) = 1) \ \wedge \  ( \exists \ \mathit{min} \ 2 \leq j \leq i, \ \mathit{com_j} \neq \mathbf{Com}(\mathbf{pk_j}))\\ % \ \wedge \\
+%&  \hspace{5.2cm} \ \wedge \ (\mathit{CheckValidConsensus}(C) = 1) \\
+& \ \ \ \ \ \ \ m'' = (j-1,\mathit{com_j}); \ m' = (j-1, \mathbf{Com}(\mathbf{pk_j})); \mathit{index} = j-1\\
+& \mathit{ElseIf} \ (\mathit{LC.VerifyProof}(\mathit{pp}, \mathit{rs_{\mathit{vk}}}, \LCseed, \pi, m, \mathcal{R}) = 1) \  \wedge \ (\forall \ 2 \leq j \leq i, \ \mathit{com_j} = \mathbf{Com}(\mathbf{pk_j})) \ \wedge \\ 
+& \hspace{1cm} \wedge (\exists \ (\mathit{aux}, d_{\mathit{aux}}) \in_{\mathit{decided}} C) \ \wedge \ \mathit{Incompatible}(\mathit{aux}, m'',  d_{\mathit{aux}})=1) \\
+%& \hspace{1cm} \wedge \ (\exists \ {\color{red} \mathit{aux}}, d_{{\color{red} \mathit{aux}}} \in C, {\color{blue} \mathit{aux} \textit{ decided  in }  C}, \mathit{Incompatible}({\color{red} \mathit{aux}}, {\color{red} m''},  d_{ {\color{red} \mathit{aux}}})=1) \\
+%& \hspace{1cm} \wedge \ (\mathit{CheckValidConsensus}(C) = 1) \\
+& \ \ \ \ \ \ \ m' =   \mathit{aux}\\
+&\mathit{Else} \ \mathit{Return} \\
+& \mathbf{bit} = \mathit{Transform}(\mathit{Parse}(\mathbf{x_{\mathit{index}}}, \mathcal{R}), \mathcal{R}) \\
+& \mathit{Compute} \ S_{m''} = \{ \mathbf{pk}_{\mathbf{index}}(k) \ | \ \mathbf{bit}(k) = 1, k \in [v] \} \\
+%& \mathit{For} \ k = 1, \ldots, v \\
+%& \ \ \ \ \textit{If exists }  \ (\sigma  \in C) \ \wedge \ (\mathit{AS.Verify}(\mathit{pp}, \mathbf{pk_{\mathbf{index}}}(k), m', \sigma) = 1) \\
+%& \ \ \ \ \ \ \ \mathbf{bit'}(k) = 1 \\
+%& \ \ \ \ \textit{Else} \\ 
+%& \ \ \ \ \ \ \ \mathbf{bit'}(k) = 0 \\
+& (\mathbf{bit'}, \_ ) = \mathit{f_{bit}}(C, m', v) \\ 
+& \mathit{Compute} \ S_{m'} = \{ \mathbf{pk}_{\mathbf{index}}(k) \ | \ \mathbf{bit'}(k) = 1, k \in [v] \} \\
+& \mathit{Return} \ (\mathit{index}, S_{m''} \cap S_{m'}, \mathbf{bit}, {\mathbf{\Sigma}}(\mathit{index}), {m''}, m' ) 
+\end{align*}
+\end{itemize}
+
+\subsubsection{Assumptions and Security Proofs}
+\label{sec:assumptions}
+\label{sec:security_proofs}
+
+\noindent We complete our instantiation by proving the security properties of our light client and accountable light client systems according to 
+definitions introduced in Sections~\ref{sec:soundness} and \ref{sec:accountability}. However, beforehand, we present the assumptions we use, of 
+which there are six classes, i.e., there are assumptions about honest validators' behaviour (B), about consensus (C), about parameters (P), about instantiation of primitives (S), 
+about genesis state (G) and assumptions about light client integration (I). \\
+
+\noindent The assumptions about honest validators' behaviour are:
+\begin{itemize}
+\item (B.1.) An honest validator never signs a message $m$ unless it knows some required data $d_m$  
+such that $\mathit{VerifyData}(m, d_m) = 1$ holds.
+\item (B.2.) An honest validator never signs a message $m$ such that $\mathit{VerifyData}(m, d_m) = 1$ holds 
+if they have previously signed $m'$ such that $\mathit{VerifyData}(m', d_{m'}) = 1$ holds and \\ $\mathit{Incompatible}(m, m',d_m) = 1$ 
+or $\mathit{Incompatible}(m', m, d_{m'}) =1$ hold.
+\item (B.3.) An honest validator does not sign any message in $M_i$ unless they have a valid consensus view $C$ (with $M_i \subset C$) 
+for which their public key is in $\mathbf{pk_i}$ with $\mathbf{pk_i} \in C$.
+\end{itemize}
+
+%{\color{blue} TO DO: CHECK the assumptions below for correctness}
+\noindent The assumptions about consensus are:
+\begin{itemize}
+\item (C.1.) The adversary interacting with honest validators should not except with negligible probability be able to produce both:
+(i) a valid consensus view $C$ in which at least $t'$ validators in every epoch are honest that decides some message $m$ 
+with $d_m$ such that $\mathit{VerifyData}(m, d_m) =1$ and 
+(ii) a valid consensus view $C'$ with the same genesis state as $C$ (in particular, with the same $\mathbf{pk_1} \subset \mathsf{genstate}$) 
+which decides some message $m'$ in the same epoch as $m$, with $\mathit{Incompatible}(m, d_m, m') = 1$. 
+\item (C.2.) The adversary interacting with honest validators should not except with negligible probability be able to produce both:
+(i) a valid consensus view $C$ in which at least $t'$ validators in every epoch are honest and 
+(ii)  a valid consensus view $C'$ with the same genesis state as $C$ (in particular, with the same $\mathbf{pk_1} \subset \mathsf{genstate}$) 
+in which there is some epoch $i$ that $C$ and $C'$ both reach with $\mathbf{pk_i} \neq \mathbf{pk'_i}$.
+\end{itemize}
+
+\noindent The assumptions about parameters are:
+\begin{itemize}
+\item (P.1.) $2t -v > 0$
+\item (P.2.) $t + t' > v$
+\end{itemize}
+
+\noindent The assumption about instantiation of primitives is:
+\begin{itemize}
+\item (S.1.) We instantiate the aggregatable signature scheme $\mathit{AS}$ 
+such that the oracle $\mathit{OSign}$ in Definition~\ref{def:aggregate_signatures} (in particular in the 
+unforgeability property definition), is replaced with $\mathit{OSpecialSign}$. It is easy to see that if $\mathit{AS}$ 
+is an aggregatable signature scheme secure according to Definition~\ref{def:aggregate_signatures},  
+then $\mathit{AS}$ is also an aggregatable signature with oracle $\mathit{OSign}$ replaced by 
+$\mathit{OSpecialSign}$ in Definition~\ref{def:aggregate_signatures}.
+\end{itemize}
+
+\noindent The assumptions about genesis state are:
+\begin{itemize}
+\item (G.1.) In a valid consensus view, $\mathit{HistoricVerifyData}$ checks, among others, that 
+a) every $\mathit{pk} \in \mathbf{pk_1}$ is also part of  $\mathsf{genstate}$, b) that every $\mathit{pk} \in \mathbf{pk_1}$ is in $\ginn{1}$ 
+and c) that the proofs of possession for each of the public keys in $ \mathbf{pk_1}$ pass the verification in $\mathit{AS.VerifyPoP}$.
+\item  (G.2.) We assume that all honest full nodes and validators have access to the same genesis state 
+$\mathsf{genstate}$ even when the genesis state is generated by a potential adversary.
+\end{itemize}
+
+Before the last class of assumptions, we add two notational conventions in the form of two functions:
+\begin{itemize}
+\item $\mathit{NextEpochKeys}(m, d_m)$ returns $\bot$ or a list of public keys; if $\mathit{epoch_{id}}(m) = i$, 
+these keys are supposed to be the public keys of epoch $i+1$. 
+%, where $d_m$ with $\mathit{ValidateData}(m, d_m) =1$. 
+%If $\mathit{epoch_{id}}(m) = i$ and $m \in C$, $\mathit{NextEpochKeys}(m, d_m) \neq \bot$, for some valid consensus view $C$, 
+%then $\mathit{NextEpochKeys}(m, d_m)= \mathbf{pk_{i+1}}$ and $\mathbf{pk_{i+1}} \subset d_m$.} 
+\item  $\mathit{IsCommitment}(m)$ returns $0$ or $1$; $\mathit{IsCommitment}(m) = 1$ iff  there exists some $i$ such that 
+$m = (i, \mathbf{Com}(\mathbf{pk_{i+1}}))$.
+%\item {\color{red} $\mathit{IsCommitment}(m)$ returns $0$ or $1$. If $\mathit{epoch_{id}}(m) = i$ and $m \in C$, 
+%for some valid consensus view $C$, then $\mathit{IsCommitment}(m) = 1$ iff $m = \mathbf{Com}(\mathbf{pk_{i+1}})$.}
+%\item {\color{red} We say predicate $P(m, d_m, \mathbf{pk}) = 1$ iff 
+%the blockhash $m$ is final ({\color{blue} What does that mean?}), $d_m$ is the blockchain leading up to and including 
+%the block for which $m$ is a blockhash and $\mathbf{pk}$ is the set of public keys which determines the next validator 
+%set and is also a deterministic function of $d_m$.}
+\end{itemize}
+
+\noindent Finally, we make the following light client integration assumptions, i.e., these are assumptions that 
+apply to our specific light client instantiation: 
+\begin{itemize}
+\item (I.1.) If $m$ and $m'$ are such that 
+$\mathit{epoch_{id}}(m) =\mathit{epoch_{id}}(m')$ and 
+$\mathit{NextEpochKeys}(m, d_m) \neq \bot$ and 
+$\mathit{IsCommitment}(m') = 1$ and 
+$m' \neq (\mathit{epoch_{id}}(m), \mathbf{Com}(\mathit{NextEpochKeys}(m, d_m)))$ 
+then $$\mathit{Incompatible}(m, m', d_m)=1.$$
+\item (I.2.) If $\mathit{epoch_{id}}(m) =i$ and $\mathit{NextEpochKeys}(m, d_m)=\mathbf{pk_{i+1}}$, 
+then $\mathit{ValidateData}(m, d_m)$ must call $\mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk}, \mathit{\pi_{POP}})$ 
+for each $pk \in \mathbf{pk_{i+1}}$ and some data $\mathit{\pi_{POP}} \in d_m$ and also check that
+ $\mathit{pk} \in \mathbb{G}_{1,\mathit{inn}}$; if any of these checks fails, then $\mathit{ValidateData}(m, d_m)$ fails.
+\item (I.3.) An honest validator with a valid consensus view $C$, does not sign a message $m'$ 
+with $\mathit{IsCommitment}(m')=1$ unless there exists a message $m$ decided in $C$ 
+and its required data $d_m$ (i.e., $\mathit{ValidateData}(m, d_m) =1$) such that 
+$$m'=(\mathit{epoch_{id}}(m), \mathbf{Com}(\mathit{NextEpochKeys}(m, d_m))).$$ 
+\item (I.4.) If $\mathit{HistoricVerifyData}$ outputs $1$ and there exist a message $m \in C$ 
+that has been decided in epoch $i$, then for all $1 \leq j < i$, $(j, \mathbf{Com}(\mathbf{pk_{j+1}}))$ was decided in epoch $j$. 
+\item (I.5.) If $\mathit{HistoricVerifyData}$ outputs $1$ and a message $m'$ has been decided in $C$ 
+such that \\ $\mathit{IsCommitment}(m') = 1$, then there exist $m, d_m \in C$ with $\mathit{ValidateData}(m, d_m) = 1$, $m$ decided in $C$
+and $\mathit{epoch_{id}}(m) = \mathit{epoch_{id}}(m')$ such that 
+$$\mathbf{pk_{\mathit{epoch_{id}}(m)+1}} = \mathit{NextEpochKeys}(m, d_m).$$
+\end{itemize}
+%{\color{blue} I propose changing the order of assumptions to (I.2), (I.1), (I.4), (I.5), (I.3).} \\
+
+\noindent We are now ready to state and prove the security properties of our (accountable) light client systems. 
+
+\begin{theorem}
+\label{th:soundness} 
+If $\mathit{AS}$ is the secure aggregatable signature scheme defined in instantiation~\ref{insta:bls} and if 
+$\mathit{CKS_{\mathcal{R}}}$ is the secure committee key scheme defined in instantiation~\ref{inst:cks}, then, together with 
+the assumptions stated at the beginning of Section~\ref{sec:assumptions} and for $\mathcal{R} \in \{ \Rlacom, \Racom \}$, the tuple 
+($\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$, $\mathit{LC.VerifyProof}$) as instantiated in Section~\ref{sec:instantiation} is a light client system.
+\end{theorem}
+
+
+\begin{proof} 
+We include the full proof in Section~\ref{supplementary_proof_sec_soundness}.   
+\end{proof}
+
+\begin{theorem} 
+\label{th:accountability_results}
+If $\mathit{AS}$ is the secure aggregatable signature scheme defined in instantiation~\ref{insta:bls} and if 
+$\mathit{CKS_{\mathcal{R}}}$ is the secure committee key scheme defined in instantiation~\ref{inst:cks}, then, together 
+with the assumptions stated at the beginning of Section~\ref{sec:assumptions} and for $\mathcal{R} \in \{ \Rlacom, \Racom \}$, the tuple 
+($\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$, $\mathit{LC.VerifyProof}$, $\mathit{LC.DetectMisbehaviour}$, 
+$\mathit{LC.VerifyMisbehaviour}$) as instantiated in Section~\ref{sec:instantiation} is an accountable light client system.
+\end{theorem}
+\begin{proof}
+\noindent Due to theorem~\ref{th:soundness}, the tuple 
+($\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$, $\mathit{LC.VerifyProof}$, \\ $\mathit{LC.DetectMisbehaviour}$, 
+$\mathit{LC.VerifyMisbehaviour}$) as instantiated in Section~\ref{sec:instantiation} is already a light client system. 
+It is only left to show that both accountability completeness and accountability soundness also hold and we include the full details of this proof in 
+Section~\ref{supplementary_proof_sec_accountability}.   
+\end{proof}
+
+\begin{corollary} In an accountable light client system, the number of misbehaving validators output by 
+$\mathit{LC.DetectMisbehaviour}$ is $|S|$ and $|S| > 0$.
+\end{corollary}
+\begin{proof} Due to theorem~\ref{th:accountability_results} and accountability completeness, 
+given a valid consensus view $C$, a verifying light client proof $\pi$ for a message $m''$ 
+and given the existence in $C$ of a message $m'$ incompatible with $m''$, the number of 
+validators that $\mathit{LC.DetectMisbehaviour}$ is able to catch is at least $|S|$. Moreover, due 
+to accountability soundness, any public key output by $\mathit{LC.DetectMisbehaviour}$, \ewnp, belongs to a misbehaving validator. 
+Finally, using again accountability completeness and, in particular, since $\mathit{LC.VerifyMisbehaviour}$ accepts 
+with overwhelming probability the output of an honest party running $\mathit{LC.DetectMisbehaviour}$ and due to assumption (P.1.) it holds that:
+$$ |S| = |S_{m'} \cap S_{m''}| = |S_{m'}| + |S_{m''}| - |S_{m'} \cup S_{m''}| \geq t + t - v > 0.$$ 
+\end{proof}

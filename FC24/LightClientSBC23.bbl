@@ -1,0 +1,306 @@
+\begin{thebibliography}{10}
+
+\bibitem{nakamoto2008bitcoin}
+S.~Nakamoto, ``Bitcoin: A peer-to-peer electronic cash system,'' {\em
+  Decentralized Business Review}, p.~21260, 2008.
+
+\bibitem{polkadot}
+J.~Burdges, A.~Cevallos, P.~Czaban, R.~Habermeier, S.~Hosseini, F.~Lama, H.~K.
+  Alper, X.~Luo, F.~Shirazi, A.~Stewart, and G.~Wood, ``Overview of polkadot
+  and its design considerations,'' 2020.
+\newblock \url{https://arxiv.org/abs/2005.13456}.
+
+\bibitem{ethereum}
+G.~Wood {\em et~al.}, ``Ethereum: A secure decentralised generalised
+  transaction ledger,'' {\em Ethereum project yellow paper}, 2014.
+
+\bibitem{cosmos}
+J.~Kwon and E.~Buchman, ``Cosmos whitepaper: A network of distributed
+  ledgers.''
+\newblock \url{https://v1.cosmos.network/resources/whitepaper}.
+
+\bibitem{tendermint_paper}
+E.~Buchman, J.~Kwon, and Z.~Milosevic, ``The latest gossip on bft consensus,''
+  2018.
+\newblock \url{https://arxiv.org/abs/1807.04938}.
+
+\bibitem{celo}
+cLabs Team, ``The celo protocol: A multi-asset cryptographic protocol for
+  decentralized social payments.''
+\newblock \url{https://celo.org/papers/whitepaper}.
+
+\bibitem{dfinity}
+T.~D. Team, ``The internet computer for geeks,'' 2022.
+\newblock \url{https://internetcomputer.org/whitepaper.pdf}.
+
+\bibitem{elliptic_harmony}
+``Over \$1 billion stolen from bridges so far in 2022 as harmony’s horizon
+  bridge becomes latest victim in \$100 million hack,'' 2022.
+\newblock \url{bit.ly/3fvlIME}.
+
+\bibitem{elliptic_nomad}
+``Nomad loses \$156 million in seventh major crypto bridge exploit of 2022,''
+  2022.
+\newblock
+  \url{https://hub.elliptic.co/analysis/nomad-loses-156-million-in-seventh-major-crypto-bridge-exploit-of-2022/}.
+
+\bibitem{IBC_paper}
+C.~Goes, ``The interblockchain communication protocol: An overview,'' 2020.
+\newblock \url{https://arxiv.org/abs/2006.15918}.
+
+\bibitem{CosmosValNYX}
+Mintscan, ``Validator dashboard for nyx,'' Accessed 19.01.2023.
+\newblock \url{https://www.mintscan.io/nyx/validators}.
+
+\bibitem{CosmosValHUB}
+Mintscan, ``Validator dashboard for cosmos hub,'' Accessed 19.01.2023.
+\newblock \url{https://www.mintscan.io/cosmos/validators}.
+
+\bibitem{CeloOptics}
+C.~Organization, ``Optics,'' Accessed 19.01.2023.
+\newblock \url{https://docs.celo.org/protocol/bridge/optics}.
+
+\bibitem{NEARrainbowB}
+N.~Foundation, ``Rainbow bridge,'' Accessed 19.01.2023.
+\newblock \url{https://wiki.near.org/getting-started/rainbow-bridge}.
+
+\bibitem{Fomo3DPM}
+SECBIT, ``How the winner got fomo3d prize — a detailed explanation,'' 2018.
+\newblock
+  \url{https://medium.com/coinmonks/how-the-winner-got-fomo3d-prize-a-detailed-explanation-b30a69b7813f}.
+
+\bibitem{RainbowBridgeFAQ}
+N.~Foundation, ``Rainbow bridge faq,'' Accessed 19.01.2023.
+\newblock \url{https://rainbowbridge.app/faq}.
+
+\bibitem{zkBridge}
+T.~Xie, J.~Zhang, Z.~Cheng, F.~Zhang, Y.~Zhang, Y.~Jia, D.~Boneh, and D.~X.
+  Song, ``zkbridge: Trustless cross-chain bridges made practical,'' {\em
+  Proceedings of the 2022 ACM SIGSAC Conference on Computer and Communications
+  Security}, 2022.
+
+\bibitem{CasperFFG}
+V.~Buterin and V.~Griffith, ``Casper the friendly finality gadget,'' {\em arXiv
+  preprint arXiv:1710.09437}, 2017.
+\newblock \url{https://arxiv.org/abs/1710.09437}.
+
+\bibitem{forensics}
+S.~Kannan, K.~Nayak, P.~Sheng, P.~Viswanath, and G.~Wang, ``Bft protocol
+  forensics,'' 2020.
+\newblock \url{https://arxiv.org/abs/2010.06785}.
+
+\bibitem{GRANDPA}
+A.~Stewart and E.~Kokoris-Kogia, ``Grandpa: a byzantine finality gadget,''
+  2020.
+\newblock \url{https://arxiv.org/abs/2007.01560}.
+
+\bibitem{ABC}
+P.~Civit, S.~Gilbert, V.~Gramoli, R.~Guerraoui, and J.~Komatovic, ``As easy as
+  abc: Optimal (a) ccountable (b) yzantine (c) onsensus is easy!,'' in {\em
+  2022 IEEE International Parallel and Distributed Processing Symposium
+  (IPDPS)}, pp.~560--570, IEEE, 2022.
+
+\bibitem{BEEFY}
+``Beefy.''
+\newblock
+  \url{https://github.com/paritytech/grandpa-bridge-gadget/blob/master/docs/beefy.md}.
+
+\bibitem{BLS_signatures}
+D.~Boneh, B.~Lynn, and H.~Shacham, ``Short signatures from the weil pairing,''
+  in {\em ASIACRYPT 2001}, pp.~514--532, 2001.
+
+\bibitem{boneh_compact_multisig}
+D.~Boneh, M.~Drijvers, and G.~Neven, ``Compact multi-signatures for smaller
+  blockchains,'' in {\em ASIACRYPT 2018}, pp.~435--464, 2018.
+
+\bibitem{sync_committee}
+``Minimal light client,'' 2021.
+\newblock Commit of 14th Sept 2021,
+  \url{https://github.com/ethereum/annotated-spec/blob/master/altair/sync-protocol.md}.
+
+\bibitem{GrothDKG}
+J.~Groth, ``Non-interactive distributed key generation and key resharing.''
+  ePrint 2021/339, 2021.
+
+\bibitem{AggregatableDKG}
+K.~Gurkan, P.~Jovanovic, M.~Maller, S.~Meiklejohn, G.~Stern, and A.~Tomescu,
+  ``Aggregatable distributed key generation.'' ePrint 2021/005, 2021.
+
+\bibitem{LWEDKG}
+C.~Gentry, S.~Halevi, and V.~Lyubashevsky, ``Practical non-interactive publicly
+  verifiable secret sharing with thousands of parties.'' ePrint 2021/1397,
+  2021.
+
+\bibitem{mina}
+J.~Bonneau, I.~Meckler, V.~Rao, and E.~Shapiro, ``Coda: Decentralized
+  cryptocurrency at scale.'' ePrint 2020/352, 2020.
+
+\bibitem{plumo}
+A.~Gabizon, K.~Gurkan, P.~Jovanovic, G.~Konstantopoulos, A.~Oines,
+  M.~Olszewski, M.~Straka, E.~Tromer, and P.~Vesely, ``Plumo: Towards scalable
+  interoperable blockchains using ultralight validation systems.'' 3rd
+  ZKStandards Workshop, 2020.
+
+\bibitem{groth16}
+J.~Groth, ``On the size of pairing-based non-interactive arguments,'' in {\em
+  EUROCRYPT 2016}, pp.~305--326, 2016.
+
+\bibitem{KilianPhD}
+J.~Kilian, ``Uses of randomness in algorithms and protocols.'' PhD Thesis,
+  1990.
+\newblock \url{https://core.ac.uk/download/pdf/4425126.pdf}.
+
+\bibitem{CLOS02}
+R.~Canetti, Y.~Lindell, R.~Ostrovsky, and A.~Sahai, ``Universally composable
+  two-party and multi-party secure computation,'' in {\em STOC02}, 2002.
+
+\bibitem{CP_proposal}
+D.~Benarroch, M.~Campanelli, D.~Fiore, J.~Kim, J.~Lee, H.~Oh, and A.~Querol,
+  ``Proposal: Commit-and-prove zero-knowledge proof systems and extensions,''
+  2021.
+\newblock 4rd ZKStandards Workshop.
+
+\bibitem{HP_paper}
+D.~Fiore, C.~Fournet, E.~Ghosh, M.~Kohlweiss, O.~Ohrimenko, and B.~Parno,
+  ``Hash first, argue later: Adaptive verifiable computations on outsourced
+  data,'' in {\em CCS'16}, pp.~1304--1316, 2016.
+
+\bibitem{CP_paper}
+M.~Campanelli, D.~Fiore, and A.~Querol, ``Legosnark: Modular design and
+  composition of succinct zero-knowledge proofs,'' in {\em CCS'19},
+  pp.~2075--2092, 2019.
+
+\bibitem{lunar}
+M.~Campanelli, A.~Faonio, D.~Fiore, A.~Querol, and H.~Rodriguez, ``Lunar: a
+  toolbox for more efficient universal and updatable zksnarks and
+  commit-and-prove extensions.'' Cryptology ePrint Archive, Paper 2020/1069,
+  2020.
+\newblock \url{https://eprint.iacr.org/2020/1069}.
+
+\bibitem{eclipse}
+D.~F. Aranha, E.~M. Bennedsen, M.~Campanelli, C.~Ganesh, C.~Orlandi, and
+  A.~Takahashi, ``Eclipse: Enhanced compiling method for pedersen-committed
+  zksnark engines.'' Cryptology ePrint Archive, Paper 2021/934, 2021.
+\newblock \url{https://eprint.iacr.org/2021/934}.
+
+\bibitem{interoperability_2}
+S.~Agrawal, C.~Ganesh, and P.~Mohassel, ``Non-interactive zero-knowledge proofs
+  for composite statements,'' in {\em CRYPTO 2018}, pp.~643--673, 2018.
+
+\bibitem{KZG_10}
+A.~Kate and I.~G. Gregory M~Zaverucha, ``Constant-size commitments to
+  polynomials and their applications,'' in {\em ASIACRYPT10}, pp.~177--194,
+  2010.
+
+\bibitem{plonk}
+A.~Gabizon, Z.~J. Williamson, and O.~Ciobotaru, ``Plonk: Permutations over
+  lagrange-bases for oecumenical noninteractive arguments of knowledge.''
+  ePrint 2019/953, 2019.
+
+\bibitem{sonic}
+M.~Maller, S.~Bowe, M.~Kohlweiss, and S.~Meiklejohn, ``Sonic: Zero-knowledge
+  snarks from linear-size universal and updateable structured reference
+  strings.'' Cryptology ePrint Archive, Paper 2019/099, 2019.
+\newblock \url{https://eprint.iacr.org/2019/099}.
+
+\bibitem{marlin}
+A.~Chiesa, Y.~Hu, M.~Maller, P.~Mishra, N.~Vesely, and N.~Ward, ``Marlin:
+  Preprocessing zksnarks with universal and updatable srs,'' in {\em EUROCRYPT
+  2020}, pp.~738--768, 2020.
+
+\bibitem{ethresearch1}
+``Simplified active validator cap and rotation proposal,'' 2022.
+\newblock
+  \url{https://ethresear.ch/t/simplified-active-validator-cap-and-rotation-proposal/9022}.
+
+\bibitem{secure_pairings}
+S.~Yonezawa, ``Pairing-friendly curves,'' 2020.
+\newblock
+  \url{https://tools.ietf.org/id/draft-yonezawa-pairing-friendly-curves-02.html}.
+
+\bibitem{pairings_for_cryptographers}
+S.~Galbraith, K.~Paterson, and N.~Smart, ``Pairings for cryptographers.''
+  ePrint 2006/165, 2006.
+
+\bibitem{zexe}
+S.~Bowe, A.~Chiesa, M.~Green, I.~Miers, P.~Mishra, and H.~Wu, ``Zexe: Enabling
+  decentralized private computation,'' in {\em Security and Privacy 2020},
+  pp.~947--964, 2020.
+
+\bibitem{BW6}
+Y.~E. Housni and A.~Guillevic, ``Optimized and secure pairing-friendly elliptic
+  curves suitable for one layer proof composition.'' ePrint 2020/351, 2020.
+
+\bibitem{proofs_of_posession}
+T.~Ristenpart and S.~Yilek, ``The power of proofs-of-possession: Securing
+  multiparty signatures against rogue-key attacks,'' in {\em EUROCRYPT 2007},
+  pp.~228--245, 2007.
+
+\bibitem{updatable_universal_srs_2018}
+J.~Groth, M.~Kohlweiss, M.~Maller, S.~Meiklejohn, and I.~Miers, ``Updatable and
+  universal common reference strings with applications to zk-snarks,'' in {\em
+  CRYPTO 2018}, pp.~698--728, 2018.
+
+\bibitem{AGM_model}
+G.~Fuchsbauer, E.~Kiltz, and J.~Loss, ``The algebraic group model and its
+  applications,'' in {\em CRYPTO 2018}, pp.~33--62, 2018.
+
+\bibitem{extractability_limits_1}
+N.~Bitansky, R.~Canetti, O.~Paneth, and A.~Rosen, ``On the existence of
+  extractable one-way functions,'' in {\em STOC '14}, pp.~505--514, 2014.
+
+\bibitem{extractability_limits_2}
+E.~Boyle and R.~Pass, ``Limits of extractability assumptions with
+  distributional auxiliary input,'' in {\em ASIACRYPT 2015}, pp.~236--261,
+  2015.
+
+\bibitem{small_exponents}
+M.~Bellare, J.~A. Garay, and T.~Rabin, ``Fast batch verification for modular
+  exponentiation and digital signatures.'' ePrint 1998/007, 1998.
+
+\bibitem{redshift}
+A.~Kattis, K.~Panarin, and A.~Vlasov, ``Redshift: Transparent snarks from list
+  polynomial commitment iops.'' ePrint 2019/1400, 2019.
+
+\bibitem{halo}
+S.~Bowe, J.~Grigg, and D.~Hopwood, ``Recursive proof composition without a
+  trusted setup.'' ePrint 2019/1021, 2019.
+
+\bibitem{FS_transform}
+A.~Fiat and A.~Shamir, ``How to prove yourself: Practical solutions to
+  identification and signature problems,'' in {\em CRYPTO' 86}, pp.~186--194,
+  1987.
+
+\bibitem{FS_transform_with_proof}
+D.~Pointcheval and J.~Stern, ``Security proofs for signature schemes,'' in {\em
+  EUROCRYPT '96}, pp.~387--398, 1996.
+
+\bibitem{SE_plonk}
+C.~Ganesh, H.~Khoshakhlagh, M.~Kohlweiss, A.~Nitulescu, and M.~Zajac, ``What
+  makes fiat--shamir zksnarks (updatable srs) simulation extractable?.'' ePrint
+  2021/511, 2021.
+
+\bibitem{bw6767}
+Y.~E. Housni and A.~Guillevic, ``Bw6 over bls12-381,'' 2021.
+\newblock \url{https://ethresear.ch/t/bw6-over-bls12-381/10321}.
+
+\bibitem{EIPs}
+F.~of~Ethereum~Magician and E.~C. Herders, ``Ethereum improvement proposals.''
+\newblock \url{https://eips.ethereum.org}.
+
+\bibitem{ethlight}
+V.~Buterin, ``Minimal light client,'' 2021.
+\newblock
+  \url{https://github.com/ethereum/annotated-spec/blob/master/altair/sync-protocol.md}.
+
+\bibitem{Gasper}
+V.~Buterin, D.~Hernandez, T.~Kamphefner, K.~Pham, Z.~Qiao, D.~Ryan, J.~Sin,
+  Y.~Wang, and Y.~X. Zhang, ``Combining ghost and casper,'' {\em arXiv}, 2020.
+\newblock \url{https://arxiv.org/abs/2003.03052}.
+
+\bibitem{flyclient}
+B.~Bünz, L.~Kiffer, L.~Luu, and M.~Zamani, ``Flyclient: Super-light clients
+  for cryptocurrencies.'' Cryptology ePrint Archive, Paper 2019/226, 2019.
+\newblock \url{https://eprint.iacr.org/2019/226}.
+
+\end{thebibliography}
