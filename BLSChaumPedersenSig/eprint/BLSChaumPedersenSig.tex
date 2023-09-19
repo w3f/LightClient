@@ -1,9 +1,20 @@
 \documentclass{llncs}
 \pagestyle{plain}
 
+%\usepackage{authblk}
+%\usepackage[toc,page]{appendix}
+%\usepackage[utf8]{inputenc}     
+     
+%%% page dimensions
+%\usepackage{geometry} 
+%\geometry{margin=1.08in} 
+%\usepackage{numdef}
+   
+\usepackage{authblk}
 \usepackage{xspace}   
 \usepackage{url}   
 \usepackage{graphicx} 
+%\usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb} %\therefore
@@ -95,20 +106,24 @@
 \spnewtheorem{test_claim}[theorem]{Claim}{\bfseries}{\itshape}
 \newenvironment{sketch}{{\bfseries}{\itshape}\paragraph{Proof Sketch}}{\hfill$\square$}
 
-\usepackage{dashrule}
+%\usepackage{dashrule}
 
 \newcommand{\ewnp}{e.w.n.p.\ }
 
-
-\begin{document}
-   
+ 
+%\title{Efficient Aggregatable BLS Signatures \\ with Chaum-Pedersen Proofs}
+%\author{Jeff Burdges \and Oana Ciobotaru \and Syed Lavasani \and Alistair Stewart}
+%\institute{Web3 Foundation}
+%\date{ \today} % % activate to display a given date or no date (if empty), otherwise the current date is printed 
+%%\date{}
 
 \title{Efficient Aggregatable BLS Signatures \\ with Chaum-Pedersen Proofs}
-\author{Jeff Burdges \and Oana Ciobotaru \and Syed Lavasani \and Alistair Stewart}
-\institute{Web3 Foundation}
-\date{ \today} % activate to display a given date or no date (if empty), otherwise the current date is printed 
-%\date{}
- 
+\author{Jeff Burdges \inst{1} \and Oana Ciobotaru \inst{2} \thanks{Research performed while second author worked at Web3 Foundation Technologies.} \and Syed Lavasani \inst{1} \and Alistair Stewart \inst{1}}
+
+\institute{Web3 Foundation Technologies \and OpenZeppelin} 
+    
+\usepackage{dashrule}    
+\begin{document}   
  \maketitle
 
 \abstract{%
