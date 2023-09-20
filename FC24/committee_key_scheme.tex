@@ -60,7 +60,7 @@ for any bitmask $(\mathit{bit_i})_{i=1}^{u} \in \{0,1\}^u$,  for any aggregated 
 it holds that: 
 \vspace{-0.1cm}
 \begin{align*}
-& \mathit{Pr}[\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 \implies 
+\mathit{Pr}[&\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 \implies 
 \mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m, \mathit{asig}, \pi, (\mathit{bit}_{i})_{i=1}^u) =1 | \\
 & (\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{rs}_{\mathit{pk}}) \leftarrow 
 \mathit{CKS.Setup}(v), 
@@ -73,10 +73,10 @@ it holds that:
 ($\mathit{CKS.Setup}$, $\mathit{CKS.GenCommitteeKey}$, $\mathit{CKS.Prove}$, $\mathit{CKS.Verify}$)
 has soundness if for every efficient adversary $\mathcal{A}$ it holds that: 
 \begin{align*}
-&\mathit{Pr}[\mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m,  \mathit{asig}, \pi, (\mathit{bit}_{i})_{i=1}^u) =1 
- \implies \\ & \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1  |  (\mathit{pp}, \mathit{rs}_{\mathit{vk}},\mathit{rs}_{\mathit{pk}}) \leftarrow \mathit{CKS.Setup}(v),\\
-& (\mathit{pk}_{i})_{i=1}^u, (\mathit{bit}_{i})_{i=1}^u, \mathit{asig}, \pi, m  \leftarrow \mathcal{A}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{rs}_{\mathit{pk}}), \\
-&  \mathit{ck} \leftarrow \mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk}_{i})_{i=1}^u), \\
+\mathit{Pr}[&\mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m,  \mathit{asig}, \pi, (\mathit{bit}_{i})_{i=1}^u) =1 \
+ \implies \ \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1  |  (\mathit{pp}, \mathit{rs}_{\mathit{vk}},\mathit{rs}_{\mathit{pk}}) \leftarrow \mathit{CKS.Setup}(v),\\
+& (\mathit{pk}_{i})_{i=1}^u, (\mathit{bit}_{i})_{i=1}^u, \mathit{asig}, \pi, m  \leftarrow \mathcal{A}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{rs}_{\mathit{pk}}), 
+ \mathit{ck} \leftarrow \mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk}_{i})_{i=1}^u), \\
 & \mathit{apk} \leftarrow \mathit{AS.AggKeys}( \mathit{pp},( \mathit{pk}_{i})_{i:\mathit{bit_i}=1})] = 1 - \negl(\lambda)
 \end{align*}
 \end{definition}

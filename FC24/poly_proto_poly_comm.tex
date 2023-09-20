@@ -2,7 +2,9 @@
 \subsection{Polynomial Protocols, Polynomial Commitments and Lagrange Bases}
 %\vspace{-0.05in}
 To prove the security of our custom SNARKs, we start by defining custom vector-based conditional NP relations and we describe for each of them a ranged polynomial protocol. 
-Extending the notion introduced in PLONK~\cite{plonk}, we give an updated definition of ranged polynomial protocols in Appendix~\ref{supplementary_poly_protocols_appendix}. 
+Extending the notion introduced in PLONK~\cite{plonk}, we give an updated definition of ranged polynomial protocols in Appendix~\ref{supplementary_poly_protocols_appendix} with the main difference 
+being that our new type of polynomial protocol verifier can contribute its own polynomials or simply finite field elements based on computations involving public input and the verifier's public randomness.
+Thus, our extended definition allows for a wider space of polynomial protocols, which, in turn necessary for modelling and proving security of our custom SNARKs. 
 We also use KZG polynomial commitments \cite{KZG_10}, their batched version and their security definitions as described in PLONK. 
 %\vspace{-0.08in}
 \vspace{-0.07in}
