@@ -7,7 +7,9 @@ time in the length of both inputs $x$ and $w$ and $\mathcal{L}(\mathcal{R})= \{x
 is an NP language w.r.t. predicate $p$. In such a case we call $x$ an \emph{instance} and $w$ a \emph{witness}.  \\
 
 %\vspace{-0.07in}
-\noindent  To model a specific property of our NP relations, we introduce further notation which we call \emph{conditional NP relation}, we denote it by 
+\noindent  In this work, we design two custom SNARKs for two specific NP relations that are shaped by necessities of 
+constructing our light client model and its instantiation. To model a specific property of our NP relations, we introduce further 
+notation which we call \emph{conditional NP relation}, we denote it by 
 $$\mathcal{R}^c = \{(x;w) : (p_1(x,w) =1 \ | \ c(x,w) =1) \ \wedge \ p_2(x,w) = 1 \}$$ and we interpret it as the NP relation containing the pairs of inputs and witnesses 
 $(x,w)$ such that $c(x,w) =1$, $p_1(x,w) = 1$ and $p_2(x,w) =1$ hold. However, to prove that $(x,w) \in \mathcal{R}^c$ we assume/take it as a given that 
 $c(x,w) =1$ and we are left to prove only that $p_1(x,w) = 1$ and $p_2(x,w) =1$ hold. The reason we separate predicate $c(x,w)$ from predicate $p_1(x,w)$ in the definition 

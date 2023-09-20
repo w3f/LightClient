@@ -1,12 +1,12 @@
 \subsection{Secure Signature Aggregation}
 \label{sec:multisig_short}
 \vspace{-0.03in}
-An aggregatable signature scheme compresses signatures using
+An aggregatable signature scheme (AS) compresses signatures using
 different signing keys into one signature. In this work we use an aggregatable 
 signature scheme making explicit use of the proofs-of-possession (PoPs)~\cite{proofs_of_posession}.
-For our concrete instantiation, we use aggregatable BLS signatures with an 
-efficient aggregation procedure, i.e., by adding together keys and by multiplying together 
-signatures, and protect against rogue key attacks~\cite{proofs_of_posession} using PoPs. 
+Overall, for our concrete instantiation, we use aggregatable BLS signatures with an 
+efficient aggregation procedure, i.e., by adding together keys and by adding together 
+signatures, and we protect against rogue key attacks~\cite{proofs_of_posession} using PoPs. 
 This is in contrast to other aggregation procedures that do not require PoPs for security 
 but incur a higher computational cost (e.g., due to the use of multi-scalar
 multiplication~\cite{boneh_compact_multisig}). For our concrete use case of accountable 

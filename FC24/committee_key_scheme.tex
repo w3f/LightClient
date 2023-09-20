@@ -9,7 +9,7 @@ public keys (in the following called \emph{committee key}) are valid. The notion
 light client scheme instantiation ($\mathit{LCI}$) as sketched in Section~\ref{sec:lcsketch}. Before providing formal definition for $\mathit{CKS}$, 
 we include some intuition for its chosen security properties.  
 \begin{itemize}
-\item \emph{Perfect completeness}: If all of $\mathit{CKS.Verify}$ inputs except for an aggregated signature have been generated honestly and if the signature is accepted 
+\item \emph{Perfect completeness}: If all of $\mathit{CKS.Verify}$ inputs except for an aggregatable signature have been generated honestly and if the signature is accepted 
 by $\mathit{AS.Verify}$ (Definition~\ref{def:aggregate_signatures}), then $\mathit{CKS.Verify}$ on the signature and honest inputs accepts; this is the counter-notion to perfect completeness for aggregation 
 (Definition~\ref{def:aggregate_signatures}); it is used for proving \emph{$\mathit{LCI}$ perfect completeness}. 
 \item \emph{Soundness}: An adversary cannot output a $\mathit{CKS}$ verifying proof and alleged aggregated signature pair without the aggregated signature being accepted 
@@ -28,7 +28,7 @@ such that for implicit security parameter $\lambda$:
 
 \begin{itemize}
 \item $(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{rs}_{\mathit{pk}}) \leftarrow \mathit{CKS.Setup}(v)$: a setup algorithm that, 
-given an upper bound $v \in \mathbb{N}$, \\ $v = \mathsf{poly}(\lambda)$ outputs some public parameters $\mathit{pp}$ and 
+given an upper bound $v \in \mathbb{N}$, $v = \mathsf{poly}(\lambda)$ outputs some public parameters $\mathit{pp}$ and 
 proving and verification keys $\mathit{rs}_{\mathit{pk}}$ and $\mathit{rs}_{\mathit{vk}}$, respectively,  
 where $\mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}})$, for some 
 $\mathit{aux_{\mathit{AS}}}$ chosen by the aggregated signature $\mathit{AS}$.
@@ -47,26 +47,26 @@ signature $\mathit{asig}$, a proof $\pi$ and a vector $\mathbf{bitvector} \in \{
 outputs $1$ if the verification succeeds and $0$ otherwise. 
 \end{itemize}
 
-\noindent We say ($\mathit{CKS.Setup}$, $\mathit{CKS.GenCommitteeKey}$, $\mathit{CKS.Prove}$, \\$\mathit{CKS.Verify}$) 
+\noindent We say ($\mathit{CKS.Setup}$, $\mathit{CKS.GenCommitteeKey}$, $\mathit{CKS.Prove}$, $\mathit{CKS.Verify}$) 
 is a committee key scheme for aggregatable signatures if it satisfies \emph{perfect completeness} and 
 \emph{soundness} as defined below.
 
 \vspace{-0.1cm}
 \noindent \textbf{Perfect Completeness} A committee key scheme for aggregatable signatures 
-($\mathit{CKS.Setup}$, \\ $\mathit{CKS.GenCommitteeKey}$, $\mathit{CKS.Prove}$, $\mathit{CKS.Verify}$)
+($\mathit{CKS.Setup}$, $\mathit{CKS.GenCommitteeKey}$, $\mathit{CKS.Prove}$, $\mathit{CKS.Verify}$)
 has perfect completeness if for any message $m \in \{0,1\}^*$, 
-for any vector of public keys $(\mathit{pk_i})_{i=1}^{u}$ generated using \\ $\mathit{AS.GenKeypair}(\mathit{pp})$, 
+for any vector of public keys $(\mathit{pk_i})_{i=1}^{u}$ generated using $\mathit{AS.GenKeypair}(\mathit{pp})$, 
 for any bitmask $(\mathit{bit_i})_{i=1}^{u} \in \{0,1\}^u$,  for any aggregated signature $\mathit{asig}$, 
 it holds that: 
 \vspace{-0.1cm}
 \begin{align*}
-& \mathit{Pr}[\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 \implies \\
-&\mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m, \mathit{asig}, \pi, (\mathit{bit}_{i})_{i=1}^u) =1 | \\
+& \mathit{Pr}[\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 \implies 
+\mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m, \mathit{asig}, \pi, (\mathit{bit}_{i})_{i=1}^u) =1 | \\
 & (\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{rs}_{\mathit{pk}}) \leftarrow 
-\mathit{CKS.Setup}(v), \\ 
-&\mathit{ck} \leftarrow \mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk}_{i})_{i=1}^u)), \\
-& \pi \leftarrow \mathit{CKS.Prove}(\mathit{rs}_{\mathit{pk}}, \mathit{ck}, (\mathit{pk}_{i})_{i=1}^u, (\mathit{bit_i})_{i=1}^u), \\
-&\mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp}, (\mathit{pk}_{i})_{i:\mathit{bit_i}=1})]=1
+\mathit{CKS.Setup}(v), 
+\mathit{ck} \leftarrow \mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk}_{i})_{i=1}^u)), \\
+& \pi \leftarrow \mathit{CKS.Prove}(\mathit{rs}_{\mathit{pk}}, \mathit{ck}, (\mathit{pk}_{i})_{i=1}^u, (\mathit{bit_i})_{i=1}^u), 
+\mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp}, (\mathit{pk}_{i})_{i:\mathit{bit_i}=1})]=1
 \end{align*} 
 \vspace{-0.08cm}
 \noindent \textbf{Soundness} A $\mathit{CKS}$ for aggregatable signatures \\
@@ -109,7 +109,6 @@ and
 & \mathit{OSign}(m_j): \\
 & \sigma_j \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk}^*, m_j); Q \leftarrow Q \cup \{m_j\}; \textit{Return} \ \sigma_j
 \end{align*}
-
 
 \noindent A committee key scheme for aggregatable signatures is unforgeable if for all efficient adversaries $\mathcal{A}$ it holds that \\ 
 $\mathit{Adv}_{\mathcal{A}}^{\mathit{forgecomkey}}(\lambda) \leq \negl(\lambda)$.
