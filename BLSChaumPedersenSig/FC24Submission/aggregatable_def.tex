@@ -1,0 +1,390 @@
+\subsection{Secure Signature Aggregation}
+\label{sec:def_aggregate}
+An aggregatable signature scheme compresses signatures issued using
+possibly different signing keys into one signature. In this work we use
+an aggregatable signature scheme making explicit use of proofs-of-possession 
+(PoPs)~\cite{proofs_of_posession} in order to protect against rogue-key attacks~\cite{proofs_of_posession}. 
+%For our concrete instantiation, we use aggregatable
+%BLS signatures with an efficient aggregation procedure, i.e., by adding
+%together keys and by multiplying together signatures, and protect against
+%rogue key attacks~\cite{proofs_of_posession} using PoPs. This is in contrast to other aggregation
+%procedures that do not require PoPs for security but incur a higher computational 
+%cost (e.g., due to the use of multi-scalar multiplication~\cite{boneh_compact_multisig}).
+%For our concrete use case of accountable light clients systems, our 
+%efficient signature aggregation method results in a simple and more efficient
+%custom argument scheme (i.e., SNARK, see section~\ref{sec:use_case} for more details), 
+%which, in turn, compensates for the cost of having to work with PoPs.
+
+\begin{definition}
+\label{def:aggregate}
+(Aggregatable Signature Scheme) An aggregatable signature scheme consists of
+the following tuple of algorithms ($\mathit{AS.Setup}$, $\mathit{AS.GenerateKeypair}$, $\mathit{AS.VerifyPoP}$, 
+$\mathit{AS.Sign}$, $\mathit{AS.AggregateKeys}$, \\ $\mathit{AS.AggregateSignatures}$, $\mathit{AS.Verify}$):
+\begin{itemize}
+
+\item $\mathit{pp} \leftarrow  \mathit{AS.Setup}(\mathit{\lambda})$: a setup algorithm that, given a
+security parameter $\lambda$, outputs public protocol parameters $\mathit{pp}$.
+
+\item $((\mathit{pk},\mathit{\pi_{PoP}}),\mathit{sk}) \leftarrow \mathit{AS.GenerateKeypair}(\mathit{pp})$:
+a key pair generation algorithm that
+outputs
+a secret key $\mathit{sk}$,
+and the corresponding public key $\mathit{pk}$
+together with a proof-of-possession $\mathit{\pi_{PoP}}$ of the secret key.
+
+\item $0/1 \leftarrow \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk},\mathit{\pi_{PoP}})$:
+a public key verification algorithm that,
+given a public key $\mathit{pk}$
+and a proof-of-possession $\mathit{\pi_{PoP}}$,
+outputs
+$1$ if $\mathit{\pi_{PoP}}$ is valid for $\mathit{pk}$ and $0$ otherwise.
+
+\item $\sigma \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk}, m)$:
+a signing algorithm that,
+given a secret key $\mathit{sk}$ and a message $m \in \{0, 1\}^*$, returns a signature $\sigma$.
+
+\item $\mathit{apk} \leftarrow \mathit{AS.AggregateKeys}(\mathit{pp}, (\mathit{pk_i})_{i=1}^{n})$:
+a public key aggregation algorithm that,
+given a vector of public keys $(\mathit{pk_i})_{i=1}^n$,
+returns
+an aggregate public key $\mathit{apk}$.
+
+\item $\mathit{asig} \leftarrow \mathit{AS.AggregateSignatures}(\mathit{pp}, (\sigma_i)_{i=1}^n)$:
+a signature aggregation algorithm that,
+given a vector of signatures $(\sigma_i)_{i=1}^n$,
+returns
+an aggregate signature $\mathit{asig}$.
+
+\item $0/1 \leftarrow \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig})$:
+a signature verification algorithm that,
+given an aggregate public key $\mathit{apk}$, a message $m \in \{0, 1\}^*$, and an aggregate signature $\sigma$,
+returns
+1 or 0 to indicate if the signature is valid.
+\end{itemize}
+\noindent We say ($\mathit{AS.Setup}$, $\mathit{AS.GenerateKeypair}$, $\mathit{AS.VerifyPoP}$, 
+$\mathit{AS.Sign}$, \\$\mathit{AS.AggregateKeys}$, $\mathit{AS.AggregateSignatures}$, 
+$\mathit{AS.Verify}$) is an aggregatable signature scheme if it satisfies \emph{perfect completeness}, \emph{completeness for aggregation}
+and \emph{unforgeability} as defined below.
+\end{definition}
+\noindent \textbf{Perfect Completeness} An aggregatable signature scheme
+($\mathit{AS.Setup}$, \\ $\mathit{AS.GenerateKeypair}$, $\mathit{AS.VerifyPoP}$, $\mathit{AS.Sign}$, $\mathit{AS.AggregateKeys}$,\\ 
+$\mathit{AS.AggregateSignatures}$, $\mathit{AS.Verify}$) has perfect completeness if for any message $m \in \{0,1\}^*$ and any 
+$n\in\mathbb{N}$ it holds that:
+\begin{align*}
+ \mathit{Pr} & [\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig})=1 \ \wedge \ \\
+ & \wedge \  \forall  i \in [n]\ \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i},\mathit{\pi_{\mathit{PoP},i}})=1\ |\\
+& \mathit{pp} \leftarrow \mathit{AS.Setup(\lambda)}, \\
+& ((pk_{i},\pi_{\mathit{PoP}, i}), sk_{i} ) \leftarrow \mathit{AS.GenerateKeypair}(\mathit{pp}),\ i=1,\ldots,n\\
+&  \mathit{apk} \leftarrow \mathit{AggregateKeys}(\mathit{pp}, (\mathit{pk}_{i})_{i=1}^{n}), \\
+&  \sigma_i \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk_i}, m),\ i=1,\ldots,n, \\
+&  \mathit{asig} \leftarrow \mathit{AS.AggregateSignatures(\mathit{pp}, (\sigma_{i})_{i=1}^{n})}] = 1.
+\end{align*}
+\noindent We note that an aggregatable signature scheme with perfect completeness implies the underlying signature scheme
+has perfect completeness when aggregation of keys and aggregation of signatures for $n=1$ are given as the listing of the key and 
+the individual signature, and where the verification of the aggregate signature for $n=1$ is the same as the verification of individual signatures. \\
+
+\noindent \textbf{Completeness for Aggregation} An aggregatable signature scheme 
+($\mathit{AS.Setup}$, $\mathit{AS.GenerateKeypair}$, $\mathit{AS.VerifyPoP}$, $\mathit{AS.Sign}$,\\
+$\mathit{AS.AggregateKeys}$, $\mathit{AS.AggregateSignatures}$, $\mathit{AS.Verify}$)
+has completeness for aggregation if, for every adversary $\mathcal{A}$
+\begin{align*}
+\mathit{Pr} & [\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 \ (\ast\ast\ast\ast) \ | \ \mathit{pp} \leftarrow \mathit{AS.Setup}(\lambda), \\
+& ((\mathit{pk_i}, \pi_{\mathit{PoP},i})_{i=1}^n, m, (\sigma_i)_{i=1}^{n}) \leftarrow \mathcal{A}(\mathit{\mathit{pp})}, \\
+& \forall i \in [n], \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i}, \pi_{\mathit{PoP},i}) = 1 \ \ \ \ (\ast), \\
+& \forall i \in [n], \mathit{AS.Verify}(\mathit{pp}, \mathit{pk_i}, m, \sigma_i) = 1 \ \ \ \ (\ast\ast),\\
+& \mathit{apk} \leftarrow \mathit{AS.AggregateKeys}(\mathit{pp},  (\mathit{pk}_{i})_{i=1}^{n}), \\
+& \mathit{asig} \leftarrow \mathit{AS.AggregateSignatures}(\mathit{pp}, (\sigma_i)_{i=1}^n) (\ast\ast\ast)] = 1- \negl(\lambda).
+\end{align*}
+
+\noindent \textbf{Unforgeable Aggregatable Signature}
+For an aggregatable signature scheme ($\mathit{AS.Setup}$, $\mathit{AS.GenerateKeypair}$, $\mathit{AS.VerifyPoP}$, $\mathit{AS.Sign}$,
+$\mathit{AS.AggregateKeys}$, $\mathit{AS.AggregateSignatures}$, $\mathit{AS.Verify}$)
+the advantage of an adversary against unforgeability is defined by
+$$\mathit{Adv}^{\mathit{forge}}_{\mathcal{A}}({\lambda}) = \mathit{Pr}[\mathit{Game}^{\mathit{forge}}_{\mathcal{A}}({\lambda}) =1], \textit{\ where}$$
+
+\begin{align*}
+&\mathit{Game}^{\mathit{forge}}_{\mathcal{A}}({\lambda}): \\
+& \mathit{pp} \leftarrow \mathit{AS.Setup(\lambda)} \\
+& ((\mathit{pk}^*,\pi^*_{\mathit{PoP}}), \mathit{sk}^*) \leftarrow \mathit{AS.GenerateKeypair}(\mathit{pp})\\
+& Q \leftarrow \emptyset \\
+& ((\mathit{pk_i}, \pi_{\mathit{PoP},i})_{i=1}^{n}, m, \mathit{asig}) \leftarrow \mathcal{A}^{\mathit{OSign}}(\mathit{pp}, (\mathit{pk^*},\pi^*_{\mathit{PoP}})) \\
+& \textit{If } \mathit{pk}^* \notin \{\mathit{pk_i}\}_{i=1}^{n} \vee m \in Q, \textit{ then return } 0 \\
+& \textit{For } i \in [n] \\
+& \ \ \ \ \ \textit{ If } \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i}, \pi_{\mathit{PoP},i})=0  \textit{ return } 0 \\
+& \mathit{apk} \leftarrow \mathit{AS.AggregateKeys}(\mathit{pp}, (\mathit{pk_i})_{i=1}^{n}) \\
+& \textit{Return } \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig})
+\end{align*}
+\noindent and
+\begin{align*}
+& \mathit{OSign}(m_j): \\
+& \sigma_j \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk}^*, m_j) \\
+&  Q \leftarrow Q \cup \{m_j\} \\
+& \textit{Return} \ \sigma_j
+\end{align*}
+\noindent and $\mathcal{A}^{\mathit{OSign}}$ denotes the adversary $\mathcal{A}$ with access to oracle $\mathit{OSign}$. \\
+\noindent We say an aggregatable signature scheme is unforgeable if for all efficient adversaries
+$\mathcal{A}$ it holds that $\mathit{Adv}^{\mathit{forge}}_{\mathcal{A}}({\lambda}) \leq \mathit{negl}(\lambda)$. 
+
+\subsection{Aggregatable BLS Signatures}
+\label{sec:bls}
+\noindent In the following, we instantiate the aggregatable signature definition given above with a scheme inspired by the BLS signature
+scheme~\cite{BLS_signatures} and its follow-up variants~\cite{proofs_of_posession,boneh_compact_multisig}.
+Because, in general, multisignatures are susceptible to so-called ``rogue-key attacks'' which can be
+mounted whenever the adversary is allowed to choose his public keys arbitrarily, in order to protect against such
+rogue-key attacks, we enhance our multisignature instantiation with proofs-of-possession as defined in~\cite{proofs_of_posession}.
+In turn, we instantiate our proofs-of-possession with BLS signatures in the first source group.  
+% the non-interactive version of Chaum-Pedersen proofs for showing 
+%the equality of discrete logarithm (i.e., the secret key or DLEQ proof) corresponding to a pair of distinct public keys.
+
+\begin{construction}(Aggregatable BLS Signatures) We call aggregatable BLS signatures the following instantiation of aggregatable signatures:
+\label{insta_bls}
+\begin{itemize}
+%\item $(\GoneBLS, \GtwoBLS,  \goneBLS, \gtwoBLS, \GTBLS, \eBLS, \HBLS, \Hpop, \Hpk, \Hsig)$ from $\mathit{pp}$ where 
+%$\mathit{pp} \leftarrow  \mathit{AS.Setup}(\lambda)$, 
+%where $\GoneBLS$, $\GtwoBLS$,  $\goneBLS$, $\gtwoBLS$, $\GTBLS$, $\eBLS$ are the first and second source groups, their generators and the 
+%associated pairing for some BLS elliptic curve $E$, respectively,  %were defined in section~\ref{sec:pairings} and 
+%and $\HBLS: \{0,1\}^* \rightarrow \GoneBLS$, $\Hpop: \{0,1\}^* \rightarrow \GoneBLS$, 
+%$\Hpk: \{0,1\}^* \rightarrow \mathbb{Z}_r^*$ and $\Hsig: \{0,1\}^* \rightarrow \mathbb{Z}_r^*$ are four hash functions. 
+
+\item $(\GoneBLS, \GtwoBLS,  \goneBLS, \gtwoBLS, \GTBLS, \eBLS, \HBLS, \Hpop, \Hsig)$ from $\mathit{pp}$ where \\ 
+$\mathit{pp} \leftarrow  \mathit{AS.Setup}(\lambda)$, 
+where $\GoneBLS$, $\GtwoBLS$,  $\goneBLS$, $\gtwoBLS$, $\GTBLS$, $\eBLS$ are the first and second source groups, 
+their generators and the associated pairing for some BLS elliptic curve $E$, respectively,  
+and $\HBLS: \{0,1\}^* \rightarrow \GoneBLS$, $\Hpop: \{0,1\}^* \rightarrow \GoneBLS$ 
+and $\Hsig: \{0,1\}^* \rightarrow \mathbb{Z}_r^*$ are three hash functions, where $r$ is the size of the scalar field of elliptic curve $E$. 
+
+%\item $(\mathit{pk_1}, \mathit{pk_2}, \mathit{sk}, \pipk, \sigpop) \leftarrow \mathit{AS.GenerateKeypair}(\mathit{pp})$, 
+%where $\mathit{sk} \xleftarrow{\$} \mathbb{Z}_{r}^{*}$ and $\mathit{pk_1} = \mathit{sk} \cdot \goneBLS \in \GoneBLS$ 
+%and $\mathit{pk_2} = \mathit{sk} \cdot \gtwoBLS \in \GtwoBLS$ 
+%and \\ $\pipk \leftarrow \Provpk(\goneBLS, \gtwoBLS, \mathit{pk_1}, \mathit{pk_2}, \mathit{sk})$ 
+%and $\sigpop = \Hpop(\mathit{pk_2})^{\mathit{sk}}$ and $r$ is the size of the scalar field of elliptic curve $E$. 
+
+\item $(\mathit{pk_1}, \mathit{pk_2}, \mathit{sk}, \sigpop) \leftarrow \mathit{AS.GenerateKeypair}(\mathit{pp})$, 
+where $\mathit{sk} \xleftarrow{\$} \mathbb{Z}_{r}^{*}$ and $\mathit{pk_1} = \mathit{sk} \cdot \goneBLS \in \GoneBLS$ 
+and $\mathit{pk_2} = \mathit{sk} \cdot \gtwoBLS \in \GtwoBLS$ and 
+$\sigpop = \mathit{sk} \cdot \Hpop(\mathit{pk_2})$. 
+
+%\item $0/1 \leftarrow \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_1}, \mathit{pk_2}, \pipk, \sigpop)$, where $\mathit{AS.VerifyPoP}$ outputs $1$ if 
+%$\Veripk(\goneBLS, \gtwoBLS, \mathit{pk_1}, \mathit{pk_2}, \pipk)$ outputs $1$ and if the following equality is fulfilled: 
+%$$e(H(m), \mathit{pk}_2) = e(\sigpop, \gtwoBLS).$$
+%\noindent In all other cases it outputs $0$.
+
+\item $0/1 \leftarrow \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_1}, \mathit{pk_2}, \sigpop)$, 
+where $\mathit{AS.VerifyPoP}$ outputs $1$ if the following holds:
+$$e(\Hpop(\mathit{pk}_2) + t \cdot \goneBLS, \mathit{pk}_2) = e(\sigpop + t \cdot \mathit{pk}_1, \gtwoBLS),$$
+\noindent with $t \xleftarrow{\$} \mathbb{Z}_r$. If the verification above does not pass, 
+then $\mathit{AS.VerifyPoP}$ outputs $0$.
+
+%\item $(\sigma, \pisig) \leftarrow \mathit{AS.Sign}(\mathit{pp},\mathit{sk}, m)$: 
+%where $\sigma = \mathit{sk} \cdot \HBLS(m) \in \GtwoBLS$ and $ \pisig \leftarrow \Provsig(\goneBLS, m, \mathit{pk_1}, \sigma, \mathit{sk})$.
+
+\item $(\sigma, \pisig) \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk}, m)$: 
+where $\sigma = \mathit{sk} \cdot \HBLS(m) \in \GoneBLS$ and $ \pisig \leftarrow \Provsig(\goneBLS, m, \mathit{pk_1}, \sigma, \mathit{sk})$. We 
+give full details for the argument system $\PSsig = (\Gensig, \Provsig, \\ \Verisig)$ at the end of this paragraph.
+
+%\item $\mathit{apk} = (\mathit{apk_1}, \mathit{apk_2}) \leftarrow \mathit{AS.AggregateKeys}(\mathit{pp}, (\mathit{pk_1^i}, \mathit{pk_2^i})_{i=1}^{n})$, 
+%where  $\mathit{apk_1} = \sum_{i=1}^{n} \mathit{pk_1^i}$ and $\mathit{apk_2} = \sum_{i=1}^{n} \mathit{pk_2^i}$. 
+
+\item $\mathit{apk}_1 \leftarrow \mathit{AS.AggregateKeys}(\mathit{pp}, (\mathit{pk_1^{(i)}}, \mathit{pk_2^{(i)}})_{i=1}^{n})$, 
+where $$\mathit{apk}_1 = \sum_{i=1}^{n} \mathit{pk_1^{(i)}}.$$ 
+
+%\item $\mathit{asig} \leftarrow \mathit{AS.AggregateSignatures}(\mathit{pp}, (\sigma_i, \pi_i)_{i=1}^n)$, 
+%where \\ $\mathit{asig} = (\sigma_1, \pi_1)$  if $n=1$ and $\mathit{asig} = (\sum_{i=1}^{n} \sigma_i, \bot)$ if $n>1$. 
+
+\item $\mathit{asig} \leftarrow \mathit{AS.AggregateSignatures}(\mathit{pp}, (\mathit{pk_1^{(i)}}, \mathit{pk_2^{(i)}})_{i=1}^{n}, (\sigma^{(i)}, \pi_i)_{i=1}^n)$, 
+where \\ $\mathit{asig} = (\sigma^{(1)}, \pi_1)$  if $n=1$ and $\mathit{asig} = (\sum_{i=1}^{n} \sigma^{(i)}, \mathit{apk_2}, \bot)$ if $n>1$, where 
+$$\mathit{apk}_2 = \sum_{i=1}^{n} \mathit{pk_2^{(i)}}.$$
+
+\item $0/1 \leftarrow  \mathit{AS.Verify}(\mathit{pp}, \mathit{apk_1}, m, \mathit{asig})$, where $\mathit{AS.Verify}$ outputs $1$ iff either 
+(100) or (200) hold; in all other cases, it outputs $0$. \\
+ (100) $\mathit{asig}_3 = \bot \ \wedge \ e(\mathit{asig}_1 + t \cdot \mathit{apk_1}, \gtwoBLS) = e(H(m) + t \cdot \goneBLS, \mathit{asig}_2)$, 
+where $$t \xleftarrow{\$} \mathbb{Z}_{r}^{*}.$$ 
+(200) There exists no component $\mathit{asig}_3$ and $$\Verisig(\goneBLS, m, \mathit{apk_1}, \mathit{asig}_1, \mathit{asig}_2) = 1.$$ 
+
+\end{itemize}
+Above we have used the following argument system %systems 
+\begin{comment}
+$$ \PSpk = (\Genpk, \Provpk, \Veripk) \ \ \ \ (1)$$ where 
+\begin{itemize}
+\item $(\GoneBLS, \goneBLS, \GtwoBLS, \gtwoBLS, \Hpk) \leftarrow \Genpk(\lambda)$ as a subprotocol of $\mathit{AS.Setup}(\lambda)$. 
+%We can also do proofs of possession by Chaum-Pedersen DLEQ proofs. Now we are proving the discrete log equality of 
+%a pair of $G_1$ elements $g_1, pk_1$ and a pair of $G_2$ elements $g_2,pk_2$ (and also that the  dicrete log $sk$ is known).
+
+\item $\pipk = (c,s) \leftarrow \Provpk(\goneBLS, \gtwoBLS, \mathit{pk_1}, \mathit{pk_2}, \mathit{sk})$ where \\ $k \xleftarrow{\$} \mathbb{Z}_{r}^{*}$, $A =k \cdot \goneBLS$, 
+$B=k \cdot  \gtwoBLS$, $c = \Hpk (\goneBLS, \gtwoBLS, \mathit{pk_1}, \mathit{pk_2}, A, B)$, \\ $s = k - c \cdot \mathit{sk} \mod r$. 
+
+\item $0/1 \leftarrow \Veripk(\goneBLS, \gtwoBLS, \mathit{pk_1}, \mathit{pk_2}, (c,s))$, 
+where $\Veripk$ outputs 1 if  $c= \Hpk (\goneBLS, \gtwoBLS, \mathit{pk_1}, \mathit{pk_2}, A', B')$
+where $A' = s \cdot \goneBLS + c \cdot \mathit{pk_1}$ and $B' = s \cdot \gtwoBLS  + c \cdot \mathit{pk_2}$ and it outputs $0$ otherwise.  
+\end{itemize}
+
+and 
+\end{comment}
+$$ \PSsig = (\Gensig, \Provsig, \Verisig) \ \ \ \ (1)$$ 
+\begin{itemize}
+\item $(\GoneBLS, \goneBLS, \Hsig) \leftarrow \Gensig(\lambda)$ as a subprotocol of $\mathit{AS.Setup}(\lambda)$. 
+\item $\pisig = (c,s) \leftarrow \Provsig(\goneBLS, m, \mathit{pk_1}, \sigma, \mathit{sk})$ where \\ $k \xleftarrow{\$} \mathbb{Z}_{r}^{*}$, $A =k \cdot \goneBLS$, 
+$B=k \cdot H(m)$, $c = \Hsig (\goneBLS, m, \mathit{pk_1}, \sigma, A, B)$, \\ $s = k - c \cdot \mathit{sk} \mod r$. 
+\item $0/1 \leftarrow \Verisig(\goneBLS, m, \mathit{pk_1}, \sigma, (c,s))$, 
+where $\Verisig$ outputs 1 if  $c= \Hsig (\goneBLS, m, \mathit{pk_1}, \sigma, A'', B'')$
+where $A'' = s \cdot \goneBLS + c \cdot \mathit{pk_1}$ and $B'' = s \cdot H(m)  + c \cdot \sigma$ and it outputs $0$ otherwise.  
+\end{itemize}
+\end{construction}
+
+%\noindent Note: It is easy to show that $\PSpk$ and $\PSsig$ are zero-knowledge non-interactive arguments of knowledge for relations 
+%$\Rpk$ and $\Rsig$, respectively, where 
+%$$\Rpk = \{( \GoneBLS, \GtwoBLS, \goneBLS, \gtwoBLS, \mathit{pk_1}, \mathit{pk_2}); \mathit{sk}) : \mathit{pk_1} = \mathit{sk} \cdot \goneBLS, \mathit{pk_2} = \mathit{sk} \cdot \gtwoBLS \},$$
+%$$\Rsig = \{( \GoneBLS, \goneBLS, m, \mathit{pk_1}, \sigma); \mathit{sk}) : \mathit{pk_1} = \mathit{sk} \cdot \goneBLS, \sigma = \mathit{sk} \cdot H(m)\},$$
+%and $\GoneBLS$, $\GoneBLS$ are generated by $\goneBLS, \gtwoBLS$, respectively.
+
+\noindent Note: It is easy to show that $\PSsig$ is a zero-knowledge non-interactive argument of knowledge for relation $\Rsig$, where 
+$$\Rsig = \{( \GoneBLS, \goneBLS, m, \mathit{pk_1}, \sigma); \mathit{sk}) : \mathit{pk_1} = \mathit{sk} \cdot \goneBLS, \sigma = \mathit{sk} \cdot H(m)\},$$
+%and $\GoneBLS$, $\GtwoBLS$ are generated by $\goneBLS, \gtwoBLS$, respectively.
+and $\GoneBLS$ is generated by $\goneBLS$. 
+
+%Note that this takes the verifier 2 $G_1$ exponentiations and 2 $G_2$ exponentiations. This may not be a lot faster than the two 
+%pairings required to verify a BLS signature with a different hash and using the same as the "Fast verification of aggregate public keys with proof" section.
+
+%\begin{theorem} Assuming that co-CDH holds for $e$ (see Appendix for a reminder of this assumption) 
+%and $H$, $\Hpop$ $\Hpk$ and $\Hsig$ are modelled as random oracles, then instantiation~\ref{insta_bls} 
+%is an aggregatable signature scheme as per definition~\ref{def:aggregate}. 
+%\end{theorem}
+\begin{theorem} Assuming that co-CDH holds for $e$ (see Appendix~\ref{sec:appendix} for a reminder of this assumption) 
+and $H$, $\Hpop$ and $\Hsig$ are modelled as random oracles, then Instantiation~\ref{insta_bls} 
+is an aggregatable signature scheme as per Definition~\ref{def:aggregate}. 
+\end{theorem}
+\begin{proof} 
+The \emph{perfect completeness} property is very easy to prove. \\ 
+\noindent Regarding \emph{completeness for aggregation}, the non-trivial case is when $n>1$. 
+Let $\mathcal{A}_1$ be an efficient adversary trying to break this property. Due to our instantiation, 
+we have the following explicit notation 
+$(\mathit{pk_i}, \pi_{\mathit{PoP},i})_{i=1}^n = ((\mathit{pk_1^{(i)}}, \mathit{pk_2^{(i)}}), \sigma^{(i)}_{\mathit{PoP}})_{i=1}^n$. 
+Since $(\ast)$ holds, then by the Schwartz-Zippel lemma 
+$e(\goneBLS, \mathit{pk}_2^{(i)}) = e(\mathit{pk}_1^{(i)}, \gtwoBLS), \forall i \in [n]$, which, due to the bilinearity of pairing $e$ 
+and the fact that the associated source groups $\GoneBLS$ and $\GtwoBLS$ are cyclic, it implies that 
+$\forall i \in [n]$, $\exists \ (\mathit{sk}_i)_{i=1}^n \in (\mathbb{Z}_r)^{n}$ such that $\mathit{pk}_1^{(i)} = \mathit{sk}_i \cdot \goneBLS$ and 
+$\mathit{pk}_2^{(i)} = \mathit{sk}_i \cdot \gtwoBLS$. Since $(\ast\ast)$ holds, then due to the existential soundness of $\PSsig$,  
+%there exist efficient extractor $\Esig$ such that, 
+except with negligible probability, there exist $(\mathit{sk}_i)_{i=1}^n \in (\mathbb{Z}_r)^{n}$ such that 
+$\mathit{pk}_1^{(i)} = \mathit{sk}_i \cdot \goneBLS$ and $\sigma^{(i)} = \mathit{sk}_i \cdot \HBLS(m)$. 
+The above properties together with $(\ast\ast\ast)$ in turn, imply that, except with negligible probability, 
+$\mathit{apk}_1 = (\sum_{i=1}^n \mathit{sk}_i) \cdot \goneBLS$, $\mathit{asig}_2 = (\sum_{i=1}^n \mathit{sk}_i) \cdot \gtwoBLS$ and 
+$\mathit{asig}_1 = (\sum_{i=1}^n \mathit{sk}_i) \cdot \HBLS(m)$. This, in turn, implies that the aggregated signature verification $(\ast\ast\ast\ast)$ 
+holds, except with negligible probability. \\ 
+
+\noindent Regarding \emph{unforgeability}, let $\mathcal{A}_2$ be an efficient adversary trying to break this property 
+(see Definition~\ref{def:aggregate}). %Without loss of generality, we assume that whenever $\mathcal{A}_2$ outputs 
+%a potential forgery, and, in particular a set of public keys and their PoPs, $\mathcal{A}_2$ has already queried the random 
+%oracle $\Hsig$ for all the hash values involved in the proofs and in the individual alleged signatures corresponding to the output 
+%public keys and message of $\mathcal{A}_2$. Indeed, adding this constraint on the forger, does not decrease its probability of success. 
+Next, we follow a similar proof technique as detailed for Theorem 15.2, part b in~\cite{dabo_book} where given a successful adversary 
+$\mathcal{A}_2$ against unforgeability one can construct a successful adversary $\mathcal{B}$ against the co-CDH assumption as follows:
+%For brevity, below we only state the differences and modifications in our proof: 
+
+Adversary $\mathcal{B}$ is given a tuple $(u_1 = \alpha \cdot \goneBLS, u_2 = \alpha \cdot \gtwoBLS, v_1 = \beta \cdot \goneBLS)$ 
+where $\alpha,\beta \xleftarrow{\$} \mathbb{Z}_{r}$, as in the co-CDH attack game (see Appendix~\ref{sec:appendix}); 
+$\mathcal{B}$ needs to compute $z_1 = \alpha\beta \cdot \goneBLS = \alpha \cdot v_1$. 
+%First, their $g_0$ is replaced in our case by $\goneBLS$ and their $g_1$ by our $\gtwoBLS$.  
+First, $\mathcal{B}$ sends the public key $(\mathit{pk}^* = (u_1, u_2), \sigma^{*}_{\mathit{PoP}})$ to the forger 
+$\mathcal{A}_2$, where $\sigma^{*}_{\mathit{PoP}} = \delta^* \cdot u_1$ and 
+$\delta^* \xleftarrow{\$} \mathbb{Z}_r$, $\Hpop(\mathit{pk_2}^*) = \delta^* \cdot \goneBLS$. 
+Hence $\sigma^{*}_{\mathit{PoP}} =  \alpha \cdot \Hpop(\mathit{pk_2}^*)$.  
+%with $\pi^* = (c^*, s^*)$ where $(c^*, s^*)$ is computed by choosing $c^*, s^*$ 
+%uniformly at random in $\mathbb{Z}_r^*$, setting $A^* = s^* \cdot \goneBLS + c^* \cdot \mathit{u_1}$ and 
+%$B^* = s^* \cdot \gtwoBLS  + c^* \cdot \mathit{u_2}$ and finally $\mathcal{B}$ records in the corresponding table 
+%the value for the simulated random oracle $\Hpk$ in $(\goneBLS, \gtwoBLS, \mathit{u_1}, \mathit{u_2}, A^*, B^*)$ 
+%as equal to $c^*$.\footnote{These are also the steps taken by a zero-knowledge simulator for relation $\Rpk$.} 
+
+Afterwards, $\mathcal{A}_2$ makes a sequence of queries: $Q_{\mathit{ro}}$ hash queries to $H$, $Q_{\mathit{sig}}$ signature queries, 
+$Q_{\mathit{pop}}$ queries to $\Hpop$, %{\color{red} TO DO: DO I need explicit queries to the signature defining the PoPs?}
+%$Q_{\mathit{DLEQ},\mathit{pk}}$ queries to $\Hpk$ 
+and $Q_{\mathit{DLEQ},\mathit{sig}}$ queries to $\Hsig$. To these queries, 
+adversary $\mathcal{B}$ responds as follows:
+
+%\noindent The forger $\mathcal{A}_2$ makes a sequence of signatures and hash queries to simulated oracles $H$, $\Hpk$ and $\Hsig$ and 
+%$\mathit{OSign}$ maintained by $\mathcal{B}$ as follows: 
+\begin{itemize}
+\item Overall, hash queries to $H$ are handled %as in $\mathcal{B}$'s simulation, theorem 15.2. part b in~\cite{dabo_book}
+by $\mathcal{B}$ by first choosing a random $\omega \in \{1, \ldots, Q_{\mathit{ro}}\}$. 
+(Note that among the $Q_{\mathit{ro}}$ hash queries there may be one message that is not part of the signature queries from 
+$\mathcal{A}_2$ but is output as an alleged forgery by $\mathcal{A}_2$. Using random value $\omega$, $\mathcal{B}$ is trying to 
+guess the index of that precise message queried by $\mathcal{A}_2$.)
+Then, for $j = 1,2,..., Q_{\mathit{ro}}$, when $\mathcal{A}_2$ issues hash query number $j$ (i.e., query for $H(m_j)$), 
+$\mathcal{B}$ responds by:
+\begin{itemize}
+\item if $j \neq \omega$ then $\mathcal{B}$ chooses $\rho_j \xleftarrow{\$} \mathbb{Z}_r$ and sets $H(m_j) :=  \rho_j \cdot \goneBLS$,
+\item if $j = \omega$ then $\mathcal{B}$ sets $H(m_{\omega}) = v_1$.
+\end{itemize}
+\item Signing queries $m_j$ are answered as follows: The first component $\sigma^{(j)}$ of the individual 
+signature for a message $m_j$ is $\rho_j \cdot u_1 = \alpha \cdot H(m_j)$. This can be answered correctly by $\mathcal{B}$ 
+as long as he guesses the correct index $\omega$ defined above and, also, since all the corresponding values $\rho_j$ 
+are chosen and known by him. Regarding the second component of the individual signature, i.e., 
+$\pi^{(j)}_{\mathit{DLEQ}, \mathit{sig}}$, this can be computed by $\mathcal{B}$ using the fact 
+that it can program the oracle for $\Hsig$ and, also, since the non-interactive argument of knowledge $\PSsig$ has zero-knowledge. Indeed, 
+$\pi^{(j)}_{\mathit{DLEQ}, \mathit{sig}}$ is computed as $(c_j, s_j)$ where $c_j$, $s_j$ are chosen 
+uniformly at random in $\mathbb{Z}_r^*$, setting $A_j = s_j \cdot \goneBLS + c_j \cdot \mathit{u_1}$ and 
+$B_j = s_j \cdot H(m_j)  + c_j \cdot \sigma^{(j)}$ and finally $\mathcal{B}$ records in the corresponding table 
+the value for the simulated random oracle $\Hsig$ in $(\goneBLS, m_j, u_1, \sigma^{(j)}, A_j, B_j)$ as equal to $c_j$. 
+ 
+\item $\Hsig(\goneBLS, m', \mathit{pk_{1}^{(j)}}, \sigma^{(j)}, A_j^{'}, B_j^{'})$ queries are received, stored in a table 
+and retrieved as consistent queries to a simulated random oracle. %with the mention that when a new query for $\Hsig$ is received 
+%by $\mathcal{B}$ and this query contains a tuple $(m', \mathit{pk_{1}^{(t)}}, \sigma'^{(t)})$ while a different tuple containing 
+%$(m', \mathit{pk_{1}^{(t)}}, \sigma^{(t)})$ with $\sigma'^{(t)} \neq \sigma^{(t)}$
+%has already been received by $\mathcal{B}$ as a query for $\Hsig$, then an error message $\bot$ is output to 
+%$\mathcal{A}_2$.\footnote{This handling of the simulation of $\Hsig$ is motivated by the fact that in our instantiation our signatures are deterministic.} 
+%Analogously, only the first query received by $\mathcal{B}$ for $\Hpk$ with input including $(\goneBLS, \gtwoBLS, \mathit{pk_1^{(t)}}, \mathit{pk_2^{(t)}})$ is answered and 
+%recorded. The reason is that for each distinct pair of keys $(\mathit{pk_1^{(t)}}, \mathit{pk_2^{(t)}})$, only one proof-of-possession is needed. 
+%As an additional property, the oracle value for $\Hpk(\goneBLS, \gtwoBLS, \mathit{pk_1^{(t)}}, \mathit{pk_2^{(t)}}, A_t^{'}, B_t^{'})$ 
+%is computed as $\psi_t \cdot \goneBLS +  v_1$, where $\psi_t \xleftarrow{\$} \mathbb{Z}_r$. 
+\item $\Hpop(m_j)$ queries for $m_j \neq \mathit{pk}_2^*$ by choosing $\delta_j \xleftarrow{\$} \mathit{Z}_r$ 
+and setting $\Hpop(m_j) = v_1 + \delta_j \cdot \goneBLS$; $\Hpop(\mathit{pk}_2^*)$ has already been defined.  
+\end{itemize}
+
+\noindent Eventually, $\mathcal{A}_2$ outputs a valid aggregate forgery 
+$$(((\mathit{pk}_1^{(i)}, \mathit{pk}_2^{(i)}), \sigma^{(i)}_{\mathit{PoP}})_{i=1}^n, m, \mathit{asig})$$ where 
+%$\forall i \in[n], \Veripk(\goneBLS, \gtwoBLS, \mathit{pk_1^{(i)}}, \mathit{pk_2^{(i)}}, \pi_{\mathit{pk}}^{(i)}) = 1$ and \\ 
+$$\forall i \in[n], e(\Hpop(\mathit{pk_2}^{(i)}) + t_i \cdot \goneBLS, \mathit{pk_2}^{(i)}) = 
+e(\sigma_{\mathit{PoP}}^{(i)} + t_i \cdot \mathit{pk_1}^{(i)}, \gtwoBLS) \ \ (10), $$ 
+with $t_i \xleftarrow{\$} \mathbb{Z}_r, \forall i \in [n]$ and $$\mathit{AS.Verify}(\mathit{pp}, 
+\sum_{i=1}^n \mathit{pk}_1^{(i)}, m, \mathit{asig}) = 1 \ \ (20)$$ 
+and $\mathit{pk}^* = (u_1, u_2)$ is among the public keys and $m$ was not signed before.
+\begin{itemize}
+\item Case 1: $n =1$. In this case, the valid forgery has the form 
+$$(\mathit{pk}_1^{(1)} = u_1, \mathit{pk}_2^{(1)} = u_2, \sigma^*_{\mathit{PoP}} , m, \sigma^*).$$ 
+If index $\omega$ was guessed correctly by $\mathcal{B}$, then by definition of $H$ above $H(m) = v_1$; 
+moreover, by the definition of valid forgery, we also have  
+$$\Verisig(\goneBLS, m, \mathit{pk_1^*}= u_1 = \alpha \cdot \goneBLS, \sigma^*, \pi^*) =1. \ \ \ \ \ (30)$$ 
+Due to knowledge soundness of the argument system $\PSsig$ with respect to simulated oracle $H$, 
+$(30)$ implies that, with overwhelming probability,  
+$\sigma^* = \alpha \cdot H(m)$. But since $H(m) = v_1$, we conclude the value $z_1 = \alpha \cdot v_1$ 
+that $\mathcal{B}$ needs to output in the co-CDH game is $\sigma^*$, so $\mathcal{B}$ can indeed output $z_1$ 
+with the help of $\mathcal{A}_2$. This concludes the proof in this case.
+
+\item Case 2: $ n > 1$. To conclude the proof, $\mathcal{B}$ uses a similar technique 
+as in Theorem 15.2 part b in~\cite{dabo_book} for computing the first component $\sigma^*$ of signature 
+which corresponds to public key $\mathit{pk}^*$ by dividing out of $\mathit{asig_1}$ all the first components of every 
+individual signature (corresponding to every public key $\mathit{pk^{(i)}} \neq \mathit{pk^*}$). Note that  
+there are two types of signatures: type I corresponding to public key $\mathit{pk^{(i)}} =  \mathit{pk^*} = (u_1, u_2)$ and type II
+corresponding to all other public keys $\mathit{pk^{(i)}} \neq (u_1, u_2)$. For type I signature, $\mathcal{B}$
+only needs to know how many times the public key (and, consequently, the respective signature) is repeated in the output of $\mathcal{A}_2$. 
+For type II signatures, let $\alpha_i \in \mathbb{Z}_r$ be such that $\mathit{pk}_2^{(i)} = \alpha_i \cdot \gtwoBLS$. Due to $(10)$, this implies 
+that $\mathit{pk_1}^{(i)} = \alpha_i \cdot \goneBLS$ and 
+$\sigma_{\mathit{PoP}}^{(i)} = \alpha_i \cdot \Hpop(\mathit{pk_2}^{(i)})$. $\mathcal{B}$ can compute for a public key $\mathit{pk^{(i)}} \neq (u_1, u_2)$ 
+the corresponding signature's first component as $\sigma^{(i)} = \sigma_{\mathit{PoP}}^{(i)} - \delta_i \cdot \mathit{pk_1^{(i)}}$. It is clear that 
+$$\sigma^{(i)} = \sigma_{\mathit{PoP}}^{(i)} - \delta_i \cdot \mathit{pk_1^{(i)}} = \alpha_i \cdot v_1 + \alpha_i \delta_i \cdot \goneBLS - 
+\alpha_i \delta_i \cdot \goneBLS =  \alpha_i \cdot v_1  = \alpha_i \cdot H(m).$$
+\noindent Since $\sigma^{(i)}$ is a correct signature, it verifies $$e(\sigma^{(i)}, g_2) = e(H(m), \mathit{pk_2}^{(i)}) \ \ \ (40)$$ 
+Moreover, let $d$ be the number of repetitions of $\mathit{pk}^{*}$ in the output of $\mathcal{A}_2$. 
+If $s$ is the sum of all the signatures that $\mathcal{B}$ can compute 
+(i.e., for public keys different from $\mathit{pk}^{*}$), then from $(20)$ we obtain 
+$e(s,\gtwoBLS) = e(H(m), \sum_{i=1}^n \mathit{pk_2}^{(i)} - d \cdot \mathit{pk_2}^{*})$ and, together with $(40)$, this implies 
+$e(d \cdot \sigma^{*}, \gtwoBLS) = e(\mathit{asig} - s, \gtwoBLS) = e(H(m), \mathit{pk_2}^{*})^d$.
+Finally, using also the definitions of $H(m)$, $\mathit{pk_2}^{\ast}$ and $z_1$ we have 
+\begin{align*}
+& e(\mathit{asig}, \gtwoBLS) = e(s, \gtwoBLS) \cdot e(\mathit{asig} - s, \gtwoBLS) = e(s, \gtwoBLS) \cdot e(H(m), \mathit{pk_2}^{*})^d =  \\
+& = e(s, \gtwoBLS) \cdot e(z_1, \gtwoBLS)^{d} = e(s, \gtwoBLS) \cdot e(d \cdot z_1, \gtwoBLS).  
+\end{align*} 
+\noindent Hence, $ d \cdot \sigma^{*} = \mathit{asig} - s = d \cdot z_1$. The value $z_1$ that $\mathcal{B}$ 
+needs to output is computable as $d^{-1} \cdot (\mathit{asig} - s)$. 
+\end{itemize}
+\end{proof}
