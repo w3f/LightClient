@@ -1,4 +1,4 @@
-Blockchain systems rely on consensus among a number of participants, where the size of this number is important for decentralisation and the foundation of blockchain security. To know that a transaction is valid, one needs to follow the consensus of the blockchain. However, following consensus can become expensive in
+1Blockchain systems rely on consensus among a number of participants, where the size of this number is important for decentralisation and the foundation of blockchain security. To know that a transaction is valid, one needs to follow the consensus of the blockchain. However, following consensus can become expensive in
 terms of bandwidth, storage and computation. Depending on the consensus type, these challenges can be aggravated when the size of participants' set becomes bigger or when the participants' set changes frequently. Light clients (such as SPV clients in Bitcoin \cite{nakamoto2008bitcoin} or inter-blockchain bridge components that support interoperability) are designed to allow resource constrained users to follow consensus of a blockchain with
 minimal cost. We are interested in blockchains that use Byzantine agreement type consensus protocols, particularly proof of stake systems
 like Polkadot~\cite{polkadot}, Ethereum~\cite{ethereum}
@@ -23,7 +23,8 @@ The committee key  scheme generates a succinct proof that a particular subset of
 Using the committee key, the proof and the bitvector, one can verify that the corresponding subset of validators signed the message.
 Public keys or signatures are usually 100s of bits long and as a result, although the bitvector has length proportional to the number of validators, this scheme reduces the amount of
 data required by a factor of 100 times or more. We could instantiate our committee key scheme using any universal SNARK scheme and suitable commitment scheme.
-However, to avoid long prover times for large validator sets, we use optimised custom SNARKs. We have implemented this scheme
+However, to avoid long prover times for large validator sets, we use optimised custom SNARKs
+. We have implemented this scheme
 (Section~\ref{sec_implementation}) and it gives fast enough proving times for the use cases we consider: a prover with
 commodity hardware can generate these custom SNARK proofs in real time, i.e., as fast as the consensus generates instances of this problem.
 
@@ -55,7 +56,7 @@ protocol of the blockchain. Such light client systems would not be possible for 
 %\vspace{-0.2cm}
 \noindent In this section we review the impact of our scheme on bridge security. Blockchain bridges are protocols that allow value transfer between blockchains. Bridges have frequently been the target of attacks. We note that \$1.2 billion has been stolen in attacks on insecure bridges during first 8 months of 2022 alone ~\cite{elliptic_harmony,elliptic_nomad}. Of the top 10 crypto thefts of all times, \$1.6bn out of \$3.4bn come from bridge attacks \cite{elliptic_nomad}. These confirm that bridges have frequently been a weaker point, compared to the security of the blockchains themselves and they carry a lot of economical value.
 
-\noindent An ideal bridge would be as secure as the least secure of the two blockchains. The most secure bridges use in-chain light client systems, e.g., Cosmos IBC protocol~\cite{IBC_paper}, to achieve this. Each bridged chain follow the other chain's consensus on-chain. To simplify, we will consider an on-chain light client of chain B on chain A, although B will also have the same for A. If B's consensus and the on-chain logic of A are secure, then adversary cannot convince the logic of A that B decided some event that B's clients do not agree as decided. This translates to the adversary for example not being able to create value on A without having locked any value on B.
+\noindent An ideal bridge would be as secure as the least secure of the two blockchains. The most secure bridges use on-chain light client systems, e.g., Cosmos IBC protocol~\cite{IBC_paper}, to achieve this. Each bridged chain follow the other chain's consensus on-chain. To simplify, we will consider an on-chain light client of chain B on chain A, although B will also have the same for A. If B's consensus and the on-chain logic of A are secure, then adversary cannot convince the logic of A that B decided some event that B's clients do not agree as decided. This translates to the adversary for example not being able to create value on A without having locked any value on B.
 
 \noindent A main reason why bridges might not use this approach is efficiency. Smart contracts and other on-chain logic is an extremely resource constrained environment compared to browsers or phones that light clients might target. One approach for efficiency is to design B's consensus so that the light clients are cheaper, for example by reducing the validator numbers. Cosmos chains currently have 33-175 validators~\cite{CosmosValNYX},\cite{CosmosValHUB}. Many chains have many more, e.g., Ethereum's hundreds of thousands of validators, for more decentralisation and security. Alternatively, the light client can use threshold signature may be used however that means not having the same accountability guarantees and also limits validator numbers in practice, both discussed elsewhere.
 
@@ -75,11 +76,13 @@ protocol of the blockchain. Such light client systems would not be possible for 
 %The following paragraph should be commented out and changed in case of a conference submission.
 \paragraph{Structure} The paper is organised as follows.
 In Section~\ref{sec:sketch}, we sketch our proposed protocols and compare
-them to existing work. In Section~\ref{sec_prelims}, we give cryptographic
-preliminaries necessary for later sections. In Section~\ref{sec_apk_proofs}
-we describe one of our custom SNARKs and our committee key scheme. In
+them to existing work. In
 Section~\ref{sec_implementation} we give benchmarks for our custom SNARKs
-implementations. We conclude in Section~\ref{conclusions}. Our paper includes
+implementation.
+In Section~\ref{sec_prelims}, we give cryptographic
+preliminaries necessary for later sections. In Section~\ref{sec_apk_proofs}
+we describe one of our custom SNARKs and our committee key scheme.
+ We conclude in Section~\ref{conclusions}. Our paper includes
 an extensive appendix for more details.% as follows.
 %\vspace{-0.01in}
 \vspace{-0.25cm}

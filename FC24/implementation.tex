@@ -4,7 +4,7 @@ is open source and publicly available at \url{https://github.com/CCS23-anonymous
 
 %\vspace{-0.1cm}
 \noindent Table \ref{tab:benchmarks} gives the prover and verifier time for the two SNARK schemes (basic accountable and  packed accountable, see Section~\ref{sec:snarks}) with $v = n-1 = 2^{10}-1$, $v = n-1 = 2^{16}-1$ 
-and $v=n-1=2^{20}-1$ signers. The benchmarks were run on commodity hardware, with an 2.2 GHz i7 and 16GB RAM. Here $v$ is the maximum number of siigners and $n> v$ is the size of a multiplicative subgroup of the field(see Section~\ref{sec:lagrange}).\\
+and $v=n-1=2^{20}-1$ signers. The benchmarks were run on a Cascade lake Intel Xeon with 4 cores. Here $v$ is the maximum number of siigners and $n> v$ is the size of a multiplicative subgroup of the field(see Section~\ref{sec:lagrange}).\\
 
 %\begin{center}
 \begin{table*}[h!]
@@ -16,8 +16,8 @@ and $v=n-1=2^{20}-1$ signers. The benchmarks were run on commodity hardware, wit
  &  prover & verifier & prover & verifier &  prover & verifier \\
 \hline
 
-Basic Accountable & 564ms & 26ms & 22s & 46ms & 332s & 231ms \\
-Packed Accountable & 830ms & 29ms & 31s & 33ms & 447s & 57ms \\
+Basic Accountable & 431ms & 28ms & 15.4s & 23ms & 209s & 157ms \\
+Packed Accountable & 581ms & 16.9ms & 21.1s & 31ms & 292s & 19ms \\
 %Counting            & 761ms & 27ms & 31s & 30ms & 692s & 107ms \\
 \hline
 \end{tabular}
