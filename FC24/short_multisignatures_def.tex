@@ -27,7 +27,7 @@ auxiliary parameter $\mathit{aux_{\mathit{AS}}}$, outputs public protocol parame
 
 \item $((\mathit{pk},\mathit{\pi_{PoP}}),\mathit{sk}) \leftarrow \mathit{AS.GenKeypair}(\mathit{pp})$:
 a key pair generation algorithm that
-outputs
+outputs 
 a secret key $\mathit{sk}$,
 and the corresponding public key $\mathit{pk}$
 together with a proof of possession $\mathit{\pi_{PoP}}$ for the secret key.
@@ -90,10 +90,9 @@ and, additionally, \emph{perfect completeness} for aggregation defined below.
 signature scheme AS
 has perfect completeness for aggregation if, for every adversary $\mathcal{A}$
 \begin{align*}
-\mathit{Pr} & [\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 \ | \ \mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}),  ((\mathit{pk_i})_{i=1}^u, m, (\sigma_i)_{i=1}^{u}) \leftarrow \mathcal{A}(\mathit{\mathit{pp})} \ 
+\mathit{Pr} & [\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 \ | \ \mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}),  ((\mathit{pk_i})_{i=1}^u, m, (\sigma_i)_{i=1}^{u}) \leftarrow \mathcal{A}(\mathit{\mathit{pp})}, \\ 
 %& {\color{red} \forall i \in [u], \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i}, \pi_{PoP,i}) = 1, }\\
-\textit{such that} \\ 
-&\forall i \in [u], \mathit{AS.Verify}(\mathit{pp}, \mathit{pk_i}, m, \sigma_i) = 1, \mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp},  (\mathit{pk}_{i})_{i=1}^{u}), \mathit{asig} \leftarrow \mathit{AS.AggSigs}(\mathit{pp}, (\sigma_i)_{i=1}^u)] = 1.
+ &\forall i \in [u], \mathit{AS.Verify}(\mathit{pp}, \mathit{pk_i}, m, \sigma_i) = 1, \mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp},  (\mathit{pk}_{i})_{i=1}^{u}), \mathit{asig} \leftarrow \mathit{AS.AggSigs}(\mathit{pp}, (\sigma_i)_{i=1}^u)] = 1.
 \end{align*}
 
 %\noindent \textbf{Unforgeable Aggregatable Signature}

@@ -70,13 +70,12 @@ $\mathit{AS.Verify}$) is an aggregatable signature scheme if it satisfies \emph{
 AS has perfect completeness if for any message $m \in \{0,1\}^*$ and any 
 $u\in\mathbb{N}$ it holds that:
 \begin{align*}
-&\mathit{Pr} [\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig})=1 \  \wedge \ \\
-& \forall  i \in [u]\ \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i},\mathit{\pi_{\mathit{PoP},i}})=1\ |\\
-& \mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}), \\
-& ((pk_{i},\pi_{\mathit{PoP}, i}), sk_{i} ) \leftarrow \mathit{AS.GenerateKeypair}(\mathit{pp}),\ i=1,\ldots, u\\
-&\mathit{apk} \leftarrow \mathit{AggregateKeys}(\mathit{pp}, (\mathit{pk}_{i})_{i=1}^{u}), \\
-& \sigma_i \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk_i}, m),\ i=1,\ldots, u, \\
-& \mathit{asig} \leftarrow \mathit{AS.AggregateSignatures(\mathit{pp}, (\sigma_{i})_{i=1}^{u})}] = 1.
+\mathit{Pr} [&\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig})=1 \  \wedge \ 
+(\forall  i \in [u], \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i},\mathit{\pi_{\mathit{PoP},i}})=1) \ | \  \mathit{pp} \leftarrow \mathit{AS.Setup} (\mathit{aux_{\mathit{AS}}}), \\
+& \forall i \in [u], ((pk_{i},\pi_{\mathit{PoP}, i}), sk_{i} ) \leftarrow \mathit{AS.GenerateKeypair}(\mathit{pp}),
+\mathit{apk} \leftarrow \mathit{AggregateKeys}(\mathit{pp}, (\mathit{pk}_{i})_{i=1}^{u}), \\
+& \forall i \in [u], \sigma_i \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk_i}, m), 
+ \mathit{asig} \leftarrow \mathit{AS.AggregateSignatures(\mathit{pp}, (\sigma_{i})_{i=1}^{u})}] = 1.
 \end{align*}
 \noindent We note that an aggregatable signature scheme with perfect completeness implies the underlying signature scheme
 has perfect completeness. \\
@@ -84,12 +83,11 @@ has perfect completeness. \\
 \noindent \textbf{Perfect Completeness for Aggregation} An aggregatable signature scheme AS
 has perfect completeness for aggregation if, for every adversary $\mathcal{A}$
 \begin{align*}
-& \mathit{Pr}[\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 \ | \ \mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}), \\
-& ((\mathit{pk_i})_{i=1}^u, m, (\sigma_i)_{i=1}^{u}) \leftarrow \mathcal{A}(\mathit{\mathit{pp})} \ 
-\textit{such that} \ \forall i \in [u], \\
-&\mathit{AS.Verify}(\mathit{pp}, \mathit{pk_i}, m, \sigma_i) = 1, \\
-& \mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp},  (\mathit{pk}_{i})_{i=1}^{u}), \\
-&  \mathit{asig} \leftarrow \mathit{AS.AggSigs}(\mathit{pp}, (\sigma_i)_{i=1}^u)] = 1.
+\mathit{Pr}[&\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 \ | \ \mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}), 
+((\mathit{pk_i})_{i=1}^u, m, (\sigma_i)_{i=1}^{u}) \leftarrow \mathcal{A}(\mathit{\mathit{pp})}, \\
+ & \forall i \in [u], \mathit{AS.Verify}(\mathit{pp}, \mathit{pk_i}, m, \sigma_i) = 1, 
+ \mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp},  (\mathit{pk}_{i})_{i=1}^{u}), 
+ \mathit{asig} \leftarrow \mathit{AS.AggSigs}(\mathit{pp}, (\sigma_i)_{i=1}^u)] = 1.
 \end{align*}
 
 \noindent \textbf{Unforgeable Aggregatable Signature}
@@ -139,15 +137,15 @@ $\mathit{pp} \leftarrow  \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}})$,
 where $\ginn{1}$, $\sginn{1}$, $\ginn{2}$, $\sginn{2}$, $\gtinn$, $\epinn$ were defined in Section~\ref{sec:pairings} and 
 $\Hinn: \{0,1\}^* \rightarrow \ginn{2}$ and $\HPoP: \{0,1\}^* \rightarrow \ginn{2}$ are two hash functions. 
 The auxiliary parameter $\mathit{aux_{\mathit{AS}}}$ is such that there exists $N \in \mathbb{N}$, 
-$N$ is the first component of the vector $\mathit{aux_{\mathit{AS}}}$ and there exists a subgroup of size at least $N$ in the multiplicative group of $\mathbb{F}$, where $\mathbb{F}$ 
-is the base field of $\einn$, but also the size of the subgroup $\in O(N)$.
+$N$ is the first component of the vector $\mathit{aux_{\mathit{AS}}}$ and there exists a subgroup of size at least $N$ in the multiplicative group 
+of \ $\mathbb{F}$, where $\mathbb{F}$ is the base field of $\einn$, but also the size of the subgroup $\in O(N)$.
 
 \item $(\mathit{pk},\mathit{sk}, \pi_{\PoP}) \leftarrow \mathit{AS.GenKeypair}(\mathit{pp})$, where $\mathit{sk} \xleftarrow{\$} \mathbb{Z}_{r}^{*}$  
 and $\mathit{pk} = \mathit{sk} \cdot \sginn{1} \in \ginn{1}$ and $\pi_{\PoP} \leftarrow {\mathit{sk}} \cdot \HPoP(\mathit{pk})$ 
 and $r$ was defined in Section~\ref{sec:pairings} as the characteristic of the scalar field of $\einn$.
 
 \item $0/1 \leftarrow \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk}, \pi_{\PoP})$, where $\mathit{AS.VerifyPoP}$ outputs $1$ if 
-$$\epinn( \sginn{1}, \pi_{\PoP}) = \epinn(\mathit{pk}, \HPoP(\mathit{pk}))$$ holds and $0$ otherwise. Note that implicitly, as part of running \\
+$$\epinn( \sginn{1}, \pi_{\PoP}) = \epinn(\mathit{pk}, \HPoP(\mathit{pk}))$$ holds and $0$ otherwise. Note that implicitly, as part of running 
 $\mathit{AS.VerifyPoP}$, one checks that $\mathit{pk} \in \ginn{1}$ also holds.
 
 \item $\sigma \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk}, m)$: 
@@ -161,6 +159,6 @@ if $(\ast)$ holds, the algorithm $\mathit{AS.AggKeys}$ continues with the comput
 \item $\mathit{asig} \leftarrow \mathit{AS.AggSigs}(\mathit{pp}, (\sigma_i)_{i=1}^u)$, where $\mathit{asig}$ = $\sum_{i=1}^{u} \sigma_i$.  
 
 \item $0/1 \leftarrow  \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig})$, where $\mathit{AS.Verify}$ outputs $1$ if $\mathit{apk} \neq \bot$ and
-$\mathit{apk} \in \ginn{1}$ and \\ $\epinn(\mathit{apk}, \Hinn(m)) = \epinn(\sginn{1}, \mathit{asig})$; otherwise, it outputs $0$.
+$\mathit{apk} \in \ginn{1}$ and $\epinn(\mathit{apk}, \Hinn(m)) = \epinn(\sginn{1}, \mathit{asig})$; otherwise, it outputs $0$.
 \end{itemize}
 \end{construction}

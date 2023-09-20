@@ -6,7 +6,9 @@ a part of the witness for the respective relation. For our custom SNARKs, $\math
 since for our use case, $\mathit{PartInput}$ does handle a portion of the witness, this operation cannot be performed by the verifier for that relation. 
 Moreover, in our instantiation, $\mathit{PartInput}$ produces computationally binding commitment schemes that are opened by the prover. Both of these properties 
 are not explicitly part of our general definition for hybrid model SNARKs, but they are crucial and explicitly assumed and used 
-in proving the security for our compiler's second step (see Appendix~\ref{sec_two_step_compiler}).\\
+in proving the security for our compiler's second step (see Appendix~\ref{sec_two_step_compiler}). Intuitively, our commitments 
+are the counterpart CP-SNARK subcomponent of a that computes a commitment (to part of the witness) linking different CP-SNARKs together. 
+We do not need such a strong property of linking SNARKs; the commitments are used in our case for the efficiency they bring to the prover/ overall system.\\
 
 \noindent The two SNARKs we design in this work have access to a \emph{structured reference string} (srs) of the form 
 $(\{[\tau^i]_1\}_{i=0}^{d}$ , $\{[\tau^i]_2\}_{i=0}^{1})$ where $\tau$ is a random (and allegedly secret) value in $\mathbb{F}$ and $d$ 
@@ -62,7 +64,7 @@ adversaries $\mathcal{A}$, for all $\mathit{aux_{\mathit{SNARK}}} \in \mathcal{D
 &\mathit{Pr}[(x = (x_1, x_2), w) \in \mathcal{R} \wedge 1 \leftarrow \mathit{SNARK.Verify}(\mathit{srs_{vk}}, x =  (x_1, x_2), \pi, \mathcal{R}) \ | \\
 &\mathit{srs} \leftarrow \mathit{SNARK.Setup}(\mathit{aux_{\mathit{SNARK}}}), (\mathit{srs_{pk}}, \mathit{srs_{vk}})\leftarrow  \mathit{SNARK.KeyGen}(\mathit{srs}, \mathcal{R}), \\ 
 & (x_1, \mathit{state}_2) \leftarrow \mathit{SNARK.PartInput}(\mathit{srs}, \mathit{state}_1, \mathcal{R}), (x_2, \pi) \leftarrow \mathcal{A}(\mathit{srs}, \mathit{state}_2, \mathcal{R}), \\
-& w \leftarrow \mathcal{E}^{\mathcal{A}}(srs,\mathit{state_2}, \mathcal{R})]
+& w \leftarrow \mathcal{E}^{\mathcal{A}}(srs,\mathcal{R})]
 \end{align*}
 \noindent is overwhelming in $\lambda$, where by $\mathcal{E}^{\mathcal{A}}$ we denote the extractor $\mathcal{E}$ that has access to all of 
 $\mathcal{A}$'s messages during the protocol with the honest verifier. \\ 
@@ -80,7 +82,7 @@ adversaries only and by $\mathcal{E}^{\mathcal{A}}$ we denote the
 extractor $\mathcal{E}$ that has access to all of 
 $\mathcal{A}$'s messages during the protocol with the honest 
 verifier including the coefficients of the linear combinations of 
-group elements used by the adversary at any protocol step for outputting new group elements at the next step. Finally, the auxiliary input (i.e., $\mathit{state_2}$) is required to 
+group elements used by the adversary at any protocol step for outputting new group elements at the next step. Finally, the auxiliary input (i.e., $\mathit{state_1}$) is required to 
 be drawn from a ``benign distribution'' or else extraction may be 
 impossible~\cite{extractability_limits_1,extractability_limits_2}. \\
 
