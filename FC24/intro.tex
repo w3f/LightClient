@@ -16,22 +16,22 @@ security of PoS systems; second, it requires an interactive setup which becomes 
 
 \vspace{-0.2cm}
 \paragraph{Our Approach:} We introduce a {\em Committee Key Scheme} to succinctly prove that a subset of signers
-signed a message using a commitment to a list of all the signers' public keys. Our primitive is an extension of an aggregatable signature scheme and it proves a message by proving the correctness of an aggregate public key for the subset of signers.
-In more detail, the committee key scheme defines a committee key which is a commitment to all the signers' public keys. It generates a succinct proof that a particular subset of the list of public keys signed a message. The proof can be verified using the committee key.
-Because of the way the aggregatable signature scheme works, we need to specify the subset of signers which is done using a bitvector.
-Using the committee key, the proof and the bitvector, a light client can verify that the corresponding subset of validators signed the message.
- Public keys or signatures are usually 100s of bits long and as a result, although the bitvector has length proportional to the number of validators, this scheme reduces the amount of
+signed a message using a commitment to a list of public keys of all signers. Our primitive is an extension of an aggregatable signature scheme and it allows proving the correctness of an aggregate key of a subset of signers, which can be used to verify an aggregate signature.
+In more detail, the committee key scheme defines a committee key which is a commitment to all the signers' public keys and the subset of signers are specified using a bitvector.
+The committee key  scheme generates a succinct proof that a particular subset of the list of public keys signed a message. The proof can be verified using the committee key.
+%Because of the way the aggregatable signature scheme works,
+Using the committee key, the proof and the bitvector, one can verify that the corresponding subset of validators signed the message.
+Public keys or signatures are usually 100s of bits long and as a result, although the bitvector has length proportional to the number of validators, this scheme reduces the amount of
 data required by a factor of 100 times or more. We could instantiate our committee key scheme using any universal SNARK scheme and suitable commitment scheme.
 However, to avoid long prover times for large validator sets, we use optimised custom SNARKs. We have implemented this scheme
 (Section~\ref{sec_implementation}) and it gives fast enough proving times for the use cases we consider: a prover with
 commodity hardware can generate these custom SNARK proofs in real time, i.e., as fast as the consensus generates instances of this problem.
 
 \vspace{-0.2cm}
-\paragraph{Application: Accountable Light Client Systems} %To understand when and how our scheme described above is useful and compare it to other approaches, we return to what a light client is used for.
-Light clients allow resource constrained devices such as browsers or phones to follow a decentralised consensus protocols. A blockchain is also resource constrained and hence could benefit from a light client system. In this case a light client verifier (e.g, smart contracts on
+\paragraph{Accountable Light Client Application:} %To understand when and how our scheme described above is useful and compare it to other approaches, we return to what a light client is used for.
+Light clients allow resource constrained devices such as browsers or phones to follow decentralised consensus protocols. A blockchain is also resource constrained and hence could benefit from a light client system. In this case a light client verifier (e.g, smart contracts on
 Ethereum) allows building trustless bridges protocols between blockchains. % \cite{BridgeSOK}.
-Currently, computation and storage
-costs on existing blockchains are much higher than those in a browser on a modern phone. If such a bridge is responsible for securing assets with high total value, then the corresponding light client system which defines such a light client verifier must be secure as well as efficient. Using the primitives and techniques described in this work, one can design a light client system with the following properties: accountability, asynchronous safety and incrementability reviewed below.  \vspace{-0.2cm}
+Currently, computation and storage costs on existing blockchains are much higher than those in a browser on a modern phone. If such a bridge is responsible for securing assets with high total value, then the corresponding light client system which defines such a light client verifier must be secure as well as efficient. Using the primitives and techniques described in this work, one can design a light client system with the following properties: accountability, asynchronous safety and incrementability reviewed below.  \vspace{-0.2cm}
 %\begin{itemize}
 %\item
 \noindent\paragraph{Accountability}Our light client system is accountable, i.e., if the light client verifier is misled and the transcript of its communication is given to the network then one can identify a large
