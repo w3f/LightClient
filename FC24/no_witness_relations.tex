@@ -267,9 +267,11 @@ generalisation of the two NP relations just detailed above.
 
 \subsection{Our Instantiation for CKS}
 \label{sec:inst_committee_key}
-\noindent Given relations $\Rlacom$ and $\Racom$ described in short in Section~\ref{sec_custom_snarks} and %in full in Section~\ref{sec_two_step_compiler}
-, we present an instantiation for committee key scheme defined in Section~\ref{sec:committee_key}; this is used to build an accountable light client system %(Section~\ref{new_light_client})
-. 
+\noindent Given relations $\Rlacom$ and $\Racom$ described in short in Section~\ref{sec_custom_snarks}, 
+%in full in Section~\ref{sec_two_step_compiler}
+we present an instantiation for committee key scheme defined in Section~\ref{sec:committee_key}; 
+this is used to build an accountable light client system. %(Section~\ref{new_light_client})
+
 We instantiate $u$ and $v$ from Section~\ref{sec:committee_key} as $u = n-1$, ($n=|H|$ from 
 Section~\ref{sec:lagrange}) and $v \in \mathbb{N}, n-1 \leq v$, $v = \mathsf{poly}(\lambda)$, where $v$ is the 
 maximum number of validators.
@@ -281,26 +283,29 @@ maximum number of validators.
 \begin{enumerate}
 \item $\mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}= v+1)$ with  $\mathit{AS.Setup}$ part of Instantiation~\ref{insta:bls} and 
 $\ginn{1}$ part of $\mathit{pp}$ (see notation in Section~\ref{sec:bls});
-\item $\mathit{srs} \leftarrow \mathit{SNARK.Setup}(\mathit{aux_{\mathit{SNARK}}} = (v, 3v))$ with \\
+\item $\mathit{srs} \leftarrow \mathit{SNARK.Setup}(\mathit{aux_{\mathit{SNARK}}} = (v, 3v))$ with 
 $\mathit{srs}=([1]_{\indexoneout}, [\tau]_{\indexoneout}, \ldots, [\tau^{3v}]_{\indexoneout}, [1]_{\indextwoout}, [\tau]_{\indextwoout})$;
-\item $(\mathit{rs}_{\mathit{pk}}, \mathit{rs}_{\mathit{vk}}) \leftarrow \mathit{SNARK.KeyGen}(\mathit{srs}, \mathcal{R})$ with \\ 
-$(\mathit{rs}_{\mathit{pk}}, \mathit{rs}_{\mathit{vk}}) =  (([1]_{\indexoneout}, [\tau]_{\indexoneout}, \ldots, [\tau^{3v}]_{\indexoneout}), \\ 
+\item $(\mathit{rs}_{\mathit{pk}}, \mathit{rs}_{\mathit{vk}}) \leftarrow \mathit{SNARK.KeyGen}(\mathit{srs}, \mathcal{R})$ with 
+$(\mathit{rs}_{\mathit{pk}}, \mathit{rs}_{\mathit{vk}}) =  (([1]_{\indexoneout}, [\tau]_{\indexoneout}, \ldots, [\tau^{3v}]_{\indexoneout}), 
 ([1]_{\indexoneout}, [1]_{\indextwoout}, [\tau]_{\indextwoout}))$ where %$\mathcal{R} \in \{\Rlacom, \Racom \}$ is one of the accountable relations defined in the end of section~\ref{sec_two_step_compiler} and 
 the notation $[\ldots]_{\indexoneout}$ and $[\ldots]_{\indextwoout}$ was defined in Section~\ref{sec:pairings}.
 \end{enumerate}
 
-\item $\mathit{ck} \leftarrow \mathit{CKS_{\mathcal{R}}.GenCommitteeKey}(\mathit{rs_{pk}}, (\mathit{pk_i})_{i=1}^{n-1})$,\\ where 
-$\mathit{CKS_{\mathcal{R}}.GenCommitteeKey}$ first checks whether \\ $(\mathit{pk_i})_{i=1}^{n-1} \in \ginn{1}^{n-1}$; \\ if this does not hold, it outputs $\bot$; \\
+\item $\mathit{ck} \leftarrow \mathit{CKS_{\mathcal{R}}.GenCommitteeKey}(\mathit{rs_{pk}}, (\mathit{pk_i})_{i=1}^{n-1})$,where 
+$\mathit{CKS_{\mathcal{R}}.GenCommitteeKey}$ first checks whether $(\mathit{pk_i})_{i=1}^{n-1} \in \ginn{1}^{n-1}$; if this does not hold, it outputs $\bot$;
 otherwise, $\mathit{CKS_{\mathcal{R}}.GenCommitteeKey}$ continues as: \\
 \noindent Let $\mathbf{pkx} = (\mathit{pkx_{1}}, \ldots, \mathit{pkx_{n-1}})$, $\mathbf{pky} = (\mathit{pky_{1}}, \ldots, \mathit{pky_{n-1}})$, $\forall i \in [n-1]$, $\mathit{pk_i} = (\mathit{pkx_i}, \mathit{pky_i}) \in \mathbb{F}^{2}$. \\
-\noindent Let $pkx(X) = \sum_{i=0}^{n-2} \mathit{pkx_{i+1}} \cdot L_i(X)$, $pky(X) = \sum_{i=0}^{n-2} \mathit{pky_{i+1}} \cdot L_i(X)$. Let $[pkx]_{\indexoneout} = pkx(\tau) \cdot [1]_{\indexoneout}$, $[pky]_{\indexoneout} = pky(\tau) \cdot [1]_{\indexoneout}$. Output $\mathit{ck} = ([pkx]_{\indexoneout}, [pky]_{\indexoneout})$.\\
+\noindent Let $pkx(X) = \sum_{i=0}^{n-2} \mathit{pkx_{i+1}} \cdot L_i(X)$, $pky(X) = \sum_{i=0}^{n-2} \mathit{pky_{i+1}} \cdot L_i(X)$. \\
+\noindent Let $[pkx]_{\indexoneout} = pkx(\tau) \cdot [1]_{\indexoneout}$, $[pky]_{\indexoneout} = pky(\tau) \cdot [1]_{\indexoneout}$. \\
+Output $\mathit{ck} = ([pkx]_{\indexoneout}, [pky]_{\indexoneout})$.\\
 \noindent Note that $\mathbb{F}$ and $\{L_i(X)\}_{i=1}^{n-2}$ are as defined in Section~\ref{sec:lagrange}. 
 
-\item $\pi \leftarrow \mathit{CKS_{\mathcal{R}}.Prove}
-(\mathit{rs}_{\mathit{pk}}, \mathit{ck}, (\mathit{pk_i})_{i=1}^{n-1}, (\mathit{bit_i})_{i=1}^{n-1})$ 
-where $ \pi = (\pi_{SNARK}, \mathit{apk})$ and $\mathit{CKS_{\mathcal{R}}.Prove}$ calls \\ 
-$\mathit{apk} = \sum_{i=1}^{n-1} \mathit{bit_i} \cdot \mathit{pk_i} \leftarrow \mathit{AS.AggregateKeys}(\mathit{pp}, (\mathit{pk_i})_{i:\mathit{bit_i = 1}})$ 
-as defined in Instantiation~\ref{insta:bls} and \\ $\pi_{SNARK} \leftarrow \mathit{SNARK.Prove}(\mathit{rs_{pk}}, (x,w), \mathcal{R})$, \\ 
+\item $(\pi, \mathit{ck}) \leftarrow \mathit{CKS_{\mathcal{R}}.Prove}
+(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^{n-1}, (\mathit{bit_i})_{i=1}^{n-1})$ 
+where $ \pi = (\pi_{SNARK}, \mathit{apk})$ and \\
+$\mathit{ck} \leftarrow \mathit{CKS_{\mathcal{R}}.GenCommitteeKey}(\mathit{rs_{pk}}, (\mathit{pk_i})_{i=1}^{n-1}) $ and \\
+ $\mathit{apk} = \sum_{i=1}^{n-1} \mathit{bit_i} \cdot \mathit{pk_i} \leftarrow \mathit{AS.AggregateKeys}(\mathit{pp}, (\mathit{pk_i})_{i:\mathit{bit_i = 1}})$ 
+as defined in Instantiation~\ref{insta:bls} and \\ $\pi_{SNARK} \leftarrow \mathit{SNARK.Prove}(\mathit{rs_{pk}}, (x,w), \mathcal{R})$, 
 for $\mathcal{R} \in \{\Rlacom, \Racom \}$ where 
 \begin{equation*}
 \begin{cases}
@@ -312,11 +317,11 @@ where $\mathbf{b'}$ is the vector of field elements formed from blocks of size $
 $(\mathit{bit_i})_{i=1}^{n-1}||0$ and $\mathsf{block}$ is the highest power of 2 smaller than the size of a field element in $\mathbb{F}$. 
 
 \item $0/1 \leftarrow \mathit{CKS_{\mathcal{R}}.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m, \mathit{asig}, \pi, \mathbf{bitvector})$ 
-parses $\pi$ to retrieve $\pi_{\mathit{SNARK}}$ and $\mathit{apk}$ and it calls \\$\mathit{AS.Verify(\mathit{pp}, \mathit{apk}, m, \mathit{asig})}$ 
+parses $\pi$ to retrieve $\pi_{\mathit{SNARK}}$ and $\mathit{apk}$ and it calls $\mathit{AS.Verify(\mathit{pp}, \mathit{apk}, m, \mathit{asig})}$ 
 as defined in Instantiation~\ref{insta:bls} and it also calls $\mathit{SNARK.Verify}(\mathit{rs_{vk}}, x, \pi_{\mathit{SNARK}}, \mathcal{R})$ 
-(where $\pi_{\mathit{SNARK}}$, $x$ and $\mathcal{R}$ are as defined in the paragraph above with the only difference that $(\mathit{bit_i})_{i=1}^{n-1}$ 
+(where $\pi_{\mathit{SNARK}}$, $x$ and $\mathcal{R}$ are as defined in the item above with the only difference that $(\mathit{bit_i})_{i=1}^{n-1}$ 
 represents the first $n-1$ bits of $\mathbf{bitvector}$, padded with $0$s, if not sufficiently many exist in $\mathbf{bitvector}$); 
-it outputs $1$ if both algorithms output $1$ and it outputs $0$ otherwise.
+overall, the output is $1$ if both algorithms output $1$ and the output is $0$ otherwise.
 \end{itemize}
 \end{construction}
 \vspace{-0.07in}
