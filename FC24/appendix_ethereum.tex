@@ -1,10 +1,10 @@
 \section{Is our protocol applicable to Ethereum?} \label{sec:ethereum}
 
 We believe that our protocol could not feasibly be directly applied to Ethereum as it is without a hard fork, but it would be easy to apply it with changes that might feasibly be implemented, even with changes not specifically designed with our protocol in mind.
- Ethereum already uses BLS signatures on the BLS12-381 curve in consensus. To work with BLS12-381, Our protocol would use KZG commitments on the BW6-767 curve\cite{bw6767}.
- Because the base field of BL12-381 is not very 2-adic, a prover would need a more complicated FFT algorithm but this is feasible \cite{bw6767}. We also need an appropriately sized subgroup of the multiplicative field to use for our Lagrange basis commitments. An easy calculation gives the small prime factors $2,3^2,11,23,47,10177$ and 859267 for the order of the multiplicative group and any product of these larger than the number of validators gives a usable subgroup.
+ Ethereum already uses BLS signatures on the BLS12-381 curve in consensus. To work with BLS12-381, our protocol would use KZG commitments on the BW6-767 curve\cite{bw6767}.
+ Because the base field of BL12-381 is not highly 2-adic, a prover would need a more complicated FFT algorithm but this is feasible \cite{bw6767}. We also need an appropriately sized subgroup of the multiplicative field to use for our Lagrange basis commitments. An easy calculation gives the small prime factors $2,3^2,11,23,47,10177$ and 859267 for the order of the multiplicative group in BLS12-381 and any product of these larger than the number of validators gives a usable subgroup.
  
- Next we consider who constructs the the KZG commitment to the validators public keys. For the shortest light client proofs validators would construct and sign this commitment, which would require a change to the consensus logic. As an alternative, a smart contract could compute the commitments on chain.
+ Next we consider who constructs the KZG commitment to the validators public keys. For the shortest light client proofs validators would construct and sign this commitment, which would require a change to the consensus logic. As an alternative, a smart contract could compute the commitments on chain.
  This requires the EVM to have access to the active validator's public keys and would also require a precompile for BW6-767 operations to be feasible.
  We note that there have been many suggestions for adding elliptic curve operations for different curves to Ethereum (e.g. EIPs 2537,2538,3026[\cite{EIPs}) but few have been implemented so far.
  We would expect this to be the bottleneck for implementing our protocol on Ethereum.

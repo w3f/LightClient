@@ -60,13 +60,13 @@ the assumption/requirement that  $\mathit{State}_{\mathcal{R}_{\mathit{vec}, \ma
 $\mathcal{R}_{\mathit{vec}, \mathit{com}} \in \{\Rlacom, \Racom \}$ is fulfilled.}
 %\vspace{-0.1in}
 \begin{align*}
-& {\Rlacom} = \{(\mathbf{C} \in \mathcal{C}, \mathbf{bit} \in \mathbb{B}^n, \mathit{apk} \in \mathbb{F}^2; \mathbf{pk}) : 
-\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \\ & | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \} 
+ {\Rlacom} = \{ & (\mathbf{C} \in \mathcal{C}, \mathbf{bit} \in \mathbb{B}^n, \mathit{apk} \in \mathbb{F}^2; \mathbf{pk}) : \mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \\ 
+& \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \} 
 \end{align*}
 %\vspace*{-0.75cm}
 \begin{align*}
-& {\Racom}  = \{(\mathbf{C} \in \mathcal{C}, \mathbf{b'} \in \mathbb{F}_{|\block|}^{\frac{n}{\block}}, \mathit{apk} \in \mathbb{F}^2;\mathbf{pk}, \mathbf{bit}) : 
-\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \\ & | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \ \mathbf{bit} \in \mathbb{B}^n  \wedge b'_{j} = \sum_{i=0}^{\block -1}2^i \cdot \mathit{bit_{\block \cdot j + i}}, \forall j < \frac{n}{\block}  \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \} 
+ {\Racom}  = \{ & (\mathbf{C} \in \mathcal{C}, \mathbf{b'} \in \mathbb{F}_{|\block|}^{\frac{n}{\block}}, \mathit{apk} \in \mathbb{F}^2;\mathbf{pk}, \mathbf{bit}) : \mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \\ 
+& \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \ \mathbf{bit} \in \mathbb{B}^n  \wedge b'_{j} = \sum_{i=0}^{\block -1}2^i \cdot \mathit{bit_{\block \cdot j + i}}, \forall j < \frac{n}{\block}  \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \} 
 \end{align*}
 For completeness, we also include the full rolled out SNARK $\Pah$ for relation $\Racom$ in Section~\ref{sec:rolled_out} and we provide a comparison between PLONK universal 
 SNARK and our custom SNARKs in Section~\ref{suplementary_plonk_comparison}.  

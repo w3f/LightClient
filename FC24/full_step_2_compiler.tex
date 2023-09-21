@@ -2,7 +2,7 @@
 
 \noindent The type of NP relations we have worked with so far as well as the more general PLONK NP relation 
 (\cite{plonk}, Section 8.2) have vector of field elements as public inputs. Next we show that SNARKs 
-compiled using Step 1 can become, under certain assumption, SNARKs for a new type of NP relation 
+compiled using Step 1 can be re-casted, under certain assumption, SNARKs for a new type of NP relation 
 that specifically contains polynomial commitments as part of the input. Interpreting 
 our already compiled SNARKs as SNARKs for this new type of NP relation is essential for designing 
 accountable light client systems via committee key schemes (see instantiation~\ref{inst:cks} 
@@ -10,9 +10,8 @@ in Section~\ref{sec:inst_committee_key}).
 
 \noindent Let conditional NP relation $\mathcal{R}_{\mathit{vec}}^c$  be:
 \begin{align*}
-\mathcal{R}_{\mathit{vec}}^c = \{&(\mathbf{input_1} \in \mathbf{\mathcal{D}_1}, \mathbf{input_2} \in\mathbf{\mathcal{D}_2}; \mathbf{witness_1}): \\  
-&p_1(\mathbf{input_1}, \mathbf{input_2}, \mathbf{witness_1}) = 1 \ | \ c(\mathbf{input_1}) = 1 \ \wedge\ \\
-&\wedge \ p_2(\mathbf{input_1}, \mathbf{input_2}, \mathbf{witness_1}) = 1 \},
+\mathcal{R}_{\mathit{vec}}^c = \{&(\mathbf{input_1} \in \mathbf{\mathcal{D}_1}, \mathbf{input_2} \in\mathbf{\mathcal{D}_2}; \mathbf{witness_1}): p_1(\mathbf{input_1}, \mathbf{input_2}, \mathbf{witness_1}) = 1 \ |  \\ 
+& c(\mathbf{input_1}) = 1 \ \wedge \ p_2(\mathbf{input_1}, \mathbf{input_2}, \mathbf{witness_1}) = 1 \},
 \end{align*}
 \noindent where $\mathbf{input_1}$, $\mathbf{input_2}$ are two sets of public input vectors 
 belonging domains  $\mathcal{D}_1$, $\mathcal{D}_2$. $\mathbf{witness_1}$ is a set of witness vectors and $c$, $p_1$, $p_2$ are predicates. 
@@ -37,20 +36,20 @@ which are KZG poly commitments to $\mathit{Q_{1,\mathbf{input_1}}}(X), \ldots, \
 $(\mathit{Com_1}, \ldots, \mathit{Com_m})$ by $\mathbf{Com}(\mathbf{input_1})$ and we denote 
 by $\mathcal{C}$ the set of all $\mathit{KZG}$ poly commitments or vectors of such poly commitments. We also define the relation: 
 \begin{align*}
-\mathcal{R}_{\mathit{vec}, \mathit{com}}^c = \{& \mathbf{C} \in \mathcal{C}, \mathbf{input_2} \in \mathbf{\mathcal{D}_2}; \mathbf{witness_1}, \mathbf{witness_2}):  \\
-& p_1(\mathbf{witness_2}, \mathbf{input_2}, \mathbf{witness_1}) =1  \ |\ c(\mathbf{witness_2}) = 1  \ \wedge\  \\
-& \wedge\ p_2(\mathbf{witness_2}, \mathbf{input_2}, \mathbf{witness_1}) = 1\ \wedge \\
-& \wedge\ \mathbf{C} = \mathbf{Com}(\mathbf{witness_2})\}
+\mathcal{R}_{\mathit{vec}, \mathit{com}}^c = \{& \mathbf{C} \in \mathcal{C}, \mathbf{input_2} \in \mathbf{\mathcal{D}_2}; \mathbf{witness_1}, \mathbf{witness_2}): p_1(\mathbf{witness_2}, \mathbf{input_2}, \mathbf{witness_1}) =1  \ | \\
+& c(\mathbf{witness_2}) = 1  \ \wedge \ p_2(\mathbf{witness_2}, \mathbf{input_2}, \mathbf{witness_1}) = 1\ \wedge \ \mathbf{C} = \mathbf{Com}(\mathbf{witness_2})\}
 \end{align*}
 \noindent Finally, for $\mathbf{input_1}$ part of $\mathit{state_1}$, we define $\mathit{SNARK.PartInput}$:
 \begin{align*} 
 &\mathit{SNARK.PartInput}(\mathit{srs}, \mathit{state_1},\mathcal{R}_{\mathit{vec}, \mathit{com}}^c) \\  
-& \mathit{If \ }  c(\mathbf{input_1}) = 0 \textit{ then} \ \mathit{Return} \\
+& \mathit{If \ }  c(\mathbf{input_1}) = 0 \\
+& \ \ \ \ \ \ \ \ \mathit{Return} \\
 & \mathit{Else} \\
 & \ \ \ \ \textit{Compute via interpolation on } \mathscr{P}_{\mathit{vec}}  \textit{ range } 
 \mathit{Q_{1,\mathbf{input_1}}}(X), \ldots, \mathit{Q_{m, \mathbf{input_1}}}(X).\\
 & \ \ \ \ \mathbf{C} = (\mathit{Com}(Q_{1,\mathbf{input_1}}(X)), \ldots, \mathit{Com}(Q_{m,\mathbf{input_1}}(X))) \\
-& \ \ \ \ \mathit{state_2} =  \mathit{state_1} \cup \{ \mathbf{C} \} \textit{ then} \ \mathit{Return} (\mathit{state_2,  \mathbf{C}})
+& \ \ \ \ \mathit{state_2} =  \mathit{state_1} \cup \{ \mathbf{C} \} \\ 
+& \ \ \ \ \ \ \ \ \ \mathit{Return} (\mathit{state_2,  \mathbf{C}})
 \end{align*}
 
 \noindent With the above notation, \textbf{our compiler's Step 2 is:} \\
@@ -62,7 +61,8 @@ by $\mathcal{C}$ the set of all $\mathit{KZG}$ poly commitments or vectors of su
 is replaced with $\mathit{SNARK.PartInput}$ for relation $\mathcal{R}_{\mathit{vec}, \mathit{com}}^c$.
 \item $\mathit{SNARK.Prover}$ for relation $\mathcal{R}_{\mathit{vec}, \mathit{com}}^c$ is identical with 
 $\mathit{SNARK.Prover}$ for relation $\mathcal{R}^{c}_{\mathit{vec}}$ (as compiled using Step 1) with the appropriate 
-re-interpretation of the public inputs and witness.
+re-interpretation of the public inputs and witness, i.e., meaning that the algorithm remains the same but the witness and public input become those 
+for $\mathcal{R}_{\mathit{vec}, \mathit{com}}^c$.
 \item $\mathit{SNARK.Verifier}$ for relation $\mathcal{R}_{\mathit{vec}, \mathit{com}}^c$ is identical with 
 $\mathit{SNARK.Verifier}$ for relation $\mathcal{R}^{c}_{\mathit{vec}}$ (as compiled using Step 1) with the appropriate 
 re-interpretation of the public inputs and such that $\mathit{SNARK.Verifier}$ for $\mathcal{R}_{\mathit{vec}, \mathit{com}}^c$ does

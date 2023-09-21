@@ -36,7 +36,7 @@ on the result of the verification of the batched polynomial commitment scheme. \
 This technique is called linearisation and is described, at a high level, after Lemma 4.7 in PLONK. The existing description however covers only the 
 SNARK prover side and it does not detail the SNARK verifier side so in the following we cover that. \\
 
-\noindent By functionality, the vectors that are handled by the the verifier $\mathcal{V}_{poly}$ are 
+\noindent By functionality, the vectors that are handled by the verifier $\mathcal{V}_{poly}$ are 
 of two types: pre-processed vectors and public input vectors. These two types of vectors are used by $\mathcal{V}_{poly}$ 
 to obtain, via interpolation over the range on which the respective range polynomial protocol is defined, pre-processed polynomials 
 (as used in the definition~\ref{supplementary_poly_protocols_appendix} in Section~\ref{def_ranged_poly_protocol}, e.g., polynomial $aux(X)$ used in Section~\ref{sec_la}) and 

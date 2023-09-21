@@ -157,7 +157,7 @@ $\mathit{LC.seed} = \mathbf{Com}(\mathbf{pk_1})$.
 &\ \ \ \ \ \ \ \ \mathbf{\Sigma}(j) \leftarrow \mathit{AS.AggregateSignatures}(\mathit{pp}, (\mathbf{\sigma_j}(k))_{k=1}^v) \\ 
 %&\ \ \ \ \ \ \ \ \mathbf{x_j} = f_x(\mathbf{Com}(\mathbf{pk_j}), \mathbf{bit_j}, s,  \mathit{apk_{j}}, \mathcal{R}) ; \ \mathbf{w_j} = f_w( \mathbf{pk_j}, \mathbf{bit_j}, \mathcal{R}) \\
 %&\ \ \ \ \ \ \ \ \mathbf{\pi_{j}} = \mathit{SNARK.Prove}(\mathit{srs}_{pk} , (\mathbf{x_j}, \mathbf{w_j}), \mathcal{R})\\
-&\ \ \ \ \ \ \ \ (\mathit{\pi_{\mathit{SNARK},j}}, \mathit{apk_j}) \leftarrow \mathit{CKS_{\mathcal{R}}.Prove}(\mathit{rs}_{pk}, \mathbf{Com}(\mathbf{pk_{j}}), (\mathbf{pk_{j}}(k))_{k=1}^{v}, (\mathbf{bit_j}(k))_{k=1}^{v})\\
+&\ \ \ \ \ \ \ \ (\mathit{\pi_{\mathit{SNARK},j}}, \mathit{apk_j}, \mathbf{Com}(\mathbf{pk_{j}})) \leftarrow \mathit{CKS_{\mathcal{R}}.Prove}(\mathit{rs}_{pk}, (\mathbf{pk_{j}}(k))_{k=1}^{v}, (\mathbf{bit_j}(k))_{k=1}^{v})\\
 &\ \ \ \ \ \ \ \ \mathbf{x_j} = f_x(\mathbf{Com}(\mathbf{pk_j}), \mathbf{bit_j}, s,  \mathit{apk_{j}}, \mathcal{R}) \\
 %&\ \ \ \ \ \ \ \ \mathbf{\Pi}(j) = (\mathbf{x_j},\mathbf{\pi_{j}}); \ \mathbf{\Sigma}(j) = \mathit{\Sigma}_{j} \\
 &\ \ \ \ \ \ \ \ \mathbf{\Pi}(j) = (\mathbf{x_j}, \mathit{\pi_{\mathit{SNARK}, j}}) \\

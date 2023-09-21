@@ -12,17 +12,15 @@ $\Pa$ are:\\
 \begin{equation*}
 \begin{split}
 \Ra = & \{(\mathbf{pk} \in (\mathbb{F}^2)^{n-1},\mathbf{b'} \in \mathbb{F}_{|\block|}^{\frac{n}{\block}},
-\mathit{apk} \in \mathbb{F}^2; \mathbf{bit}) : \\ 
- & \mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \\
- & \wedge \mathbf{bit} \in \mathbb{B}^n  \wedge b'_{j} = \sum_{i=0}^{\block -1}2^i \cdot \mathit{bit_{\block \cdot j + i}}, \forall j < \frac{n}{\block} \} 
+\mathit{apk} \in \mathbb{F}^2; \mathbf{bit}) : \mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \\ 
+& \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \ \mathbf{bit} \in \mathbb{B}^n  \wedge b'_{j} = \sum_{i=0}^{\block -1}2^i \cdot \mathit{bit_{\block \cdot j + i}}, \forall j < \frac{n}{\block} \} 
 \end{split}
 \end{equation*}
 where $\mathbf{b'} = (b'_{0}, \ldots, b'_{{\frac{n}{\block}} -1})$.
 
 \noindent \textsf{New Polynomials as Computed by Honest Parties} 
 \begin{align*}
-aux(X) = & \sum_{i=0}^{n-1}aux_i \cdot L_i(X); c_{a}(X) \\
-& = \sum_{i=0}^{n-1} c_{a,i} \cdot L_i(X); acc_{a}(X)  =  \sum_{i=0}^{n-1} acc_{a,i}  \cdot L_i(X)
+aux(X) =  \sum_{i=0}^{n-1}aux_i \cdot L_i(X); \ c_{a}(X) = & \sum_{i=0}^{n-1} c_{a,i} \cdot L_i(X); \ acc_{a}(X)  =   \sum_{i=0}^{n-1} acc_{a,i}  \cdot L_i(X)
 \end{align*}
 
 \noindent where $aux_{i} = 1 \in \mathbb{F}$ if $i$ is divisible with $\block$ and $aux_{i} = 0 \in \mathbb{F}$ otherwise, $\forall i < n$ 
@@ -33,10 +31,8 @@ padded  with 0s  if necessary, to have an individual length of $\block$ bits. Wi
 
 \noindent \textsf{New Polynomial Identities} 
 \begin{align*}
-id_6(X) & =  c_{a}(\omega \cdot X) - c_{a}(X) \cdot L_{n-1}(X). \\
-& \cdot (2+ (\frac{r}{2^{\block -1}} -2)  \cdot aux(\omega \cdot X)) - (1 - r^{\frac{n}{\block}}) \\
-id_7(X) & = acc_{a}(\omega \cdot X) - acc_{a}(X) - b(X)\cdot c_{a}(X)  \\
-& +  \mathsf{sum} \cdot L_{n-1}(X),
+id_6(X) & =  c_{a}(\omega \cdot X) - c_{a}(X) \cdot L_{n-1}(X) \cdot (2+ (\frac{r}{2^{\block -1}} -2)  \cdot aux(\omega \cdot X)) - (1 - r^{\frac{n}{\block}}). \\
+id_7(X) & = acc_{a}(\omega \cdot X) - acc_{a}(X) - b(X)\cdot c_{a}(X) +  \mathsf{sum} \cdot L_{n-1}(X).
 \end{align*}
 
 \noindent where $\mathsf{sum}$ is a field element known to both $\mathcal{P}_{poly}$ and $\mathcal{V}_{poly}$ and will be defined below. \\ 

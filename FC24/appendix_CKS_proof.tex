@@ -4,9 +4,9 @@
 \begin{theorem} Given the hybrid model SNARK scheme secure for relation $\mathcal{R} \in \{ \Rlacom, \Racom\}$ as 
 obtained using our two-step compiler in Section~\ref{sec_two_step_compiler} and the aggregatable signature scheme $\mathit{AS}$ 
                      as per Instantiation~\ref{insta:bls} (which fulfils Definition~\ref{def:aggregate_signatures}, with the additional 
-                     specification that $\mathit{aux}_{\mathit{AS}} = v+1$ and choosing $v = n-1$, 
-if we assume that an efficient adversary (against soundness of) $\mathit{CKS}_{\mathcal{R}}$ outputs public keys only from the source group $\ginn{1}$,  
-then the committee key scheme $\mathit{CKS}_{\mathcal{R}}$ as per Instantiation~\ref{inst:cks} is secure with respect to Definition~\ref{def: committee_key}. 
+                     specification that $\mathit{aux}_{\mathit{AS}} = v+1$ and choosing $v = n-1$), 
+if we assume that an efficient adversary (against soundness of) $\mathit{CKS}_{\mathcal{R}}$ outputs public keys only from the source group 
+$\ginn{1}$, then the committee key scheme $\mathit{CKS}_{\mathcal{R}}$ as per Instantiation~\ref{inst:cks} is secure with respect to Definition~\ref{def: committee_key}. 
 \end{theorem}
 
 \begin{proof} We prove below the statement only for $\Rlacom$. The statement can be proven analogously for $\Racom$. \\
