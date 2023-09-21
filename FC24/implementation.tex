@@ -1,10 +1,10 @@
 %\vspace{-0.2cm}
-\noindent We implemented and benchmarked our Custom SNARK. The implementation allows us to evaluate the performance of our protocol and serve as prototype for future deployment. The implementation 
+\noindent We implemented and benchmarked our custom SNARKs. The implementation allows us to evaluate the performance of our SNARKs and serve as prototype for future deployment. The implementation 
 is open source and publicly available at \url{https://github.com/CCS23-anonymous/light-client}. It is written in Rust and uses the Arkworks library. \\
 
 %\vspace{-0.1cm}
 \noindent Table \ref{tab:benchmarks} gives the prover and verifier time for the two SNARK schemes (basic accountable and  packed accountable, see Section~\ref{sec:snarks}) with $v = n-1 = 2^{10}-1$, $v = n-1 = 2^{16}-1$ 
-and $v=n-1=2^{20}-1$ signers. The benchmarks were run on a 3.6GHz 16-core AMD Ryzen 9 5950X. Here $v$ is the maximum number of siigners and $n> v$ is the size of a multiplicative subgroup of the field(see Section~\ref{sec:lagrange}).\\
+and $v=n-1=2^{20}-1$ signers. The benchmarks were run on a 3.6GHz 16-core AMD Ryzen 9 5950X. Here $v$ is the maximum number of signers and $n> v$ is the size of a multiplicative subgroup of the field (see Section~\ref{sec:lagrange}).\\
 
 %\begin{center}
 \begin{table*}[h!]
@@ -30,9 +30,10 @@ Packed Accountable & 157ms & 12.5ms & 4.1s & 12.6ms & 58.0s & 14.2ms \\
 %\vspace{-0.2cm}
 \noindent These signer set sizes are approximately the range of the number of validators that we aimed our implementation at e.g. the Kusama blockchain (\url{https://kusama.network/}) has 1000 validators which is also the number that Polkadot is aiming for, while Ethereum 2 has about 348,000 validators and it has been suggested that there will be no more than $2^{19}$~\cite{ethresearch1}. \\
 
-\noindent At $v = n-1 = 1023$, the prover can generate a proof in any scheme in well under a second, which is short enough to generate a proof for every block in most prominent blockchains. Even for $v= n-1 =2^{20}-1$, the prover time is under 6.4 minutes, the time for an Ethereum 2 epoch, the period that validators sign messages for finality of the chain. For verification time, the basic accountable scheme is slower, considerably so for larger sets of signers. \\
+\noindent At $v = n-1 = 1023$, the prover can generate a proof in any scheme in well under a second, which is short enough to generate a proof for every block in most prominent blockchains. Even for $v= n-1 =2^{20}-1$, the prover time is under 1 minute, 
+when the time for an Ethereum 2 epoch is 6 minutes, i.e.,  the period that validators sign messages for finality of the chain. For verification time, the basic accountable scheme is slower, considerably so for larger sets of signers. \\
 
-\noindent  Table \ref{tab:operations} gives the number of operations the prover and verifier use. Table \ref{tab:proof-size} gives the proof constituents and also the total proof and input sizes in bits. The basic accountable scheme's verifier performance at large numbers is so slow because it includes $O(n)$ field operations, which dominate the running time, however at 1023 signers it gives the smallest size. The packed accountable scheme, which includes $O(n/\lambda)$ field operations, fairs better on the verification benchmarks for large signer sets. The prover is considerably slower for the latter scheme because it needs to do additional operations. At larger signer sizes, the proof size  is dominated by the bitfield.
+\noindent  Table \ref{tab:operations} gives the number of operations the prover and verifier use. Table \ref{tab:proof-size} gives the proof constituents and also the total proof and input sizes in bits. The basic accountable scheme's verifier performance at large numbers is slower because it includes $O(n)$ field operations, which dominate the running time, however at 1023 signers it gives the smallest size. The packed accountable scheme, which includes $O(n/\lambda)$ field operations, fairs better on the verification benchmarks for large signer sets. The prover is considerably slower for the latter scheme because it needs to do additional operations. At larger signer sizes, the proof size  is dominated by the bitfield.
 
 %\vspace{-0.1in}
 \begin{table*}[h!]

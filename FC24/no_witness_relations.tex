@@ -252,10 +252,10 @@ pair of succinct commitments and, $\mathbf{pk}$ becomes a witness for the result
 Thus, we design a two-step compiler to obtain SNARKs for relations with such properties. We are interested in relations $\Rlacom$ and $\Racom$, where 
 $\Rlacom$ defined below and $\Racom$ defined in Section~\ref{compiler_step_2}.
  
-\begin{align*}
-{\Rlacom} = \{(\mathbf{C} \in \mathcal{C}, \mathbf{bit} \in \mathbb{B}^n, \mathit{apk} \in \mathbb{F}^2; \mathbf{pk}) : 
-\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \} 
-\end{align*}
+$${\Rlacom} = \{(\mathbf{C} \in \mathcal{C}, \mathbf{bit} \in \mathbb{B}^n, \mathit{apk} \in \mathbb{F}^2; \mathbf{pk}) : 
+\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \},$$
+\noindent where $\mathbf{C}$ is a commitment from a set $\mathcal{C}$ of commitments and $\mathbf{Com}(\mathbf{pk})$ is a commitment to a specific vector, 
+namely $\mathbf{pk}$. 
 
 %\vspace*{-0.5cm}
 %\begin{align*}

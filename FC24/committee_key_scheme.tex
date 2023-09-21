@@ -37,9 +37,9 @@ $\mathit{aux_{\mathit{AS}}}$ chosen by the aggregated signature $\mathit{AS}$.
 given a proving key $\mathit{rs}_{\mathit{pk}}$ and a list of public keys, 
 outputs a committee key $\mathit{ck}$, where $u \leq v$.
 
-\item $\pi \leftarrow \mathit{CKS.Prove}(\mathit{rs}_{\mathit{pk}}, \mathit{ck}, (\mathit{pk_i})_{i=1}^u, (\mathit{bit_i})_{i=1}^u)$: a proving algorithm that, 
-given a proving key $\mathit{rs}_{\mathit{pk}}$, a committee key $\mathit{ck}$, a list of public keys and a bitvector $(\mathit{bit_i})_{i=1}^u \in \{0,1\}^u$,  
-outputs a proof $\pi$, where $u \leq v$.
+\item $(\pi, \mathit{ck}) \leftarrow \mathit{CKS.Prove}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^u, (\mathit{bit_i})_{i=1}^u)$: a proving algorithm that, 
+given a proving key $\mathit{rs}_{\mathit{pk}}$, a list of public keys and a bitvector $(\mathit{bit_i})_{i=1}^u \in \{0,1\}^u$,  
+outputs a proof $\pi$, where $u \leq v$; moreover, $\mathit{ck}$ is generated using  $\mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^u)$.
  
 \item $0/1 \leftarrow \mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m, \mathit{asig}, \pi, \mathbf{bitvector})$: a verification algorithm that, 
 given public parameters $\mathit{pp}$, a verification key $\mathit{rs}_{\mathit{vk}}$, a committee key $\mathit{ck}$, a message $m$, a 
@@ -64,9 +64,9 @@ it holds that:
 \mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m, \mathit{asig}, \pi, (\mathit{bit}_{i})_{i=1}^u) =1 | \\
 & (\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{rs}_{\mathit{pk}}) \leftarrow 
 \mathit{CKS.Setup}(v), 
-\mathit{ck} \leftarrow \mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk}_{i})_{i=1}^u)), \\
-& \pi \leftarrow \mathit{CKS.Prove}(\mathit{rs}_{\mathit{pk}}, \mathit{ck}, (\mathit{pk}_{i})_{i=1}^u, (\mathit{bit_i})_{i=1}^u), 
-\mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp}, (\mathit{pk}_{i})_{i:\mathit{bit_i}=1})]=1
+%\mathit{ck} \leftarrow \mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk}_{i})_{i=1}^u)), \\
+(\pi, \mathit{ck}) \leftarrow \mathit{CKS.Prove}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk}_{i})_{i=1}^u, (\mathit{bit_i})_{i=1}^u), \\
+& \mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp}, (\mathit{pk}_{i})_{i:\mathit{bit_i}=1})]=1.
 \end{align*} 
 \vspace{-0.08cm}
 \noindent \textbf{Soundness} A $\mathit{CKS}$ for aggregatable signatures \\
@@ -77,7 +77,7 @@ has soundness if for every efficient adversary $\mathcal{A}$ it holds that:
  \implies \ \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1  |  (\mathit{pp}, \mathit{rs}_{\mathit{vk}},\mathit{rs}_{\mathit{pk}}) \leftarrow \mathit{CKS.Setup}(v),\\
 & (\mathit{pk}_{i})_{i=1}^u, (\mathit{bit}_{i})_{i=1}^u, \mathit{asig}, \pi, m  \leftarrow \mathcal{A}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{rs}_{\mathit{pk}}), 
  \mathit{ck} \leftarrow \mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk}_{i})_{i=1}^u), \\
-& \mathit{apk} \leftarrow \mathit{AS.AggKeys}( \mathit{pp},( \mathit{pk}_{i})_{i:\mathit{bit_i}=1})] = 1 - \negl(\lambda)
+& \mathit{apk} \leftarrow \mathit{AS.AggKeys}( \mathit{pp},( \mathit{pk}_{i})_{i:\mathit{bit_i}=1})] = 1 - \negl(\lambda).
 \end{align*}
 \end{definition}
 
