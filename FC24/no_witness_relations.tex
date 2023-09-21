@@ -244,25 +244,29 @@ Corollary~\ref{corollary:keys_affine_comm}. \end{proof}
 \subsection{Our Custom SNARKs}
 \label{sec_custom_snarks}
 To design our accountable light client systems as introduced in Section~\ref{sec_intro_committee} and fully detailed in Section~\ref{new_light_client}, 
-we need to further refine and then compile relations $\Rla$ and $\Ra$ into appropriate SNARKs such that 
-the long public input $\mathbf{pk} \in ({\mathbb{F}^2})^{n-1}$ is replaced by a 
+we need to further refine and then compile relations $\Rla$ and $\Ra$ (introduced in Sections \ref{sec_la} and \ref{sec_a}, respectively) into appropriate 
+SNARKs such that the long public input $\mathbf{pk} \in ({\mathbb{F}^2})^{n-1}$ is replaced by a 
 pair of succinct commitments and, $\mathbf{pk}$ becomes a witness for the resulting refined relations. As far as we are aware, such a compiler does not exist. 
 Thus, we design a two-step compiler to obtain SNARKs for relations with such properties. We are interested in relations below. 
  \begin{align*}
-& {\Rlacom} = \{(\mathbf{C} \in \mathcal{C}, \mathbf{bit} \in \mathbb{B}^n, \mathit{apk} \in \mathbb{F}^2; \mathbf{pk}) : \\
-& \mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \} 
+{\Rlacom} = \{(\mathbf{C} \in \mathcal{C}, \mathbf{bit} \in \mathbb{B}^n, \mathit{apk} \in \mathbb{F}^2; \mathbf{pk}) : 
+\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \} 
 \end{align*}
-%\vspace*{-0.75cm}
+\vspace*{-0.5cm}
 \begin{align*}
-& {\Racom}  = \{(\mathbf{C} \in \mathcal{C}, \mathbf{b'} \in \mathbb{F}_{|\block|}^{\frac{n}{\block}}, \mathit{apk} \in \mathbb{F}^2;\mathbf{pk}, \mathbf{bit}) : \\
-& \mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \ \mathbf{bit} \in \mathbb{B}^n \ \wedge\\ 
-& \wedge b'_{j} = \sum_{i=0}^{\block -1}2^i \cdot \mathit{bit_{\block \cdot j + i}}, \forall j < \frac{n}{\block}  \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \} 
+ {\Racom}  = \{&(\mathbf{C} \in \mathcal{C}, \mathbf{b'} \in \mathbb{F}_{|\block|}^{\frac{n}{\block}}, \mathit{apk} \in \mathbb{F}^2;\mathbf{pk}, \mathbf{bit}) : 
+\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \\
+\vspace*{-0.75cm}
+ &\mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \ \mathbf{bit} \in \mathbb{B}^n \ \wedge\ \ 
+ b'_{j} = \sum_{i=0}^{\block -1}2^i \cdot \mathit{bit_{\block \cdot j + i}}, \forall j < \frac{n}{\block}  \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \} 
 \end{align*}
-The two-step compiler is described  
-in Section~\ref{sec_two_step_compiler}, with the first 
-step being the standard PLONK compiler %(Section 4.7 of 
-\cite{plonk} and the second step being amenable for compiling into SNARKs a %specific 
-generalisation of the two NP relations just detailed above.
+The two-step compiler is described in Section~\ref{sec_two_step_compiler}, with the first 
+step being the standard PLONK compiler (Section 4.7 of 
+\cite{plonk}) and the second step being amenable for compiling into SNARKs a specific 
+generalisation of the two NP relations just detailed above. In fact, the second compilation step is simply a re-casting of the already compiled SNARKs in first step 
+as SNARKs for new NP relations based on both commitments and vectors of field elements. 
+This re-casting is possible due to a new security proof that holds under mild conditions. 
+Overall, due to its generality, our two-step compiler may be of independent interest for other projects as well. Full details can be found in Appendix~\ref{sec_two_step_compiler}.
 \vspace{-0.05in}
 
 \subsection{Our Instantiation for CKS}
