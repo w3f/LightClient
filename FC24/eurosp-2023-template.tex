@@ -1,0 +1,143 @@
+% Please don't change anything in the documentclass below:
+\documentclass[compsoc, conference, a4paper, 10pt, times]{IEEEtran}
+
+% We recommend using these packages as below, but if you have a good reason and want to change these, you can.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+
+\begin{document}
+
+\title{Example Submission for Euro S\&P 2023}
+
+% Submissions should be anonymized. See the CFP for details on how to anonymize your paper, including any references to your own work.
+%\author{\em Anonymous Authors}
+
+% The author information is skipped here, but can be used to include author information in the publication.
+\iffalse
+\author{\IEEEauthorblockN{1\textsuperscript{st} Given Names Surname}
+\IEEEauthorblockA{\textit{Affiliation} \\
+City, Country \\
+email address or website URL}
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Given Names Surname}
+\IEEEauthorblockA{\textit{Affiliation} \\
+City, Country \\
+email address or website URL}
+\and
+\IEEEauthorblockN{3\textsuperscript{rd} Given Names Surname}
+\IEEEauthorblockA{\textit{Affiliation} \\
+City, Country \\
+email address or website URL}
+%% IEEE format can accommodate up to six authors this way
+}
+\fi
+
+\maketitle
+
+\begin{abstract}
+This document is a formatting template for preparing a submission to Euro S\&P 2023. We have done the hard part of creating a LaTeX template; all that is left to you to do is produce the innovative work, insightful presentation, and flowing prose. This template and the IEEEtran.cls file define the components of your paper (title, text, heads, etc.). IEEE prefers that you do not use symbols, special characters, or math in Paper Title or Abstract since their antiquated systems will have trouble processing these. You should use them with discretion to produce your submission the way you want readers to see it.
+\end{abstract}
+
+% Depending on how vigilant their paper processor is, IEEE may ask for these in your final paper, but we've heard about these amazing inventions called search engines that are able to index every word in your paper, so no need to include them in your submission unless you really want to.
+
+%\begin{IEEEkeywords}
+%component, formatting, style, styling, insert
+%\end{IEEEkeywords}
+
+\section{Introduction}
+This document was successfully compiled into a compliant pdf file using the default settings in \url{overleaf.com} (pdflatex with TexLive version 2022). It should also build with most local latex installations. The following files should be in your build directory: \texttt{IEEEtran.cls} and \texttt{eurosp-2023-template.tex}. 
+
+
+%It has historically also been built using the following local command:
+
+%\begin{center}{\small\texttt{latexmk -pdf
+%  eurosp-2023-template.tex}}
+%\end{center}
+
+%\noindent using Latexmk version 4.43a (5 Feb 2015),
+%which called pdfTeX 3.14159265-2.6-1.40.16 (TeX Live 2015). 
+
+
+We recommend writing your paper by creating a copy of the \texttt{eurosp-2023-template.tex} and renaming it as your paper (e.g., \texttt{main.tex}), and removing and replacing the template contents with your paper.
+
+Please do not change the \verb-\documentclass- options. In particular, submissions to Euro S\&P must stick with the A4 page format, \emph{not} US Letter. Please observe the conference page limits as documented in the Call for Papers on the conference website (\url{https://www.ieee-security.org/TC/EuroSP2023/}). The program chairs will reject papers without review that violate requirements stated in the Call for Papers. If you have questions, you can contact the program chairs at 
+\href{mailto:eurosp2023-pc-chairs@ieee-security.org}{eurosp2023-pc-chairs@ieee-security.org}.
+
+\section{Preparing your Paper}
+
+Do excellent work and think about the best way to present it to your target audience. We won't offer any actual advice on this here, but do recommend reading reading recent award-winning papers from Euro S\&P~\cite{fang2022costco,ahmadian2022dynamic}, and, if you are a PhD student, reading Luke Burns' advice carefully~\cite{burns2010snakes}.
+
+\subsection{Formatting Specifications}
+
+The IEEEtran class file is used to format your paper and style the text. All margins,  column widths, line spaces, and text fonts are prescribed; please do not  alter them. You may note peculiarities. For example, the head margin measures proportionately more than is customary. This measurement 
+and others are deliberate, using specifications that anticipate your paper as one part of the entire proceedings, and not as an independent document. Please do not revise any of the current designations, or play any tricks to try to squeeze in a bit more content within the page limit. You should edit your presentation to fit the required limits --- the page limit is there for a reason, to bound the effort required from reviewers and to be fair to all submitter, not meant as a challenge for skilled LaTeX hackers to overcome.
+
+\subsection{Advice on Figures and Tables}
+
+If you are generating figures as images, use a vector format such as PDF (instead of a fixed-resolution formal like PNG). Most graphing software (including pyplot) can produce PDF files as outputs. By using a vector-based image format, your images will contain detail if a viewer zooms in on them. You shouldn't, however, design your graphics to be unreadable when viewed at normal scale. You should choose colors for your graphs carefully and wisely, and consider color-blind readers~\cite{katsnelson2021colour}.
+
+LaTeX will attempt to place figures based on its typesetting heuristics, but it does not understand the content of your writing and will not know enough to ensure figures are in useful places for readers. Pay attention to figure and table placement and move things around and use the formatting parameters to try to have them appear as close as possible to where a reader would want them. In general, figures and tables should be at the top or bottom of columns (using \verb|[tb]| as the placement parameters). Large figures and tables may span across both columns (use \verb|table*| or \verb|figure*|). Figure captions should be below the figures; table heads should appear above the tables. Use \verb|\autoref{...}| to refer to your table and figures (as well as to sections or any other internal references). This makes the naming consistent and the full reference a clickable link.
+
+Make your tables less ugly by avoiding vertical bars and unnecessary lines. Instead of a table like \autoref{tab:ugly} (from the previous version of this template), use the \verb|booktabs| package to make your tables look more like \autoref{tab:beautiful}.
+
+\begin{table}[b]
+\caption{Table Type Styles}\label{tab:ugly}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Table}&\multicolumn{3}{|c|}{\textbf{Table Column Head}} \\
+\cline{2-4} 
+\textbf{Head} & \textbf{\textit{Table column subhead}}& \textbf{\textit{Subhead}}& \textbf{\textit{Subhead}} \\
+\hline
+copy& More table copy & 3.14 & 3.15 \\
+\hline
+\end{tabular}
+\label{tab1}
+\end{center}
+\end{table}
+
+\begin{table}[b]
+\caption{Better Table}\label{tab:beautiful}
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+ & \multicolumn{3}{c}{\textbf{Table Column Head}} \\
+\textbf{Table Head} & Table column subhead & Subhead & Subhead \\
+\midrule
+copy& More table copy & 6.28 & 6.29 \\
+\bottomrule
+\end{tabular}
+\label{tab1}
+\end{center}
+\end{table}
+
+\section*{Data Availability}
+
+Include a section explaining how the materials necessary to reproduce your work, including source code and data, are available. As per the CFP, if you are not able to release all of the necessary materials publicly under open source licenses, you should explain why this is not possible. As mentioned in the CFP, open science expectations are taken seriously and authors are required to satisfy commitments made in their submissions. Papers that fail to satisfy these commitments may be removed from the conference. 
+
+This section, and everything following, does not count within the body text page limit requirement (so this paper would satisfy a page limit of 1). For your Euro S\&P submission, we expect more useful content than what is in this paper, so you have 13 pages of body text. 
+
+\section*{Acknowledgements}
+For your anonymous submission, you shouldn't include any acknowledgements. For your final paper, you will probably want to profusely thank any sponsors who you want to continue to get funding from, regardless of how annoying their reporting forms may be. You can also use this opportunity to thank colleagues who tried to dissuade you from writing this paper, as well as give due thanks for your favorite taco stand. 
+The preferred spelling of the word ``acknowledgment'' in America is without  an ``e'' after the ``g''; in British English, the preferred spelling is ``acknowledgement''. Since this is a European conference, and neither America nor the United Kingdom are properly part of Europe anymore, you can choose whichever spelling you like (but don't blame us if IEEE complains about your choice, just add or remove the offending `e' as they prefer). 
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\appendices
+
+\section{Gory Details}
+
+Use appendices to provide details that are not necessary to understand the main paper, as well as additional results that don't fit into the flow of the main paper. Please don't use appendices to get around the page limit or hide content you hope reviewers won't read since many of our reviewers are extremely diligent and will actual read your appendices.
+
+\section{Boring Experiments}
+
+These results are too boring to be worth wasting space in the main paper on, but we put a lot of effort into running these experiments and want to show how hard we worked, so we're including them here (but hope no one will actually read this part).
+
+\end{document}
