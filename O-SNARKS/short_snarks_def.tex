@@ -1,5 +1,3 @@
-\section{O-SNARKs}
-\label{sec:short_snarks_defs}
 In the following, we remind the reader the definition of an O-SNARK from~\cite{O_SNARK} and we prove that 
 SNARKs such as PLONK~\cite{plonk}, Marlin~\cite{marlin} or Groth16~\cite{groth16} on which a flurry of 
 both under development or in production practical applications are based, fulfil this definition for a commonly occurying 
@@ -14,17 +12,18 @@ such that $h = \sum_ {i =1}^t s_i \cdot g_i$, where $(g_1,...,g_t)$ is the list 
 \noindent It is easy to see that the property above is equivalent to $A$ outputting  representation $(v_1, \ldots, v_l) \in \mathbb{Z}^{l}_p$ 
 such that $h = \sum_ {i =1}^l v_i \cdot g_i$, where $(g_1,...,g_l)$ is the list of all group elements that were given to $A$ as input. \\
 
+\noindent {\color{red}TO DO: Revise the entire next paragraph.}\\
 \noindent Let $\mathcal{R}$ be an NP relation, i.e., there exists a random access machine $M$ and a polynomial $t$ 
 such that  $(x,w) \in \mathcal{R}$ if and only if $M(x,w)$ outputs $1$ after at most $t(\lambda)$ steps and 
 $|x| \leq t(\lambda)$, $|w| \leq t(\lambda)$, where by $|x|$, $|w|$ we denote the length of the public input $x$ 
 and of the witness $w$, respectively. We denote $\mathcal{L}_{\mathcal{R}} = \{ x\  | \ \exists \ w,  (x, w) \in \mathcal{R} \}$.  
-Finally, by $|M|$ we denote the upper bound (in the security parameter $\lambda$) 
-of the time taken by $M$ to output $1$ on input $(x,w) \in \mathcal{R}$.\\
+Finally, by $|M|$ we denote the upper bound (in the security parameter $\lambda$) of the time taken by $M$ to output 
+$1$ on input $(x,w) \in \mathcal{R}$.\\
 
 \noindent Let $\mathbb{O} = \{ \mathcal{O} \}_{i \in \mathcal{I}}$ be a family of oracles. We denote by $\mathcal{O} \leftarrow \mathbb{O}$ 
 the process of sampling an oracle $\mathcal{O}$ from the family $\mathbb{O}$ according to some (possibly probabilistic) process.
 $\mathbb{O}$ can be a random oracle family or a signing oracle corresponding to a signature scheme. For any oracle family 
-$\mathbb{O}$, we define an O-SNARK $\Pi$ for $\mathbb{O}$ as follows~\cite{O_SNARK}. \\
+$\mathbb{O}$, we define an O-SNARK $\Pi$ for $\mathbb{O}$ as follows~\cite{O_SNARK}. {\color{red} TO DO: Clarify if the next definition is inspired by or identical to the source mentioned!} \\
 
 \begin{comment}
 %\begin{definition}[(O-)SNARKs]
@@ -55,23 +54,25 @@ $\mathbb{O}$, we define an O-SNARK $\Pi$ for $\mathbb{O}$ as follows~\cite{O_SNA
 %\end{definition} 
 \end{comment}
 
-\begin{definition}[$\mathcal{Z}$-auxiliary input (O-)SNARK (for oracle family $\mathbb{O}$)]
+\begin{definition}[$\mathcal{Z}$-auxiliary input (O-)SNARK for oracle family $\mathbb{O}$]
 \label{def:osnarks}
 %A succinct non-interactive argument of knowledge (SNARK) for a relation $\mathcal{R}$ is a triple of algorithms 
-A $\mathcal{Z}$-auxiliary input with oracle access succinct non-interactive argument of knowledge for a relation $\mathcal{R}$ 
+A $\mathcal{Z}$-auxiliary input succinct non-interactive argument of knowledge for a relation $\mathcal{R}$ and with oracle access to oracle family $\mathbb{O}$
 is a triple of algorithms $\Pi=(\mathsf{Gen}, \mathsf{Prove}, \mathsf{Verify})$ working as follows:
 \begin{itemize}
 \item $\mathsf{Gen}(1^{\lambda},\mathcal{R}) \rightarrow \mathsf{crs}:$ 
 on input a security parameter $\lambda \in \mathbb{N}$, the generation algorithm outputs
 a common reference string $\mathsf{crs} = (\mathit{prs},\mathit{vrs})$ 
-consisting of a public pair of prover reference string $\mathit{prs}$ and a verification state $\mathit{vrs}$;
-\item $\mathsf{Prove}(\mathsf{crs}, x, w, \mathcal{R}) \rightarrow \pi:$ the proving algorithm takes as input 
-a common reference string $\mathsf{crs}$ and a pair $(x,w) \in \mathcal{R}$ and returns a proof $\pi$. 
-\item $\mathsf{Verify}(\mathsf{crs}, x, \pi, \mathcal{R}) \rightarrow 0/1:$ the verification algorithm takes as input 
-a common reference string $\mathsf{crs}$, some public input $x$ and an alleged proof $\pi$ and if it accepts, 
+consisting of a public pair of prover reference string $\mathit{prs}$ and a verification state $\mathit{vrs}$ {\color{red} TO DO Verification state or verification reference string?};
+\item $\mathsf{Prove}(\mathsf{prs}, x, w, \mathcal{R}) \rightarrow \pi:$ the proving algorithm takes as input 
+a prover reference string $\mathsf{crs}$ and a pair $(x,w) \in \mathcal{R}$ and returns a proof $\pi$. 
+\item $\mathsf{Verify}(\mathsf{vrs}, x, \pi, \mathcal{R}) \rightarrow 0/1:$ the verification algorithm takes as input 
+a verification reference string $\mathsf{vrs}$, some public input $x$ and an alleged proof $\pi$ and if it accepts, 
 it outputs 1 and if it rejects, it outputs 0. 
 \end{itemize}
-\noindent that fulfils perfect completeness, succinctness and (oracle access) adaptive knowledge soundness (for oracle family $\mathbb{O}$) as defined below.
+\noindent that fulfils perfect completeness, succinctness and oracle access adaptive knowledge soundness for oracle family 
+$\mathbb{O}$ as defined below.
+\noindent {\color{red} TO DO decide on use of $\mathsf{crs}$ or $\mathsf{prs}$ as parameter for $\mathsf{Prove}$; same for $\mathsf{Verify}$.}
 
 \paragraph{Perfect completeness:} For every $(x,w) \in \mathcal{R}$ we have
 $$\mathit{Pr}[ \mathsf{Verify}(\mathsf{crs}, x, \pi, \mathcal{R})=1 \  | \  \mathsf{Gen}(1^{\lambda},\mathcal{R}) \rightarrow \mathsf{crs} \ \wedge \  \mathsf{Prove}(\mathsf{crs}, x, w, \mathcal{R}) \rightarrow \pi ] = 1. $$
@@ -79,7 +80,9 @@ $$\mathit{Pr}[ \mathsf{Verify}(\mathsf{crs}, x, \pi, \mathcal{R})=1 \  | \  \mat
 \paragraph{Succinctness:} For every large enough security parameter $\lambda \in \mathbb{N}$ 
 and every $x \in \mathcal{L}_{\mathcal{R}}$, we have that 
 $\mathsf{Gen}$ runs in $\mathsf{poly}(\lambda)$ time, $\mathsf{Prove}$ runs in $\mathsf{poly}(\lambda + |M|+ |x|)$ time,  
-$\mathsf{Verify}$ runs in $\mathsf{poly}(\lambda + |x|)$ time and an honestly generated proof has size $\mathsf{poly}(\lambda)$. 
+$\mathsf{Verify}$ runs in $\mathsf{poly}(\lambda + |x|)$ time and an honestly generated proof has size $\mathsf{poly}(\lambda)$. \
+{\color{red} TO DO is this the definition of succinctness that we want? Is this not too relaxed? To replace $\mathsf{poly}$ by $\mathsf{polylog}$?}
+
 \paragraph{Adaptive knowledge soundness:} Consider the following experiment for security 
 parameter $\lambda \in \mathbb{N}$, adversary $\mathcal{A}$, extractor $\mathcal{E}_{\mathcal{A}}$, auxiliary 
 input generator $\mathcal{Z}$ :\\
@@ -95,6 +98,7 @@ for every non-uniform oracle prover $\mathcal{A}$ making at most
 $Q(\lambda) = \mathsf{poly}(\lambda)$ queries there exists a non-uniform extractor $\mathcal{E}_{\mathcal{A}}$ 
 and a negligible function $\mathsf{negl}(\lambda)$ such that 
 $$\mathsf{Pr}[\mathit{AddaptPoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}) \implies  1]\ \leq \mathsf{negl}(\lambda).$$
+\noindent{\color{red} TO DO Do we want to add at all this variant? Is this variant fully correct? Is it as per definition introduced by Dario?}
 
 \paragraph{Oracle-access adaptive knowledge soundness for oracle family $\mathbb{O}$:} Consider the following experiment for security 
 parameter $\lambda \in \mathbb{N}$, adversary $\mathcal{A}$, extractor $\mathcal{E}_{\mathcal{A}}$, auxiliary 
@@ -106,11 +110,11 @@ input generator $\mathcal{Z}$ and oracle family $\mathbb{O}$:\\
 & if \ \mathsf{Verify}(\mathsf{crs}, y, \pi) = 1 \wedge (y,w) \in R \ return  \ 1 \\
 & else \ return \ 0
 \end{align*}
-\noindent where $\mathsf{qt} = \{q_i, \mathcal{O}(q_i)\}$ is the transcript of all the oracle queries and answers made and received by 
+\noindent where $\mathsf{qt} = \{q_i, \mathcal{O}(q_i)\}$ is the transcript of all the $\mathcal{O}$ oracle queries and answers made and received by 
 $\mathcal{A}$ during its execution. $\Pi$ satisfies oracle-access adaptive proof of knowledge with respect to oracle family  $\mathbb{O}$ and auxiliary 
 input from $\mathcal{Z}$ if for every non-uniform oracle prover $\mathcal{A}^{\mathcal{O}}$  
-making at most $Q(\lambda) = \mathsf{poly}(\lambda)$ queries there exists a non-uniform extractor $\mathcal{E}_{\mathcal{A}}$ 
-and a negligible function $\mathsf{negl}(\lambda)$ such that 
+making at most $Q(\lambda) = \mathsf{poly}(\lambda)$ queries to oracle $\mathcal{O}$ there exists a non-uniform extractor 
+$\mathcal{E}_{\mathcal{A}}$ and a negligible function $\mathsf{negl}(\lambda)$ such that 
 $$\mathsf{Pr}[\mathit{OAddaptPoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}, \mathcal{O}) \implies  1]\ \leq \mathsf{negl}(\lambda).$$ 
 \end{definition} 
 
@@ -119,9 +123,11 @@ concrete examples and counterexamples introduced at the end of Section 5.2.1.
 
 \begin{definition}[AGM Respecting Oracles]
 \label{def:agm_oracles}
-Let $\mathbb{G}$ be a cyclic group of prime order $p$. We say that a family of oracles $\mathbb{O}$ is AGM respecting relative to 
-$\mathbb{G}$ if the probability of any oracle $\mathcal{O} \in \mathbb{O}$ outputting an element of $\mathbb{G}$ or outputting 
-an element which can be transformed via an efficient algorithm into an element of $\mathbb{G}$ is $0$. 
+Let $\{\mathbb{G}_{i}\}_{i  \in I}$ be a set of cyclic groups of prime orders $\{p_i\}_{i \in I}$, respectively. 
+We say that a family of oracles $\mathbb{O}$ is AGM respecting relative to 
+$\{\mathbb{G}_{i}\}_{i  \in I}$ if the probability of any oracle $\mathcal{O} \in \mathbb{O}$ outputting an element of 
+$\{\mathbb{G}_{i}\}_{i  \in I}$ or outputting an element which can be transformed via an efficient algorithm into an element 
+of $\{\mathbb{G}_{i}\}_{i  \in I}$ is $0$. 
 \end{definition}
 
 \begin{comment}
@@ -139,8 +145,11 @@ input SNARK $\Pi$ secure in the AGM model with respect to $\mathbb{G}$ is an O-S
 
 \begin{theorem}[O-SNARKS for AGM Respecting Oracles]
 \label{the:when_osnarks} 
-Let $\mathbb{G}$ be a cyclic group of prime order $p$ and let $\mathbb{O}$ be an AGM respecting oracle family relative to $\mathbb{G}$ 
-as per Definition~\ref{def:agm_oracles}. If $\Pi$ is a $\mathcal{Z}$-auxiliary input SNARK secure in the AGM model for any benign 
+%Let $\mathbb{G}$ be a cyclic group of prime order $p$ and let $\mathbb{O}$ be an AGM respecting oracle family relative to $\mathbb{G}$ 
+%as per Definition~\ref{def:agm_oracles}.
+Let $\{\mathbb{G}_{i}\}_{i  \in I}$ be a set of cyclic groups of prime orders $\{p_i\}_{i \in I}$, respectively, and let $\mathbb{O}$ be an AGM 
+respecting oracle family relative to $\{\mathbb{G}_{i}\}_{i  \in I}$ as per Definition~\ref{def:agm_oracles}.
+ If $\Pi$ is a $\mathcal{Z}$-auxiliary input SNARK secure in the AGM model for any benign 
 distribution $\mathcal{Z}$, then $\Pi_{\mathbb{O}}$ which follows $\Pi$ with the exception that the prover has oracle access to $\mathbb{O}$, 
 is a $\mathcal{Z}$-auxiliary input O-SNARK for $\mathbb{O}$.
 \end{theorem}

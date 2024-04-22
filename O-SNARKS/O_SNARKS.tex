@@ -2,12 +2,14 @@
 %\pagestyle{plain}
 
 \documentclass[10pt]{article} 
+\usepackage{hyperref}   
 \usepackage[
     type={CC},
     modifier={by-nc-sa},
     version={3.0},
 ]{doclicense}
 
+%\usepackage{hyperref}   
 \usepackage{authblk}
 \usepackage[toc,page]{appendix}
 \usepackage[utf8]{inputenc}     
@@ -17,6 +19,7 @@
 \geometry{margin=1.08in} 
 %\usepackage{numdef}
    
+
 \usepackage{url}   
 %\usepackage[hyphen]{url}
 \usepackage{xspace}
@@ -24,7 +27,6 @@
 \usepackage{amsmath,amsthm}
 \usepackage{amsfonts}
 \usepackage{amssymb} %\therefore
-\usepackage{hyperref}
 \usepackage{cryptocode}
 \usepackage{framed} 
 % \usepackage[parfill]{parskip} % activate to begin paragraphs with an empty line rather than an indent
@@ -199,7 +201,7 @@ performed on the elliptic curve on which a SNARK prover runs. Our main result sh
 with AGM respecting oracles. On one hand, from a theoretical perspective, AGM respecting oracles is a wide class 
 which includes oracles often used when modelling practical applications. On the other hand, via a concrete example, 
 we shed more light on the subtleties regarding where and how O-SNARK security is useful for complex real-world applications.
-     
+    
 \section{Introduction} \label{sec_intro}
 \input{intro.tex}
 
@@ -209,19 +211,20 @@ we shed more light on the subtleties regarding where and how O-SNARK security is
 %\input{short_multisignatures_def}
 %\input{multisignatures_def}
 
-%\input{conditional_NP_relations}
+\input{conditional_NP_relations}
+\section{O-SNARKs} \label{sec:short_snarks_defs}
 \input{short_snarks_def}
 %\input{snarks_def}
 %\input{poly_proto_poly_comm}
 %\input{lagrange_bases}
 
-\section{A Fully Succinct Public Keys Aggregation Argument}\label{sec_apk_proofs}
+\section{A Fully Succinct Public Keys Aggregation Argument} \label{sec_apk_proofs}
 \input{example.tex}
 
 \section{Implementation} \label{sec_implementation}
 \input{implementation}
 
-\section{Conclusions}\label{conclusions}
+\section{Conclusions} \label{conclusions}
 \input{conclusions}
 
 \bibliography{bibliography} 
