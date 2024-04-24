@@ -1,62 +1,70 @@
 Assume a set $S$ of public keys instantiated by points on a pairing-friendly elliptic curve and assume polynomial commitments $C_{S,x}$ and $C_{S,y}$ 
-to the vectors of $x$ and $y$ affine coordinates, respectively, of the public keys in $S$. In the following, we construct 
+to the vectors of $x$ and $y$ of affine coordinates, respectively, of the public keys in $S$. In the following, we construct 
 a \emph{counting SNARK} which allows a prover to convince an efficient verifier that an alleged 
-aggregated public key has been computed correctly as an aggregate (i.e., sum) of a subset $U$ of the public keys in $S$, 
+aggregated public key has been computed correctly as an aggregate (i.e., a sum) of a subset $U$ of the public keys in $S$, 
 when $C_{S,x}$ and $C_{S,y}$ have been given as inputs. Additionally, our counting SNARK ensures that the alleged 
 aggregated public key, in turn, is a scalar product between the entire set of public keys in $S$ and a \emph{bitvector} with one bit associated to each public key 
 for signalling the inclusion or omission of the respective public key in the subset $U$.  
-{\color{red} We finally mention how to transform the counting SNARK into a SNARK for building non-accountable light client systems.} \\
+{\color{blue} TO DO We conclude this section by mentioning how to transform the counting SNARK into a SNARK for building non-accountable light client systems.} \\
 
-\noindent To compile our desired SNARK, we proceed as follows: in 
-Section~\ref{sec_vt} we define vector-based conditional NP relations $\Rvt$ (i.e., counting) and we design a 
-ranged polynomial protocol for this relation. The ranged polynomial protocol notion originates in~\cite{plonk}; 
-we give a reminder of it in Section~\ref{supplementary_poly_protocols_appendix} including a refinement introduced in~\cite{LC_paper}.  
-In Section~\ref{sec:interesting} we use the two-steps PLONK-based compiler introduced in~\cite{LC_paper} which is necessary to compile the counting 
-ranged polynomial protocol into an O-SNARK for an NP relation based on mixed vector and pair of polynomial commitments; 
-we denote this relation by $\Rvtcom$. \\
+\noindent To compile our desired SNARK, we proceed as follows: in Section~\ref{sec_vt}, we define vector-based 
+conditional NP relations $\Rvt$ (i.e., counting) and we design a ranged polynomial protocol $\Rvt$ for this relation. 
+The ranged polynomial protocol notion originates in~\cite{plonk}; we give a reminder of it in 
+Appendix~\ref{supplementary_poly_protocols_appendix} including a refinement introduced in~\cite{LC_paper}. In 
+Section~\ref{sec:interesting}, we use the two-steps PLONK-based compiler introduced in~\cite{LC_paper} which is 
+necessary to compile the counting ranged polynomial protocol $\Rvt$ into an O-SNARK for an NP relation based on mixed 
+vector and pair of polynomial commitments; we denote this relation by $\Rvtcom$. \\
 
-\noindent To start with, we define our vector based counting NP relation over $\mathbb{F}$, i.e., the base field of a pairing friendly 
+\noindent To start with, we define our vector based counting NP relation over $\mathbb{F}$ which is the base field of a pairing friendly 
 elliptic curve $\einn$. Our SNARK prover's circuit is defined as well over $\mathbb{F}$ as the scalar field of a second pairing friendly elliptic 
 curve $\eout$. The vector of public keys, which is part of the public input for $\Rvt$ and is denoted by 
 $\mathbf{pk} = (\mathit{pk_0}, \ldots, \mathit{pk_{n-2}})$, is a vector of pairs with each component in $\mathbb{F}$. 
-This vector has size $n-1$, where $n$ is the order of a group $H$ defined below. For $\Rvt$ we denote 
-the $n$ components bitvector by $\mathbf{bit} = (\mathit{bit_0}, \ldots, \mathit{bit_{n-1}})$ 
-(meaning that each component belongs to the set $\{0,1\} \subset \mathbb{F}$). 
-Each bit signals the inclusion (or exclusion) of the index-wise corresponding public keys 
-into the aggregated public key $\mathit{apk}$. The $n$-th component $\mathit{bit_{n-1}}$ does not correspond to any public key, 
-but, as will become clear in the following, has been included for easier design of constraints. \\ 
+This vector has size $n-1$, where $n$ is the order of a group $H$ defined below. For $\Rvt$, we denote by $\mathbf{bit}$ a bitvector with 
+$n$ components where $\mathbf{bit} = (\mathit{bit_0}, \ldots, \mathit{bit_{n-1}})$, meaning that each component $\mathit{bit_i}$ belongs 
+to $\mathbb{B} \subset \mathbb{F}$). Each bit $\mathit{bit_i}$ signals  whether the index-wise corresponding public key $(\mathit{pk_i}$ 
+is aggregated (i.e., summed in) or not into the aggregated public key $\mathit{apk}$. The $n$-th component $\mathit{bit_{n-1}}$ does 
+not correspond to any public key, but, as will become clear in the following, has been included for easier design of constraints. \\ 
 
 \vspace{-0.009in}
 \noindent We denote by $H$ the multiplicative subgroup of $\mathbb{F}$ generated 
 by an $n$-th root of unity $\omega$. We denote by \\ $\mathit{incl}(a_0, \ldots, a_{n-2})$ the inclusion 
 predicate that checks if $(a_0, \ldots, a_{n-2}) \in \ginn{1}^{n-1}$, where $\ginn{1}$ is the first source group 
-of pairing function associated with $\einn$. Moreover let $h = (\mathit{h_x}, \mathit{h_y})$ be some fixed, 
+of pairing function associated with $\einn$. Moreover, let $h = (\mathit{h_x}, \mathit{h_y})$ be some fixed, 
 publicly known element in $\einn \setminus \ginn{1}$. We denote by $(a_x, a_y)$ the affine representation in 
-$x$ and $y$ coordinates of $a \in \einn$ and by $\oplus$ the point addition in affine coordinates on the 
-elliptic curve $\einn$. We denote by $\mathbb{B} = \{0,1\} \subset \mathbb{F}$. \\
+$x$ and $y$ coordinates, respectively, of $a \in \einn$ and by $\oplus$ the point addition in affine coordinates on the 
+elliptic curve $\einn$. \\
 \vspace{-0.15in}
 
 \subsection{Counting Ranged Polynomial Protocol}
 \label{sec_vt}
 
 \noindent Next, we introduce the following Lagrange interpolation polynomials of degree at most $n-1 = |H|$ over cyclic group $H$: 
-$b(X)$ - interpolates the bits of bitvector $\mathit{bit}$; $pkx(X)$, $pky(X)$ - interpolate all public keys' 
-$x$ and $y$ coordinates, respectively; $kaccx(X)$, $kaccy(X)$ - interpolate $x$ and $y$ coordinates, respectively, 
-of the iterative partial aggregate sum of the actual signing validators' public keys. We also define six polynomial identities 
-$id_1(X)=0, \ldots, id_6(X)=0$ supporting the following intuition: $id_1(X)=0$, $id_2(X)=0$ over $H$ 
-ensure the $x$ and, respectively, the $y$ coordinates of the iterative partial aggregate sums of actual signing validators public keys 
-(up to each index $i \leq n-2$) follow formulas $(\ast)$, $(\ast\ast)$ from Observation 1 (see Appendix~\ref{sec:delayed}) which gives all possible cases of 
-complete curve point addition when the second curve point is multiplied by a bit; $id_3(X)=0$, $id_4(X)=0$ over $H$ 
-ensure first partial aggregate sum is $h$ and the total aggregate sum is $h + \mathit{apk}$; this is necessary in order to ensure the 
+\begin{itemize}
+\item $b(X)$ - interpolates the bits of bitvector $\mathit{bit}$; 
+\item $pkx(X)$, $pky(X)$ - interpolate all public keys' $x$ and $y$ coordinates, respectively; 
+\item $kaccx(X)$, $kaccy(X)$ - interpolate $x$ and $y$ coordinates, respectively, 
+of the iterative partial aggregate sum of the actual signing validators' public keys. 
+\end{itemize}
+\noindent We also define six polynomial identities $id_1(X)=0, \ldots, id_6(X)=0$ supporting the following intuition:
+\begin{itemize}
+\item If $id_1(X)=0$ and $id_2(X)=0$ hold over $H$, this 
+ensures the $x$ and, respectively, the $y$ coordinates of the iterative partial 
+aggregate sums of the public keys (up to each index $i \leq n-2$) follow formulas $(\ast)$, $(\ast\ast)$ from Observation 1 (see Appendix~\ref{sec:delayed}) 
+which gives all possible cases of complete curve point addition when the second curve point is multiplied by a bit; 
+\item If $id_3(X)=0$ and $id_4(X)=0$ hold over $H$, this  
+ensure the first partial aggregate sum is $h$ and the total aggregate sum is $h + \mathit{apk}$; this is necessary in order to ensure the 
 addition of the public keys (i.e., elliptic curve points) never falls into condition (3) defined in Observation 1 (see Appendix~\ref{sec:delayed}). 
 This recursively implies the partial aggregate sum at every step is a well defined curve point, hence, it is a suitable input for the next step; 
-$id_5(X)=0$ over $H$ ensures $b(X)$ evaluates to bits over $H$. $id_6(X)= 0$ over $H$ ensures that the sum of bits in the 
-bitvector $\mathit{bit}$ is $s+1$. \\
+\item If $id_5(X)=0$ holds over $H$, this 
+ensures $b(X)$ evaluates to bits over $H$. 
+\item If $id_6(X)= 0$ holds  over $H$, this 
+ensures that the sum of bits in the bitvector $\mathit{bit}$ is $s+1$.
+\end{itemize}
 
-\noindent Intuitively and overall the identities $id_1(X)=0$ to $id_6(X)=0$ over $H$ 
-ensure $\mathit{apk}$ is the aggregated public key of at least $s$ and at most $s+1$ public keys. 
+\noindent Intuitively and overall, if the identities $\{id_i(X)=0\}_{i \in [6]}$ hold over $H$, this 
+ensures $\mathit{apk}$ is the aggregated public key of at least $s$ and at most $s+1$ public keys. 
 Hence, we interpret $s$ as a threshold on the number of public keys included in the aggregated public key. 
-Since $\mathit{bit_{n-1}}$ as the last component of the bitmask witness does not correspond to any public 
+Note that since $\mathit{bit_{n-1}}$ as the last component of the bitmask witness $\mathit{bit}$ does not correspond to any public 
 key and we have to account for the fact that $\mathit{bit_{n-1}}$ may be 
 $1 \in \mathbb{F}$, relation $\Rvt$ includes the off-by-one constraint $\sum_{i=0}^{n-1} \mathit{bit_i} = s+1$.\\
 
@@ -69,7 +77,7 @@ $1 \in \mathbb{F}$, relation $\Rvt$ includes the off-by-one constraint $\sum_{i=
 \end{split}
 \end{equation*}
 
-\noindent TO DO: EXPLAIN THE CONDITIONAL PART IN THIS RELATION.\\
+\noindent {\color{red} TO DO: EXPLAIN THE CONDITIONAL PART IN THIS RELATION.}\\
 \noindent The polynomials and polynomial identities computed and used are: \\
 
 \noindent \textsf{Polynomials as Computed by Honest Parties} 
@@ -146,10 +154,11 @@ acc_{vt,n-1} &= acc_{vt,n-2} + \mathit{bit}_{n-2} \\
 acc_{vt,0} &= acc_{vt,n-1} + \mathit{bit}_{n-1} - (s+1).
 \end{align*}
 \noindent By summing together the LHS and, respectively, the RHS of the equalities above and 
-reducing the equal terms, we obtain $s+1 = \sum_{i=0}^{n-1}\mathit{bit}_i$. \\ 
+reducing the equal terms, we obtain $s+1 = \sum_{i=0}^{n-1}\mathit{bit}_i \ \ \ \ (1)$. \\ 
 Second, since it holds over $H$ that $id_i(X) = 0$, $\forall i \in [5]$ and $b(\omega^i) = \mathit{bit_i}, \forall i<n$ (by the definition 
-of $\mathcal{E}$), the properties concluded in Claim~\ref{claim:keys_affine_comm} from Appendix~\ref{sec:delayed} hold. 
-Combining the two proof steps above, we obtain the desired conclusion.
+of $\mathcal{E}$), the properties concluded in Claim~\ref{claim:keys_affine_comm} from Appendix~\ref{sec:delayed} hold. We call this property $(2)$.
+%Combining the two proof steps above, we obtain the desired conclusion.
+{\color{red} TO DO: Is the next sentence correct/enough? By combining the properties in $(1)$ and $(2)$, we obtain the desired conclusion.}
 \end{proof}
 
 \subsection{From a Polynomial Protocol to an O-SNARK}
