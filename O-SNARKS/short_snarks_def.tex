@@ -7,10 +7,11 @@ reminder of algebraic algorithms (see, for example~\cite{AGM_model}) and introdu
 \noindent Let $\mathbb{G}$ be a cyclic group of prime order $p$. Informally, an algorithm $A$ is algebraic with respect to 
 $\mathbb{G}$ if it fulfils the following requirement: whenever $A$ outputs a group element $h \in \mathbb{G}$, 
 it also outputs a representation $(s_1, \ldots, s_t) \in \mathbb{Z}^{t}_p$ 
-such that $h = \sum_ {i =1}^t s_i \cdot g_i$, where $(g_1,...,g_t)$ is the list of all group elements that were given to $A$ during its execution so far. \\
+such that $h = \sum_ {i =1}^t s_i \cdot g_i$, where $(g_1,\ldots,g_t)$ is the list of all group elements that were given to 
+$A$ during its execution so far. \\
 
 \noindent It is easy to see that the property above is equivalent to $A$ outputting  representation $(v_1, \ldots, v_l) \in \mathbb{Z}^{l}_p$ 
-such that $h = \sum_ {i =1}^l v_i \cdot g_i$, where $(g_1,...,g_l)$ is the list of all group elements that were given to $A$ as input. \\
+such that $h = \sum_ {i =1}^l v_i \cdot g_i$, where $(g_1,\ldots,g_l)$ is the list of all group elements that were given to $A$ as input. \\
 
 \noindent {\color{red}TO DO: Revise the entire next paragraph.}\\
 \noindent Let $\mathcal{R}$ be an NP relation, i.e., there exists a random access machine $M$ and a polynomial $t$ 

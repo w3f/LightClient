@@ -63,16 +63,17 @@ outputting $\mathsf{acc}$ at the end of the protocol and, simultaneously, $(x, \
 
 \noindent Our definition for polynomial protocols over ranges does not include a zero-knowledge property as it is not required in our current work. \\
 
-\noindent{\color{red} TO DO Either add new definition of SNARKs using PartInput, then link to Definition below, or remove this TO DO and what is below.} \\
+\noindent{\color{red} TO DO: Make sure that the definition of SNARK we use in the rest of the paper (unification of Dario's and of hybrid model SNARKs) is what we also mean below. 
+Also, make sure we call the unified SNARK notion the same way throughout the paper. Add a proof for lemma below and refer to it in the rest of the paper.} \\
 
 \noindent Given the definition for polynomial protocols over ranges for conditional relations as detailed above, we are now ready to state the following result.
 The proof follows with only minor changes from that of Lemmas 4.5. and 4.7. from~\cite{plonk}. 
 
-\begin{lemma}(Compilation of Ranged Polynomial Protocols for Conditional NP Relations into Hybrid Model SNARKs using PLONK) 
+\begin{lemma}(Compilation of Ranged Polynomial Protocols for Conditional NP Relations into SNARKs using PLONK) 
 \label{le:compilation_step_1}
 Let $\mathscr{P}_{\mathcal{R}^c}$ be a public coin $S$-ranged $(d, D, t, l, u, e)$-polynomial protocol for relation $\mathcal{R}^c$ where only 
 one identity is checked by $\mathcal{V}_{poly}$ and predicate $c$ from the definition of ${\mathcal{R}^c}$ needs to be fulfilled only by a part $x_1$ 
-of the public input of the relation ${\mathcal{R}^c}$. Then one can construct a hybrid model SNARK protocol $\mathscr{P}^*_{\mathcal{R}^c}$ for relation 
+of the public input of the relation ${\mathcal{R}^c}$. Then one can construct a SNARK protocol $\mathscr{P}^*_{\mathcal{R}^c}$ for relation 
 $\mathscr{P}_{\mathcal{R}^c}$ with $\mathit{SNARK.PartInput}$ as defined below 
 and with $\mathscr{P}^*_{\mathcal{R}^c}$ secure in the AGM under the $2d$-DLOG 
 assumption\footnote{Definition 2.1. in PLONK~\cite{plonk} formally describes the $2d$-DLOG assumption.} such that:
