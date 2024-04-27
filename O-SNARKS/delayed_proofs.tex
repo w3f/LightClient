@@ -44,21 +44,24 @@ so this is equivalent to Condition~\ref{cond1}. \\
 
 \begin{test_claim} Assume that $\forall i < n-1$ such that $\mathit{bit}_i = 1$, $pk_i = (pkx_i, pky_i) \in \ginn{1}$. 
 If polynomial identities $id_i(X) = 0, \forall i \in [5],$ hold over range 
-$H$ and the polynomial $b(X)$ has been constructed via interpolation on $H$ such that $b(\omega^i) = \mathit{bit}_i, \forall i <n$ then $\mathit{bit}_i \in \mathbb{B} = \{0,1\} \subset \mathbb{F}, \forall i <n$ \\
-$(kaccx_{0}, kaccy_{0}) = (h_x, h_y)$, $(kaccx_{n-1}, kaccy_{n-1}) = (h_x, h_y)\\ \oplus (apk_x, apk_y)$, 
-$(kaccx_{i+1}, kaccy_{i+1}) =  (kaccx_{i}, kaccy_{i}) \oplus \mathit{bit}_i(pkx_{i}, pky_{i})$, $\forall i < n-1$.
+$H$ and the polynomial $b(X)$ has been constructed via interpolation on $H$ such that 
+$b(\omega^i) = \mathit{bit}_i, \forall i <n$ then the following four properties hold: \\
+$\mathit{bit}_i \in \mathbb{B} = \{0,1\} \subset \mathbb{F}, \forall i <n \ \ \ \ \ \ (1)$, \\
+$(kaccx_{0}, kaccy_{0}) = (h_x, h_y) \ \ \ \ \ \ (2) $, \\
+$(kaccx_{n-1}, kaccy_{n-1}) = (h_x, h_y) \oplus (apk_x, apk_y) \ \ \ \ \ \ (3) $,  \\
+$(kaccx_{i+1}, kaccy_{i+1}) =  (kaccx_{i}, kaccy_{i}) \oplus \mathit{bit}_i(pkx_{i}, pky_{i})$, $\forall i < n-1 \ \ \ \ \ \ (4) $.
 %where in the last relation $\mathit{bit_i}$ should not be interpreted as a field element but as a binary bit
 \label{claim:keys_affine_comm}
 \end{test_claim}
 \vspace{-0.08in}
 
-\begin{proof} Everything but the last property in the claim is easy to derive from polynomial identities 
-$id_3(X) =0, id_4(X )= 0, id_5(X) = 0$ holding over $H$. To prove the remaining property, we apply 
+\begin{proof} The properties $(1)$, $(2)$ and $(3)$ in the claim are easy to derive from the polynomial identities 
+$id_3(X) =0, id_4(X )= 0, id_5(X) = 0$ holding over $H$. To prove property $(4)$, we apply 
 the above \textit{Observation} 1 by noticing that if $id_1(X)$ and $id_2(X)$ hold over $H$, 
 then $(\ast)$ and $(\ast \ast)$ hold with $(x_1, y_1)$ substituted by $(kaccx_i,kaccy_i)$, $(x_2, y_2)$ 
 substituted by $(pkx_i, pky_i)$, $(x_3, y_3)$ substituted by $(kaccx_{i+1},kaccy_{i+1})$ and 
 $\mathit{bit}$ substituted by $\mathit{bit}_i$ for $0 \leq i \leq n-2$. %, where $\mathit{bit_i}$ should not be interpreted as a field element but as binary  bit
-Moreover, since $(kaccx_{0}, kaccy_{0}) = (h_x, h_y) \in \einn \setminus \ginn{1}$ 
+Moreover, since $$(kaccx_{0}, kaccy_{0}) = (h_x, h_y) \in \einn \setminus \ginn{1}$$ 
 and if $(pkx_i, pky_i) \in \ginn{1}$ whenever $\mathit{bit}_i = 1$, then $\forall i < n-1$ 
 equations $(\ast)$ and $(\ast \ast)$ obtained after the substitution defined above are equivalent to either 
 condition~\ref{cond1} or condition~\ref{cond2}, but never condition~\ref{cond3}, so the result of the sum (i.e., $(kaccx_{i+1}, kaccy_{i+1})$, $0\leq i \leq n-2$) is, 
@@ -66,6 +69,7 @@ by induction, at each step a well-defined point on the curve.% and this conclude
 \end{proof}
 \vspace{-0.1in}
 
+\begin{comment}
 \begin{corollary} Assume $\forall i < n-1$ 
 such that $\mathit{bit}_i = 1$, $pk_i = (pkx_i, pky_i) \in \ginn{1}$. 
 If the polynomial identities $id_i(X) = 0, \forall i \in [4],$ hold over range $H$ and 
@@ -82,3 +86,4 @@ $(kaccx_{i+1}, kaccy_{i+1}) =  (kaccx_{i}, kaccy_{i}) \oplus \mathit{bit_i}(pkx_
 \begin{proof}The proof follows trivially from the general result stated by Claim~\ref{claim:keys_affine_comm}. 
 \end{proof}
 \vspace{-0.1in}
+\end{comment}
