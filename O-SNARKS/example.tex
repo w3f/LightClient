@@ -168,12 +168,16 @@ counting ranged polynomial protocol for relation $\Rvt$ introduced in Section~\r
 into a SNARK $\Pi_{\Rvt}$ for the same relation. More precisely, let $\mathbb{O}$ be an 
 AGM respecting oracle as per Definition~\ref{def:agm_oracles} and let $\mathcal{Z}_{\mathbb{O}}$ be defined as in the statement of Theorem~\ref{the:when_osnarks}. 
 Then according to the PLONK compiler, $\mathcal{Z}_{\mathbb{O}}$ auxiliary input $\Pi_{\Rvt}$ is a SNARK.
-Next, invoking Theorem~\ref{the:when_osnarks}, one can prove that $\Pi_{\Rvt}$ is an O-SNARK for $\mathbb{O}$. \\
+%Next, invoking Theorem~\ref{the:when_osnarks}, one can prove that $\Pi_{\Rvt}$ is an O-SNARK for $\mathbb{O}$. \\
 
 \noindent In fact, what we have described so far corresponds to the first step of the compiler for the two-step compiler 
 introduced in~\cite{LC_paper}.\footnote{As a reminder, the first compilation step in~\cite{LC_paper} uses a standard PLONK compiler.}
-TO DO: PROVE THIS HOLDS IF NECESSARY. Next, using a similar technique as the one employed in the proof of Theorem~\ref{the:when_osnarks}, one can show that 
-$\mathcal{Z}_{\mathbb{O}}$ auxiliary input $\Pi_{\Rvtcom}$ is an O-SNARK for relation $\Rvtcom$, where
+{\color{red} TO DO 3: Prove this compilation step holds or give a short argument.} 
+Next, analogously to the step two in the compilation introduced in~\cite{LC_paper}, we prove that $\Pi_{\Rvtcom}$ is an O-SNARK for relation 
+$\Rvtcom$ {\color{red} TO DO 4}:, where 
+
+%Next, using a similar technique as the one employed in the proof of Theorem~\ref{the:when_osnarks}, one can show that 
+%$\mathcal{Z}_{\mathbb{O}}$ auxiliary input $\Pi_{\Rvtcom}$ is an O-SNARK for relation $\Rvtcom$, where
 
 %$$\Rvtcom = {\color{red}Fill \ in. \ }$$
 
@@ -195,15 +199,17 @@ $\mathcal{Z}_{\mathbb{O}}$ auxiliary input $\Pi_{\Rvtcom}$ is an O-SNARK for rel
 %\end{split}
 %\end{equation*}
 \noindent where $\mathit{Com}$ denotes the KZG polynomial commitment, 
-$\mathcal{C}$ is the set of all $\mathit{KZG}$ poly commitments or vectors of such poly commitments and $\mathbf{C}$ is an alleged tuple of such commitments.
+$\mathcal{C}$ is the set of all $\mathit{KZG}$ poly commitments or vectors of such poly commitments and $\mathbf{C}$ is an alleged pair of such commitments.
+Finally, either invoking Theorem~\ref{the:when_osnarks} or via a direct proof, we show that 
+$\Pi_{\Rvtcom}$ is an ($\mathcal{Z}_{\mathbb{O}}$ auxiliary input ??) O-SNARK. {\color{red} TO DO 5.}
 
-
-\noindent In turn, by using $\Pi_{\Rvtcom}$ as an $\mathcal{Z}_{\mathbb{O}}$ auxiliary input O-SNARK and an aggregatable signature 
-scheme as defined also in~\cite{LC_paper}, one can construct a non-accountable light client scheme which is a very close analog 
+\noindent Having proven the above result,  we can now combine the ($\mathcal{Z}_{\mathbb{O}}$ auxiliary input ??) O-SNARK
+$\Pi_{\Rvtcom}$ and an aggregatable signature 
+scheme as defined in~\cite{LC_paper}, and we can construct a non-accountable light client scheme which is a very close analog 
 to the accountable light client schemes introduced in~\cite{LC_paper}. While the perfect completeness for the non-accountable light client scheme 
-can requires perfect completeness of the O-SNARK (which, in turn, is identical to the perfect completeness for a SNARK scheme), 
+requires perfect completeness of the O-SNARK (which, in turn, is identical to the perfect completeness for a SNARK scheme), 
 the soundness of the non-accountable scheme makes direct use of the knowledge-soundness 
-property of the $\mathcal{Z}_{\mathbb{O}}$ auxiliary input O-SNARK for $\Pi_{\Rvtcom}$ which is specific for O-SNARKs. 
+property of the ($\mathcal{Z}_{\mathbb{O}}$ auxiliary input ??) O-SNARK for $\Pi_{\Rvtcom}$ which is specific for O-SNARKs. 
 For more details on why is crucial we use an O-SNARK for the soundness security proof, please read Section~\ref{sec:discussion}.
 
 \subsection{Discussion}

@@ -98,7 +98,9 @@ for every non-uniform oracle prover $\mathcal{A}$ making at most
 $Q(\lambda) = \mathsf{poly}(\lambda)$ queries there exists a non-uniform extractor $\mathcal{E}_{\mathcal{A}}$ 
 and a negligible function $\mathsf{negl}(\lambda)$ such that 
 $$\mathsf{Pr}[\mathit{AddaptPoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}) \implies  1]\ \leq \mathsf{negl}(\lambda).$$
-\noindent{\color{red} TO DO Do we want to add at all this variant? Is this variant fully correct? Is it as per definition introduced by Dario?}
+\noindent{\color{red} TO DO 1 Do we want to add at all this variant? Yes! Is this variant fully correct? Is it as per definition introduced by Dario? 
+In fact, eventually, we want the Dario inspired definition to be combined with our light client paper new definition of SNARKs. 
+But, maybe, we can show everything with Dario's definition and motivate at the last step the combined definition.}
 
 \paragraph{Oracle-access adaptive knowledge soundness for oracle family $\mathbb{O}$:} Consider the following experiment for security 
 parameter $\lambda \in \mathbb{N}$, adversary $\mathcal{A}$, extractor $\mathcal{E}_{\mathcal{A}}$, auxiliary 
@@ -154,7 +156,7 @@ distribution $\mathcal{Z}$, then $\Pi_{\mathbb{O}}$ which follows $\Pi$ with the
 is a $\mathcal{Z}$-auxiliary input O-SNARK for $\mathbb{O}$.
 \end{theorem}
 
-\begin{proof}{\color{red}TO DO}
+\begin{proof}{\color{red}TO DO 2; First try the proof using Dario's inspired definition only.}
 \begin{comment} Write a proof inspired by We denote by $\mathcal{Z}_{\mathbb{O}}$ the 
 probability distribution of all the public parameters that define a member of $\mathbb{O}$ together with some 
 polynomial number $Q$ of queries and answers to $\mathbb{O}$. More formally: 
