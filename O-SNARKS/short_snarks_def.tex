@@ -1,6 +1,6 @@
 In the following, we remind the reader the definition of an O-SNARK from~\cite{O_SNARK} and we prove that 
 SNARKs such as PLONK~\cite{plonk}, Marlin~\cite{marlin} or Groth16~\cite{groth16} on which a flurry of 
-both under development or in production practical applications are based, fulfil this definition for a commonly occurying 
+both under development or production-ready practical applications are based, fulfil this definition for a commonly occurying 
 and well-defined class of oracles. In order to do that, we start with a couple of building block definitions: we give a 
 reminder of algebraic algorithms (see, for example~\cite{AGM_model}) and introduce our new notion of AGM respecting oracles. \\
 
@@ -64,14 +64,14 @@ is a triple of algorithms $\Pi=(\mathsf{Gen}, \mathsf{Prove}, \mathsf{Verify})$ 
 \item $\mathsf{Gen}(1^{\lambda},\mathcal{R}) \rightarrow \mathsf{crs}:$ 
 on input a security parameter $\lambda \in \mathbb{N}$, the generation algorithm outputs
 a common reference string $\mathsf{crs} = (\mathit{prs},\mathit{vrs})$ 
-consisting of a public pair of prover reference string $\mathit{prs}$ and a verification state $\mathit{vrs}$ {\color{red} TO DO Verification state or verification reference string?};
-\item $\mathsf{Prove}(\mathsf{prs}, x, w, \mathcal{R}) \rightarrow \pi:$ the proving algorithm takes as input 
-a prover reference string $\mathsf{crs}$ and a pair $(x,w) \in \mathcal{R}$ and returns a proof $\pi$. 
-\item $\mathsf{Verify}(\mathsf{vrs}, x, \pi, \mathcal{R}) \rightarrow 0/1:$ the verification algorithm takes as input 
-a verification reference string $\mathsf{vrs}$, some public input $x$ and an alleged proof $\pi$ and if it accepts, 
-it outputs 1 and if it rejects, it outputs 0. 
+consisting of a public pair of prover reference string $\mathit{prs}$ and a verification reference string $\mathit{vrs}$ {\color{red} TO DO Verification state or verification reference string?};
+\item $\mathsf{Prove}(\mathsf{crs}, x, w, \mathcal{R}) \rightarrow \pi:$ the proving algorithm takes as input 
+a $\mathsf{crs}$ and a pair $(x,w) \in \mathcal{R}$ and returns a proof $\pi$;
+\item $\mathsf{Verify}(\mathsf{crs}, x, \pi, \mathcal{R}) \rightarrow 0/1:$ the verification algorithm takes as input 
+a $\mathsf{crs}$, some public input $x$ and an alleged proof $\pi$ and if it accepts, 
+it outputs 1 and if it rejects, it outputs 0; 
 \end{itemize}
-\noindent that fulfils perfect completeness, succinctness and oracle access adaptive knowledge soundness for oracle family 
+\noindent that fulfils perfect completeness, succinctness and oracle access knowledge soundness for oracle family 
 $\mathbb{O}$ as defined below.
 \noindent {\color{red} TO DO decide on use of $\mathsf{crs}$ or $\mathsf{prs}$ as parameter for $\mathsf{Prove}$; same for $\mathsf{Verify}$.}
 
@@ -82,44 +82,65 @@ $$\mathit{Pr}[ \mathsf{Verify}(\mathsf{crs}, x, \pi, \mathcal{R})=1 \  | \  \mat
 and every $x \in \mathcal{L}_{\mathcal{R}}$, we have that 
 $\mathsf{Gen}$ runs in $\mathsf{poly}(\lambda)$ time, $\mathsf{Prove}$ runs in $\mathsf{poly}(\lambda + |M|+ |x|)$ time,  
 $\mathsf{Verify}$ runs in $\mathsf{poly}(\lambda + |x|)$ time and an honestly generated proof has size $\mathsf{poly}(\lambda)$. \
-{\color{red} TO DO is this the definition of succinctness that we want? Is this not too relaxed? To replace $\mathsf{poly}$ by $\mathsf{polylog}$?}
+{\color{red} TO DO is this the definition of succinctness that we want? The same way or inspired from Dario's definition, the bound $T$ should be included above.}
 
-\paragraph{Adaptive knowledge soundness:} Consider the following experiment for security 
+\begin{comment}
+\paragraph{Knowledge soundness:} Consider the following experiment for security 
 parameter $\lambda \in \mathbb{N}$, adversary $\mathcal{A}$, extractor $\mathcal{E}_{\mathcal{A}}$, auxiliary 
 input generator $\mathcal{Z}$ :\\
 \begin{align*}
-\mathit{AddaptPoK}&(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}): \\
+\mathit{PoK}&(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}): \\
 & \mathsf{aux} \leftarrow \mathcal{Z}(1^{\lambda}); \mathsf{crs} \leftarrow \mathsf{Gen}(1^{\lambda}); \\
 & (y,\pi) \leftarrow \mathcal{A}(\mathsf{crs},\mathsf{aux}); w \leftarrow \mathcal{E}_{\mathcal{A}}(\mathsf{crs}, \mathsf{aux}); \\
-& if \ \mathsf{Verify}(\mathsf{crs}, y, \pi) = 1 \wedge (y,w) \in R \ return  \ 1 \\
-& else \ return \ 0
+& \mathit{if} \ (\mathsf{Verify}(\mathsf{crs}, y, \pi) = 1) \wedge ((y,w) \notin R) \ \mathit{return}  \ 1 \\
+& \mathit{else} \ \mathit{return} \ 0
 \end{align*}
-\noindent $\Pi$ satisfies adaptive proof of knowledge soundness with respect to auxiliary input from $\mathcal{Z}$ if 
+\noindent $\Pi$ satisfies knowledge soundness with respect to auxiliary input from $\mathcal{Z}$ if 
 for every non-uniform oracle prover $\mathcal{A}$ making at most 
 $Q(\lambda) = \mathsf{poly}(\lambda)$ queries there exists a non-uniform extractor $\mathcal{E}_{\mathcal{A}}$ 
 and a negligible function $\mathsf{negl}(\lambda)$ such that 
-$$\mathsf{Pr}[\mathit{AddaptPoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}) \implies  1]\ \leq \mathsf{negl}(\lambda).$$
-\noindent{\color{red} TO DO 1 Do we want to add at all this variant? Yes! Is this variant fully correct? Is it as per definition introduced by Dario? 
-In fact, eventually, we want the Dario inspired definition to be combined with our light client paper new definition of SNARKs. 
-But, maybe, we can show everything with Dario's definition and motivate at the last step the combined definition.}
+$$\mathsf{Pr}[\mathit{PoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}) = 1]\ \leq \mathsf{negl}(\lambda).$$
+\end{comment}
 
-\paragraph{Oracle-access adaptive knowledge soundness for oracle family $\mathbb{O}$:} Consider the following experiment for security 
+\paragraph{Oracle-access knowledge soundness for oracle family $\mathbb{O}$:} Consider the following experiment for security 
 parameter $\lambda \in \mathbb{N}$, adversary $\mathcal{A}$, extractor $\mathcal{E}_{\mathcal{A}}$, auxiliary 
 input generator $\mathcal{Z}$ and oracle family $\mathbb{O}$:\\
 \begin{align*}
-\mathit{OAddaptPoK}&(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}, \mathbb{O}): \\
+\mathit{OPoK}&(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}, \mathbb{O}): \\
 & \mathsf{aux} \leftarrow \mathcal{Z}(1^{\lambda}); \mathcal{O} \leftarrow \mathbb{O}; \mathsf{crs} \leftarrow \mathsf{Gen}(1^{\lambda}); \\
 & (y,\pi) \leftarrow \mathcal{A}^{\mathcal{O}}(\mathsf{crs},\mathsf{aux}); w \leftarrow \mathcal{E}_{\mathcal{A}}(\mathsf{crs}, \mathsf{aux}, \mathsf{qt}); \\
-& if \ \mathsf{Verify}(\mathsf{crs}, y, \pi) = 1 \wedge (y,w) \in R \ return  \ 1 \\
-& else \ return \ 0
+& \mathit{if} \ (\mathsf{Verify}(\mathsf{crs}, y, \pi) = 1) \wedge ((y,w) \notin R) \ \mathit{return}  \ 1 \\
+& \mathit{else} \ \mathit{return} \ 0
 \end{align*}
 \noindent where $\mathsf{qt} = \{q_i, \mathcal{O}(q_i)\}$ is the transcript of all the $\mathcal{O}$ oracle queries and answers made and received by 
-$\mathcal{A}$ during its execution. $\Pi$ satisfies oracle-access adaptive proof of knowledge with respect to oracle family  $\mathbb{O}$ and auxiliary 
+$\mathcal{A}$ during its execution. $\Pi$ satisfies oracle-access knowledge soundness with respect to oracle family  $\mathbb{O}$ and auxiliary 
 input from $\mathcal{Z}$ if for every non-uniform oracle prover $\mathcal{A}^{\mathcal{O}}$  
 making at most $Q(\lambda) = \mathsf{poly}(\lambda)$ queries to oracle $\mathcal{O}$ there exists a non-uniform extractor 
 $\mathcal{E}_{\mathcal{A}}$ and a negligible function $\mathsf{negl}(\lambda)$ such that 
-$$\mathsf{Pr}[\mathit{OAddaptPoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}, \mathcal{O}) \implies  1]\ \leq \mathsf{negl}(\lambda).$$ 
+$$\mathsf{Pr}[\mathit{OPoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}, \mathcal{O}) =  1]\ \leq \mathsf{negl}(\lambda).$$ 
 \end{definition} 
+
+\paragraph{Oracle-access knowledge soundness for oracle family $\mathbb{O}$ and security in the AGM:} Consider the following experiment for security 
+parameter $\lambda \in \mathbb{N}$, algebraic adversary $\mathcal{A}$, extractor $\mathcal{E}_{\mathcal{A}}$, auxiliary 
+input generator $\mathcal{Z}$ and oracle family $\mathbb{O}$:\\
+\begin{align*}
+\mathit{OPoK}&(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}, \mathbb{O}): \\
+& \mathsf{aux} \leftarrow \mathcal{Z}(1^{\lambda}); \mathcal{O} \leftarrow \mathbb{O}; \mathsf{crs} \leftarrow \mathsf{Gen}(1^{\lambda}); \\
+& (y,\pi) \leftarrow \mathcal{A}^{\mathcal{O}}(\mathsf{crs},\mathsf{aux}); w \leftarrow \mathcal{E}_{\mathcal{A}}(\mathsf{crs}, \mathsf{aux}, \mathsf{qt}); \\
+& \mathit{if} \ (\mathsf{Verify}(\mathsf{crs}, y, \pi) = 1) \wedge ((y,w) \notin R) \ \mathit{return}  \ 1 \\
+& \mathit{else} \ \mathit{return} \ 0
+\end{align*}
+\noindent where $\mathsf{qt} = \{q_i, \mathcal{O}(q_i)\}$ is the transcript of all the $\mathcal{O}$ oracle queries and answers made and received by 
+$\mathcal{A}$ during its execution. $\Pi$ satisfies oracle-access knowledge soundness with respect to oracle family  $\mathbb{O}$ and auxiliary 
+input from $\mathcal{Z}$ and AGM security if for every algebraic adversary $\mathcal{A}^{\mathcal{O}}$  
+making at most $Q(\lambda) = \mathsf{poly}(\lambda)$ queries to oracle $\mathcal{O}$ there exists an extractor 
+$\mathcal{E}_{\mathcal{A}}$ and a negligible function $\mathsf{negl}(\lambda)$ such that 
+$$\mathsf{Pr}[\mathit{OPoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}, \mathcal{O}) =  1]\ \leq \mathsf{negl}(\lambda).$$ 
+
+\noindent{\color{red} TO DO 1 Do we want to add also the variant which has non-oracle version of knowledge soundness? Maybe not! Are the above variants fully correct? 
+Are they as per definition introduced by Dario? I believe the bound $T$ from Dario's definition is still missing! 
+In fact, eventually, we want the Dario inspired definition (actually just the one in the AGM, lets say) to be combined with our light client paper new definition of SNARKs. 
+But, maybe, we can show everything with Dario's definition and motivate at the last step the combined definition.}
 
 \noindent The following definition is inspired by the definition of the AGM model itself introduced in ~\cite{DBLP:phd/dnb/Loss19}, and, in particular the formalism and 
 concrete examples and counterexamples introduced at the end of Section 5.2.1.  
@@ -151,10 +172,10 @@ input SNARK $\Pi$ secure in the AGM model with respect to $\mathbb{G}$ is an O-S
 %Let $\mathbb{G}$ be a cyclic group of prime order $p$ and let $\mathbb{O}$ be an AGM respecting oracle family relative to $\mathbb{G}$ 
 %as per Definition~\ref{def:agm_oracles}.
 Let $\{\mathbb{G}_{i}\}_{i  \in I}$ be a set of cyclic groups of prime orders $\{p_i\}_{i \in I}$, respectively, and let $\mathbb{O}$ be an AGM 
-respecting oracle family relative to $\{\mathbb{G}_{i}\}_{i  \in I}$ as per Definition~\ref{def:agm_oracles}.
- If $\Pi$ is a $\mathcal{Z}$-auxiliary input SNARK secure in the AGM model for any benign 
+respecting oracle family relative to $\{\mathbb{G}_{i}\}_{i  \in I}$ as per Definition~\ref{def:agm_oracles}. 
+If $\Pi$ is a $\mathcal{Z}$-auxiliary input SNARK secure in the AGM model for any benign 
 distribution $\mathcal{Z}$, then $\Pi_{\mathbb{O}}$ which follows $\Pi$ with the exception that the prover has oracle access to $\mathbb{O}$, 
-is a $\mathcal{Z}$-auxiliary input O-SNARK for $\mathbb{O}$.
+is a $\mathcal{Z}$-auxiliary input O-SNARK for $\mathbb{O}$ secure in the AGM model.
 \end{theorem}
 
 \begin{proof}{\color{red}TO DO 2; First try the proof using Dario's inspired definition only.}
@@ -163,10 +184,11 @@ probability distribution of all the public parameters that define a member of $\
 polynomial number $Q$ of queries and answers to $\mathbb{O}$. More formally: 
 $\mathcal{Z}_{\mathbb{O}} = (\mathit{pp}, \{\mathcal{O}(q_i), q_i\}_{i=1}^Q)$, 
 $Q = \mathsf{poly}(\lambda)$, $(\mathit{pp}, \mathcal{O}) \leftarrow \mathbb{O}$. Then every $\mathcal{Z}_{\mathbb{O}}$-auxiliary 
-input SNARK $\Pi$ secure in the AGM model with respect to $\mathbb{G}$ is an O-SNARK for $\mathbb{O}$.
+input SNARK $\Pi$ secure in the AGM model with respect to $\mathbb{G}$ is an O-SNARK for $\mathbb{O}$ secure in the AGM model.
 \end{comment}
 \end{proof}
 
+\noindent The following corollary is an immediate consequence of Theorem~\ref{the:when_osnarks}.
 \begin{corollary}[O-SNARKs from Pairing-based SNARKs]
 Let $\mathbb{G}_1$ and  $\mathbb{G}_2$ be two cyclic groups of prime order $p$ and let $\mathbb{O}$ be 
 an AGM respecting oracle family relative to both $\mathbb{G}_1$ and $\mathbb{G}_2$ as per Definition~\ref{def:agm_oracles}. 
@@ -174,7 +196,3 @@ If $\Pi$ is a $\mathcal{Z}$-auxiliary input SNARK secure in the AGM model for an
 distribution $\mathcal{Z}$, then $\Pi_{\mathbb{O}}$ which follows $\Pi$ with the exception that the prover has oracle access 
 to $\mathbb{O}$, is a $\mathcal{Z}$-auxiliary input O-SNARK for $\mathbb{O}$. 
 \end{corollary}
-
-\begin{proof}{\color{red} TO DO}
-\end{proof}
-
