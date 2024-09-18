@@ -55,7 +55,7 @@ $\mathbb{O}$, we define an O-SNARK $\Pi$ for $\mathbb{O}$ as follows~\cite{O_SNA
 %\end{definition} 
 \end{comment}
 
-\begin{definition}[$\mathcal{Z}$-auxiliary input (O-)SNARK for oracle family $\mathbb{O}$]
+\begin{definition}[$\mathcal{Z}$-auxiliary input O-SNARK for oracle family $\mathbb{O}$]
 \label{def:osnarks}
 %A succinct non-interactive argument of knowledge (SNARK) for a relation $\mathcal{R}$ is a triple of algorithms 
 A $\mathcal{Z}$-auxiliary input succinct non-interactive argument of knowledge for a relation $\mathcal{R}$ and with oracle access to oracle family $\mathbb{O}$
@@ -120,6 +120,13 @@ $\mathcal{E}_{\mathcal{A}}$ and a negligible function $\mathsf{negl}(\lambda)$ s
 $$\mathsf{Pr}[\mathit{OPoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}, \mathcal{O}) =  1]\ \leq \mathsf{negl}(\lambda).$$ 
 \end{definition} 
 
+\subsection{O-SNARKs Secure in the AGM}
+\noindent Note that Definition~\ref{def:osnarks} includes, as a special case, the classical definition of SNARKs as soon as the knowledge soundness 
+adversary $\mathcal{A}$ never makes any queries to any oracle or any oracle family. Moreover, in the following, we will actually focus on 
+(another) special case of Definition~\ref{def:osnarks} which restricts the knowledge soundness adversary to algebraic adversaries only. 
+In this case, we say we have a $\mathcal{Z}$-auxiliary input O-SNARK for oracle family $\mathbb{O}$ secure in the AGM. For such an O-SNARK,  
+perfect completeness and succinctness are identical to those in Definition~\ref{def:osnarks}, while knowledge soundness is defined as: 
+ 
 \paragraph{Oracle-access knowledge soundness for oracle family $\mathbb{O}$ and security in the AGM:} Consider the following experiment for security 
 parameter $\lambda \in \mathbb{N}$, algebraic adversary $\mathcal{A}$, extractor $\mathcal{E}_{\mathcal{A}}$, auxiliary 
 input generator $\mathcal{Z}$ and oracle family $\mathbb{O}$:\\
@@ -132,8 +139,8 @@ input generator $\mathcal{Z}$ and oracle family $\mathbb{O}$:\\
 \end{align*}
 \noindent where $\mathsf{qt} = \{q_i, \mathcal{O}(q_i)\}$ is the transcript of all the $\mathcal{O}$ oracle queries and answers made and received by 
 $\mathcal{A}$ during its execution. $\Pi$ satisfies oracle-access knowledge soundness with respect to oracle family  $\mathbb{O}$ and auxiliary 
-input from $\mathcal{Z}$ and AGM security if for every algebraic adversary $\mathcal{A}^{\mathcal{O}}$  
-making at most $Q(\lambda) = \mathsf{poly}(\lambda)$ queries to oracle $\mathcal{O}$ there exists an extractor 
+input from $\mathcal{Z}$ and AGM security if for every algebraic adversary $\mathcal{A}$ which  has access to oracle ${\mathcal{O}}$  
+and which makes at most $Q(\lambda) = \mathsf{poly}(\lambda)$ queries to oracle $\mathcal{O}$ there exists an extractor 
 $\mathcal{E}_{\mathcal{A}}$ and a negligible function $\mathsf{negl}(\lambda)$ such that 
 $$\mathsf{Pr}[\mathit{OPoK}(\lambda, \mathcal{A}, \mathcal{E}_{\mathcal{A}}, \mathcal{Z}, \mathcal{O}) =  1]\ \leq \mathsf{negl}(\lambda).$$ 
 
