@@ -91,6 +91,17 @@ $\mathit{CKS.Verify}$) the advantage of an
 adversary $\mathcal{A}$ against unforgeability is defined by \\
 $\mathit{Adv}_{\mathcal{A}}^{\mathit{forgecomkey}}(\lambda) = \Pr[\mathit{Game}^{\mathit{forgecomkey}}_{\mathcal{A}}(\lambda) = 1]$, 
 where
+\begin{comment}
+\begin{align*}
+& \mathit{Game}^{\mathit{forgecomkey}}_{\mathcal{A}}({\lambda}): \\
+& (\mathit{pp}, \mathit{rs}_{\mathit{vk}},\mathit{rs}_{\mathit{pk}}) \leftarrow \mathit{CKS.Setup}(v), \\
+&((\mathit{pk}^*,\pi^*_{\mathit{PoP}}), \mathit{sk}^*) \leftarrow \mathit{AS.GenKeypair}(\mathit{pp}), Q \leftarrow \emptyset \\
+& ((\mathit{pk_i}, \pi_{\mathit{PoP},i})_{i=1}^{u}, (\mathit{bit_i})_{i=1}^u, \mathit{asig}, \pi, m) \leftarrow \mathcal{A}^{\mathit{OSign}}(\mathit{pp},\mathit{rs}_{\mathit{vk}}, \\ &\mathit{rs}_{\mathit{pk}}, (\mathit{pk^*},\pi^*_{\mathit{PoP}})) \\
+&\textit{If } ( i  \in [u], \mathit{pk}^* = \mathit{pk_i} \wedge \mathit{bit_i}=1) \vee m \in Q, \textit{ then return } 0 \\
+& \textit{For } i \in [u] 
+\end{align*}
+\end{comment}
+%\begin{comment}
 \begin{align*}
 &\mathit{Game}^{\mathit{forgecomkey}}_{\mathcal{A}}({\lambda}): \\
 %& \mathit{pp} \leftarrow \mathit{AS.Setup}(\lambda) \\
@@ -104,6 +115,7 @@ where
 & \mathit{ck} \leftarrow \mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^u) \\
 & \textit{Return } \mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}},  \mathit{ck}, m, \mathit{asig}, \pi, (\mathit{bit_i})_{i=1}^u)
 \end{align*}
+%\end{comment}
 and 
 \begin{align*}
 & \mathit{OSign}(m_j): \\
