@@ -1,17 +1,29 @@
-\documentclass{llncs}
-%\documentclass[llncs, nonacm=true]{acmart}
-%\usepackage[toc,page]{appendix}
-%\usepackage[utf8]{inputenc}
+\documentclass[runningheads]{llncs}
+%
+\usepackage[T1]{fontenc}
+% T1 fonts will be used to generate the final print and online PDFs,
+% so please use T1 fonts in your manuscript whenever possible.
+% Other font encondings may result in incorrect characters.
+%
+\usepackage{graphicx}
+% Used for displaying a sample figure. If possible, figure files should
+% be included in EPS format.
+%
+% If you use the hyperref package, please uncomment the following two lines
+% to display URLs in blue roman font according to Springer's eBook style:
+%
 
-%%% page dimensions
-%\usepackage{geometry}
-%\geometry{margin=0.9in}
-%\usepackage{numdef}
+
 \usepackage{hyperref}
+\usepackage{color}
+\renewcommand\UrlFont{\color{blue}\rmfamily}
+\urlstyle{rm}
+
 \usepackage{url}
+
 %\usepackage[hyphen]{url}
 \usepackage{xspace}
-\usepackage{graphicx}
+%\usepackage{graphicx}
 \let\proof\relax \let\endproof\relax
 \usepackage{amsmath,amsthm,amssymb}
 \usepackage{amsfonts}
@@ -128,6 +140,12 @@
 \newcommand{\kate}{\ensuremath{\mathsf{KZG}}\xspace}
 \newcommand{\ewnp}{e.w.n.p.\ }
 
+\spnewtheorem{construction}[theorem]{Instantiation}{\bfseries}{\itshape}
+\spnewtheorem{assumption}[theorem]{Assumption}{\bfseries}{\itshape}
+\spnewtheorem{test_claim}[theorem]{Claim}{\bfseries}{\itshape}
+\spnewtheorem{observation}[theorem]{Observation}{\bfseries}{\itshape}
+
+
 
 %%
 %% \BibTeX command to typeset BibTeX logo in the docs
@@ -203,8 +221,10 @@
 %% The "title" command has an optional parameter,
 %% allowing the author to define a "short title" to be used in page headers.
 
+\title{Accountable Light Client Systems for Proof-of-Stake Blockchains}
+\author{Anonymous et al.}  
+\maketitle
 
-\title{Accountable Light Client Systems for PoS Blockchains}
 %\author[1]{Oana Ciobotaru, Web 3 Foundation}
 %\author[2]{Fatemeh Shirazi, Parity Technology}
 %\author[1]{Alistair Stewart, Web 3 Foundation}
@@ -266,19 +286,22 @@
 %?????{observation}[theorem]{Observation}
 
 %\spnewtheorem{definition}[theorem]{Definition}{\bfseries}{\itshape}
-\spnewtheorem{construction}[theorem]{Instantiation}{\bfseries}{\itshape}
-\spnewtheorem{assumption}[theorem]{Assumption}{\bfseries}{\itshape}
-\spnewtheorem{test_claim}[theorem]{Claim}{\bfseries}{\itshape}
-\spnewtheorem{observation}[theorem]{Observation}{\bfseries}{\itshape}
 
 
-\begin{abstract} A major challenge for blockchain interoperability is having an on-chain light client protocol that is both efficient and secure.
-We present a protocol that provides short proofs about the state of a decentralised consensus protocol while being able to detect misbehaving parties.
-To do this naively, a verifier would need to maintain an updated list of all participants' public keys which makes the corresponding proofs long.
-Existing solutions either are not able to detect misbehaving parties (i.e. lack accountability) or are not efficient. We define and design a committee key scheme with short proofs that does not include any of the individual participants' public keys in plain which makes it very efficient. Our committee key scheme, in turn, can use one of our two custom designed SNARKs which have fast prover times. Our committee key scheme can be used in an accountable light client system as the main cryptographic core for building bridges between proof-of-stake blockchains. By allowing a large number of participants, our scheme allows decentralisation and interoperability without compromise. Finally, we implement a prototype of our custom SNARKs for which we provide benchmarks.
+\begin{abstract} A major challenge for blockchain interoperability is having an on-chain light client protocol that is both efficient 
+and secure. We present a protocol that provides short proofs about the state of a decentralised consensus protocol while being 
+able to detect misbehaving parties. To do this naively, a verifier would need to maintain an updated list of all participants' public 
+keys which makes the corresponding proofs long. Existing solutions either are not able to detect misbehaving parties (i.e. lack 
+accountability) or are not efficient. We define and design a committee key scheme with short proofs that does not include any 
+of the individual participants' public keys in plain which makes it very efficient. Our committee key scheme, in turn, can use 
+one of our two custom designed SNARKs which have fast prover times. Our committee key scheme can be used in an 
+accountable light client system as the main cryptographic core for building bridges between proof-of-stake blockchains. 
+By allowing a large number of participants, our scheme allows decentralisation and interoperability without compromise. 
+Finally, we implement a prototype of our custom SNARKs for which we provide benchmarks.
+
+\keywords{Custom SNARKs \and Accountable light clients \and Bridges}
 \end{abstract}
 
- \maketitle
 
 
 \section{Introduction} \label{sec_intro}
@@ -312,10 +335,11 @@ Existing solutions either are not able to detect misbehaving parties (i.e. lack 
 %\section{Acknowledgements} \label{sec_ack}
 %\input{acknowledgements}
 
+%\bibliography{bibliography}
+%\bibliographystyle{ieeetr}
+\bibliographystyle{splncs04}
 \bibliography{bibliography}
-\bibliographystyle{ieeetr}
-%%\bibliography{bibliography}
-%%\bibliographystyle{splncs04}
+
 \onecolumn
 \appendix
 \section*{Appendices}

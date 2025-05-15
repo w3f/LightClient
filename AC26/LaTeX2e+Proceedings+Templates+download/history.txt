@@ -143,6 +143,15 @@ Version history for the LLNCS LaTeX2e class
                                   use detokenized argument in the definition of \doi
                                   to allow underscores in DOIs
 
-05.09.22  llncs.cls        2.22   robust redefinition of \vec (bold italics), bug 
+05.09.22  llncs.cls        2.22   robust redefinition of \vec (bold italics), bug
                                   reported by Alexander Malkis, TUM
 
+02.11.23  llncs.cls        2.23   \ackname changed from "Acknowledgements" (BE) to
+                                  "Acknowledgments" (AE).
+                                  \discintname introduced for the new, mandatory
+                                  section "Disclosure of Interests".
+                                  New "credits" environment introduced to provide
+                                  small run-in headings for "Acknowledgments" and
+                                  the "Disclosure of Interests".
+
+29.01.22  llncs.cls        2.24   bugfixes for options envcountsame and envcountsect

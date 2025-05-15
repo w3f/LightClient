@@ -1,0 +1,290 @@
+\begin{thebibliography}{10}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\providecommand{\doi}[1]{https://doi.org/#1}
+
+\bibitem{BEEFY}
+Beefy,
+  \url{https://github.com/paritytech/grandpa-bridge-gadget/blob/master/docs/beefy.md}
+
+\bibitem{sync_committee}
+Minimal light client (2021), commit of 14th Sept 2021,
+  \url{https://github.com/ethereum/annotated-spec/blob/master/altair/sync-protocol.md}
+
+\bibitem{elliptic_nomad}
+Nomad loses \$156 million in seventh major crypto bridge exploit of 2022
+  (2022),
+  \url{https://hub.elliptic.co/analysis/nomad-loses-156-million-in-seventh-major-crypto-bridge-exploit-of-2022/}
+
+\bibitem{elliptic_harmony}
+Over \$1 billion stolen from bridges so far in 2022 as harmony’s horizon
+  bridge becomes latest victim in \$100 million hack (2022),
+  \url{bit.ly/3fvlIME}
+
+\bibitem{ethresearch1}
+Simplified active validator cap and rotation proposal (2022),
+  \url{https://ethresear.ch/t/simplified-active-validator-cap-and-rotation-proposal/9022}
+
+\bibitem{interoperability_2}
+Agrawal, S., Ganesh, C., Mohassel, P.: Non-interactive zero-knowledge proofs
+  for composite statements. In: CRYPTO 2018. pp. 643--673 (2018)
+
+\bibitem{eclipse}
+Aranha, D.F., Bennedsen, E.M., Campanelli, M., Ganesh, C., Orlandi, C.,
+  Takahashi, A.: Eclipse: Enhanced compiling method for pedersen-committed
+  zksnark engines. Cryptology ePrint Archive, Paper 2021/934 (2021),
+  \url{https://eprint.iacr.org/2021/934},
+  \url{https://eprint.iacr.org/2021/934}
+
+\bibitem{small_exponents}
+Bellare, M., Garay, J.A., Rabin, T.: Fast batch verification for modular
+  exponentiation and digital signatures. ePrint 1998/007 (1998)
+
+\bibitem{CP_proposal}
+Benarroch, D., Campanelli, M., Fiore, D., Kim, J., Lee, J., Oh, H., Querol, A.:
+  Proposal: Commit-and-prove zero-knowledge proof systems and extensions
+  (2021), 4rd ZKStandards Workshop
+
+\bibitem{extractability_limits_1}
+Bitansky, N., Canetti, R., Paneth, O., Rosen, A.: On the existence of
+  extractable one-way functions. In: STOC '14. pp. 505--514 (2014)
+
+\bibitem{boneh_compact_multisig}
+Boneh, D., Drijvers, M., Neven, G.: Compact multi-signatures for smaller
+  blockchains. In: ASIACRYPT 2018. pp. 435--464 (2018)
+
+\bibitem{BLS_signatures}
+Boneh, D., Lynn, B., Shacham, H.: Short signatures from the weil pairing. In:
+  ASIACRYPT 2001. pp. 514--532 (2001)
+
+\bibitem{mina}
+Bonneau, J., Meckler, I., Rao, V., Shapiro, E.: Coda: Decentralized
+  cryptocurrency at scale. ePrint 2020/352 (2020)
+
+\bibitem{zexe}
+Bowe, S., Chiesa, A., Green, M., Miers, I., Mishra, P., Wu, H.: Zexe: Enabling
+  decentralized private computation. In: Security and Privacy 2020. pp.
+  947--964 (2020)
+
+\bibitem{halo}
+Bowe, S., Grigg, J., Hopwood, D.: Recursive proof composition without a trusted
+  setup. ePrint 2019/1021 (2019)
+
+\bibitem{extractability_limits_2}
+Boyle, E., Pass, R.: Limits of extractability assumptions with distributional
+  auxiliary input. In: ASIACRYPT 2015. pp. 236--261 (2015)
+
+\bibitem{tendermint_paper}
+Buchman, E., Kwon, J., Milosevic, Z.: The latest gossip on bft consensus
+  (2018), \url{https://arxiv.org/abs/1807.04938}
+
+\bibitem{polkadot}
+Burdges, J., Cevallos, A., Czaban, P., Habermeier, R., Hosseini, S., Lama, F.,
+  Alper, H.K., Luo, X., Shirazi, F., Stewart, A., Wood, G.: Overview of
+  polkadot and its design considerations (2020),
+  \url{https://arxiv.org/abs/2005.13456}
+
+\bibitem{ethlight}
+Buterin, V.: Minimal light client (2021),
+  \url{https://github.com/ethereum/annotated-spec/blob/master/altair/sync-protocol.md}
+
+\bibitem{CasperFFG}
+Buterin, V., Griffith, V.: Casper the friendly finality gadget. arXiv preprint
+  arXiv:1710.09437  (2017), \url{https://arxiv.org/abs/1710.09437}
+
+\bibitem{Gasper}
+Buterin, V., Hernandez, D., Kamphefner, T., Pham, K., Qiao, Z., Ryan, D., Sin,
+  J., Wang, Y., Zhang, Y.X.: Combining ghost and casper. arXiv  (2020),
+  \url{https://arxiv.org/abs/2003.03052}
+
+\bibitem{flyclient}
+Bünz, B., Kiffer, L., Luu, L., Zamani, M.: Flyclient: Super-light clients for
+  cryptocurrencies. Cryptology ePrint Archive, Paper 2019/226 (2019),
+  \url{https://eprint.iacr.org/2019/226}
+
+\bibitem{lunar}
+Campanelli, M., Faonio, A., Fiore, D., Querol, A., Rodriguez, H.: Lunar: a
+  toolbox for more efficient universal and updatable zksnarks and
+  commit-and-prove extensions. Cryptology ePrint Archive, Paper 2020/1069
+  (2020), \url{https://eprint.iacr.org/2020/1069}
+
+\bibitem{CP_paper}
+Campanelli, M., Fiore, D., Querol, A.: Legosnark: Modular design and
+  composition of succinct zero-knowledge proofs. In: CCS'19. pp. 2075--2092
+  (2019)
+
+\bibitem{CLOS02}
+Canetti, R., Lindell, Y., Ostrovsky, R., Sahai, A.: Universally composable
+  two-party and multi-party secure computation. In: STOC02 (2002)
+
+\bibitem{marlin}
+Chiesa, A., Hu, Y., Maller, M., Mishra, P., Vesely, N., Ward, N.: Marlin:
+  Preprocessing zksnarks with universal and updatable srs. In: EUROCRYPT 2020.
+  pp. 738--768 (2020)
+
+\bibitem{ABC}
+Civit, P., Gilbert, S., Gramoli, V., Guerraoui, R., Komatovic, J.: As easy as
+  abc: Optimal (a) ccountable (b) yzantine (c) onsensus is easy! In: 2022 IEEE
+  International Parallel and Distributed Processing Symposium (IPDPS). pp.
+  560--570. IEEE (2022)
+
+\bibitem{EIPs}
+of~Ethereum~Magician, F., Herders, E.C.: Ethereum improvement proposals,
+  \url{https://eips.ethereum.org}
+
+\bibitem{FS_transform}
+Fiat, A., Shamir, A.: How to prove yourself: Practical solutions to
+  identification and signature problems. In: CRYPTO' 86. pp. 186--194 (1987)
+
+\bibitem{HP_paper}
+Fiore, D., Fournet, C., Ghosh, E., Kohlweiss, M., Ohrimenko, O., Parno, B.:
+  Hash first, argue later: Adaptive verifiable computations on outsourced data.
+  In: CCS'16. pp. 1304--1316 (2016)
+
+\bibitem{NEARrainbowB}
+Foundation, N.: Rainbow bridge (Accessed 19012023),
+  \url{https://wiki.near.org/getting-started/rainbow-bridge}
+
+\bibitem{RainbowBridgeFAQ}
+Foundation, N.: Rainbow bridge faq (Accessed 19012023),
+  \url{https://rainbowbridge.app/faq}
+
+\bibitem{AGM_model}
+Fuchsbauer, G., Kiltz, E., Loss, J.: The algebraic group model and its
+  applications. In: CRYPTO 2018. pp. 33--62 (2018)
+
+\bibitem{plumo}
+Gabizon, A., Gurkan, K., Jovanovic, P., Konstantopoulos, G., Oines, A.,
+  Olszewski, M., Straka, M., Tromer, E., Vesely, P.: Plumo: Towards scalable
+  interoperable blockchains using ultralight validation systems. 3rd
+  ZKStandards Workshop (2020)
+
+\bibitem{plonk}
+Gabizon, A., Williamson, Z.J., Ciobotaru, O.: Plonk: Permutations over
+  lagrange-bases for oecumenical noninteractive arguments of knowledge. ePrint
+  2019/953 (2019)
+
+\bibitem{pairings_for_cryptographers}
+Galbraith, S., Paterson, K., Smart, N.: Pairings for cryptographers. ePrint
+  2006/165 (2006)
+
+\bibitem{SE_plonk}
+Ganesh, C., Khoshakhlagh, H., Kohlweiss, M., Nitulescu, A., Zajac, M.: What
+  makes fiat--shamir zksnarks (updatable srs) simulation extractable? ePrint
+  2021/511 (2021)
+
+\bibitem{LWEDKG}
+Gentry, C., Halevi, S., Lyubashevsky, V.: Practical non-interactive publicly
+  verifiable secret sharing with thousands of parties. ePrint 2021/1397 (2021)
+
+\bibitem{IBC_paper}
+Goes, C.: The interblockchain communication protocol: An overview (2020),
+  \url{https://arxiv.org/abs/2006.15918}
+
+\bibitem{groth16}
+Groth, J.: On the size of pairing-based non-interactive arguments. In:
+  EUROCRYPT 2016. pp. 305--326 (2016)
+
+\bibitem{GrothDKG}
+Groth, J.: Non-interactive distributed key generation and key resharing. ePrint
+  2021/339 (2021)
+
+\bibitem{updatable_universal_srs_2018}
+Groth, J., Kohlweiss, M., Maller, M., Meiklejohn, S., Miers, I.: Updatable and
+  universal common reference strings with applications to zk-snarks. In: CRYPTO
+  2018. pp. 698--728 (2018)
+
+\bibitem{AggregatableDKG}
+Gurkan, K., Jovanovic, P., Maller, M., Meiklejohn, S., Stern, G., Tomescu, A.:
+  Aggregatable distributed key generation. ePrint 2021/005 (2021)
+
+\bibitem{BW6}
+Housni, Y.E., Guillevic, A.: Optimized and secure pairing-friendly elliptic
+  curves suitable for one layer proof composition. ePrint 2020/351 (2020)
+
+\bibitem{bw6767}
+Housni, Y.E., Guillevic, A.: Bw6 over bls12-381 (2021),
+  \url{https://ethresear.ch/t/bw6-over-bls12-381/10321}
+
+\bibitem{forensics}
+Kannan, S., Nayak, K., Sheng, P., Viswanath, P., Wang, G.: Bft protocol
+  forensics (2020), \url{https://arxiv.org/abs/2010.06785}
+
+\bibitem{KZG_10}
+Kate, A., Gregory M~Zaverucha, I.G.: Constant-size commitments to polynomials
+  and their applications. In: ASIACRYPT10. pp. 177--194 (2010)
+
+\bibitem{redshift}
+Kattis, A., Panarin, K., Vlasov, A.: Redshift: Transparent snarks from list
+  polynomial commitment iops. ePrint 2019/1400 (2019)
+
+\bibitem{KilianPhD}
+Kilian, J.: Uses of randomness in algorithms and protocols. PhD Thesis (1990),
+  \url{https://core.ac.uk/download/pdf/4425126.pdf}
+
+\bibitem{cosmos}
+Kwon, J., Buchman, E.: Cosmos whitepaper: A network of distributed ledgers,
+  \url{https://v1.cosmos.network/resources/whitepaper}
+
+\bibitem{sonic}
+Maller, M., Bowe, S., Kohlweiss, M., Meiklejohn, S.: Sonic: Zero-knowledge
+  snarks from linear-size universal and updateable structured reference
+  strings. Cryptology ePrint Archive, Paper 2019/099 (2019),
+  \url{https://eprint.iacr.org/2019/099}
+
+\bibitem{CosmosValHUB}
+Mintscan: Validator dashboard for cosmos hub (Accessed 19012023),
+  \url{https://www.mintscan.io/cosmos/validators}
+
+\bibitem{CosmosValNYX}
+Mintscan: Validator dashboard for nyx (Accessed 19012023),
+  \url{https://www.mintscan.io/nyx/validators}
+
+\bibitem{nakamoto2008bitcoin}
+Nakamoto, S.: Bitcoin: A peer-to-peer electronic cash system. Decentralized
+  Business Review p. 21260 (2008)
+
+\bibitem{CeloOptics}
+Organization, C.: Optics (Accessed 19012023),
+  \url{https://docs.celo.org/protocol/bridge/optics}
+
+\bibitem{FS_transform_with_proof}
+Pointcheval, D., Stern, J.: Security proofs for signature schemes. In:
+  EUROCRYPT '96. pp. 387--398 (1996)
+
+\bibitem{proofs_of_posession}
+Ristenpart, T., Yilek, S.: The power of proofs-of-possession: Securing
+  multiparty signatures against rogue-key attacks. In: EUROCRYPT 2007. pp.
+  228--245 (2007)
+
+\bibitem{Fomo3DPM}
+SECBIT: How the winner got fomo3d prize — a detailed explanation (2018),
+  \url{https://medium.com/coinmonks/how-the-winner-got-fomo3d-prize-a-detailed-explanation-b30a69b7813f}
+
+\bibitem{GRANDPA}
+Stewart, A., Kokoris-Kogia, E.: Grandpa: a byzantine finality gadget (2020),
+  \url{https://arxiv.org/abs/2007.01560}
+
+\bibitem{celo}
+cLabs Team: The celo protocol: A multi-asset cryptographic protocol for
+  decentralized social payments, \url{https://celo.org/papers/whitepaper}
+
+\bibitem{dfinity}
+Team, T.D.: The internet computer for geeks (2022),
+  \url{https://internetcomputer.org/whitepaper.pdf}
+
+\bibitem{ethereum}
+Wood, G., et~al.: Ethereum: A secure decentralised generalised transaction
+  ledger. Ethereum project yellow paper  (2014)
+
+\bibitem{zkBridge}
+Xie, T., Zhang, J., Cheng, Z., Zhang, F., Zhang, Y., Jia, Y., Boneh, D., Song,
+  D.X.: zkbridge: Trustless cross-chain bridges made practical. Proceedings of
+  the 2022 ACM SIGSAC Conference on Computer and Communications Security
+  (2022)
+
+\bibitem{secure_pairings}
+Yonezawa, S.: Pairing-friendly curves (2020),
+  \url{https://tools.ietf.org/id/draft-yonezawa-pairing-friendly-curves-02.html}
+
+\end{thebibliography}
