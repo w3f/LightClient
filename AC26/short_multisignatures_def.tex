@@ -16,7 +16,7 @@ in a simple and more efficient SNARK which compensates for the cost of having to
 \begin{definition}
 \label{def:aggregate_signatures}
 (Aggregatable Signature Scheme) An aggregatable signature scheme consists of
-the following tuple of algorithms ($\mathit{AS.Setup}$, $\mathit{AS.GenKeypair}$, $\mathit{AS.VerifyPoP}$, 
+the following tuple of algorithms ($\mathit{AS.Setup}$, $\mathit{AS.GenKeypair}$, \\ $\mathit{AS.VerifyPoP}$, 
 $\mathit{AS.Sign}$, $\mathit{AS.AggKeys}$, $\mathit{AS.AggSig}$, $\mathit{AS.Verify}$) 
 such that for implicit security parameter $\lambda$:
 \vspace{-0.05in}
@@ -90,9 +90,10 @@ and, additionally, \emph{perfect completeness} for aggregation defined below.
 signature scheme AS
 has perfect completeness for aggregation if, for every adversary $\mathcal{A}$
 \begin{align*}
-\mathit{Pr} & [\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 \ | \ \mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}),  ((\mathit{pk_i})_{i=1}^u, m, (\sigma_i)_{i=1}^{u}) \leftarrow \mathcal{A}(\mathit{\mathit{pp})}, \\ 
-%& {\color{red} \forall i \in [u], \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i}, \pi_{PoP,i}) = 1, }\\
- &\forall i \in [u], \mathit{AS.Verify}(\mathit{pp}, \mathit{pk_i}, m, \sigma_i) = 1, \mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp},  (\mathit{pk}_{i})_{i=1}^{u}), \mathit{asig} \leftarrow \mathit{AS.AggSigs}(\mathit{pp}, (\sigma_i)_{i=1}^u)] = 1.
+\mathit{Pr} & [\mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1 \ | \ \mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}),  \\     
+                  &((\mathit{pk_i})_{i=1}^u, m, (\sigma_i)_{i=1}^{u}) \leftarrow \mathcal{A}(\mathit{\mathit{pp})}, \forall i \in [u], \mathit{AS.Verify}(\mathit{pp}, \mathit{pk_i}, m, \sigma_i) = 1 \\ 
+                  %& {\color{red} \forall i \in [u], \mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk_i}, \pi_{PoP,i}) = 1, }\\
+                  &\mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp},(\mathit{pk}_{i})_{i=1}^{u}), \mathit{asig} \leftarrow \mathit{AS.AggSigs}(\mathit{pp}, (\sigma_i)_{i=1}^u)] = 1.
 \end{align*}
 
 %\noindent \textbf{Unforgeable Aggregatable Signature}

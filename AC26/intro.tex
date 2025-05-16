@@ -239,20 +239,19 @@ We detail below two further optimisations of our custom SNARKs.
 %The tradeoff is that we cannot use an existing SNARK system or polynomial constraint compiler as a black box, making the proofs in this paper more complicated.}
 %\item
 \vspace{-0.05in}
-\paragraph{Commit and Prove SNARKs:} Our SNARKs are an instance of commit and prove SNARKs (see Section~\ref{sec:commit_prove}).
-The underlying commitment scheme used for computing the public input commitment $C$ is the same as the (polynomial) commitment scheme used in the rest of our SNARK(s). Hence, we do not need to add a witness for $C$
-to the SNARK constraint system in the same way we would have to if our commitment scheme were, e.g., to use a hash function.
-The constraints for checking a hash inside our custom SNARKs would increase the size of the constraint system so much that it would lead to several orders of magnitude increase in our prover time.
-The trade-off for our SNARKs design (i.e., with a commitment as part of the public input) is that we cannot use an existing SNARK compiler as a black box.
+\paragraph{Commit-and-Prove SNARKs:} Our SNARKs are an instance of commit-and-prove SNARKs (see Section~\ref{sec:commit_prove}).
+The underlying commitment scheme used for computing the public input commitment $C$ is the same as the (polynomial) commitment scheme used in the rest of our SNARK(s). 
+Hence, we do not need to add a witness for $C$ to the SNARK constraint system the same way we would have to if our commitment scheme were, e.g., to use a hash function.
+The constraints for checking a hash inside our custom SNARKs would increase the size of the constraint system so much that it would lead to several orders of magnitude 
+increase in our prover time. The trade-off for our SNARKs design (i.e., with a commitment as part of the public input) is that we cannot use an existing SNARK compiler as a black box.
 
 %\item Our constraint system is of a form where the wiring together of different constraints is trivial enough that we can avoid doing a permutation argument
 %or sparse matrix vector product that general proving systems would use to wire together gates. This reduces the proof size and proving time.}
 %\item
 \vspace{-0.05in}
-\paragraph{Constraint System Simplicity: }Our constraint system is simple enough such that our custom SNARKs do not require a permutation argument or a matrix-vector product argument
-which general proving systems need to bind together gates. In fact, the underlying circuit for our SNARKs can be described as an affine addition gate with a couple of constraints added to avoid the incompleteness of our addition formulae. This simplification leads to smaller proof sizes  and faster proving times.
-
-
+\paragraph{Constraint System Simplicity:} Our constraint system is simple enough such that our custom SNARKs do not require a permutation argument or a matrix-vector product 
+argument which general proving systems need to bind together gates. In fact, the underlying circuit for our SNARKs can be described as an affine addition gate with a couple of 
+constraints added to avoid the incompleteness of our addition formulae. This simplification leads to smaller proof sizes  and faster proving times.
 %\vspace{-0.2cm}
 
 \vspace{-0.2cm}
@@ -274,11 +273,11 @@ is used in bridges in the IBC protocol~\cite{IBC_paper}. This approach becomes p
 does, which currently has 415,278 validators. %\cite{EthExplorer}.
 However for a light client verifier, it is expensive to keep a list of 100,000s of public keys updated. As such only full nodes of Ethereum use this approach and instead light clients verifiers of Ethereum~\cite{sync_committee} follow signatures of randomly selected subsets of validators of size 512. This means that the resulting light client system is not accountable because these 512 validators are only backed by a small fraction of the total stake.
 \vspace{-0.2cm}
-\noindent \paragraph{Threshold Signatures} Alternatively a threshold signature scheme may be used, with one public key for the entire set of validators. This approach was adopted by Dfinity~\cite{GrothDKG}. Threshold signature schemes used in practice use secret sharing for the secret key corresponding to the single public key. This gives the schemes two downsides. Firstly, they require a communication-heavy distributed key generation protocol for the setup which is difficult to scale to large numbers of validators. Indeed, despite recent progress~\cite{AggregatableDKG,GrothDKG,LWEDKG}, it is still challenging to implement setup schemes for threshold signatures across a peer-to-peer network with a large number of participants, which is what many blockchain related use cases require. Moreover, such a setup may need repeating whenever the signer set changes. Secondly, for secret sharing based threshold signature schemes, the signature does not depend on the set of signers and so we cannot tell which subset of the validators did actually sign, i.e., they are not accountable. Dfinity~\cite{GrothDKG} uses a re-shareable BLS threshold signature, where the threshold public key remains the same even when the validator set changes. Such a signature scheme
-provides the light client verifier with a constant size proof, even over many validator set changes, but means that the proof not only does not identify which of a particular set of validators are misbehaving, but also we cannot say when this misbehaviour happened i.e., which validator set misbehaved. This is because the signature would be the same for any threshold subset of any validator set.
+\noindent \paragraph{Threshold Signatures} Alternatively, a threshold signature scheme may be used, with one public key for the entire set of validators. This approach was adopted by Dfinity~\cite{GrothDKG}. Threshold signature schemes used in practice use secret sharing for the secret key corresponding to the single public key. This gives the schemes two downsides. Firstly, they require a communication-heavy distributed key generation protocol for the setup which is difficult to scale to large numbers of validators. Indeed, despite recent progress~\cite{AggregatableDKG,GrothDKG,LWEDKG}, it is still challenging to implement setup schemes for threshold signatures across a peer-to-peer network with a large number of participants, which is what many blockchain related use cases require. Moreover, such a setup may need repeating whenever the signer set changes. Secondly, for secret sharing based threshold signature schemes, the signature does not depend on the set of signers and so we cannot tell which subset of the validators did actually sign, i.e., they are not accountable. Dfinity~\cite{GrothDKG} uses a re-shareable BLS threshold signature, where the threshold public key remains the same even when the validator set changes. Such a signature scheme
+provides the light client verifier with a constant size proof, even over many validator set changes, but means that the proof not only does not identify which particular set of validators are misbehaving, but also we cannot say when this misbehaviour happened, i.e., which validator set misbehaved. This is because the signature would be the same for any threshold subset of any validator set.
 
 %\vspace{-0.2cm}
-\noindent It is worth noting that if a protocol has already implemented aggregatable BLS signatures, our committee key scheme can be used without altering the consensus layer. Indeed it may be easier to alter a protocol that uses individual
+\noindent It is worth noting that if a protocol has already implemented aggregatable BLS signatures, our committee key scheme can be used without altering the consensus layer. Indeed, it may be easier to alter a protocol that uses individual
 signatures to use aggregatable BLS signatures than to implement threshold signatures from scratch because the latter requires waiting for an interactive setup before making validator set changes.
 
 %\vspace{-0.2cm}
@@ -313,34 +312,31 @@ Their protocol is not accountable because, as with Dfinity above, it is not poss
 %\vspace{-0.2cm}
 \paragraph{Mina~\cite{mina}} achieves light clients with $O(1)$ sized light client proofs using recursive SNARKs. This requires some nodes have a large computational overhead to produce proofs. Also because this requires verifying consensus with small circuits, they do not use the consensus paradigm
 discussed above where a majority of validators sign, and instead use a longest chain rule version of proof of stake~\cite{mina}.
-Their protocol is not accountable because, as with Difinity above, it is not possible to tell from the proof which validators signed off on a fork, nor when this happened.
+Their protocol is not accountable because, as with Dfinity above, it is not possible to tell from the proof which validators signed off on a fork, nor when this happened.
 Another downside is that because the proof only shows the length of a chain (and its block density), similar to a Bitcoin SPV proof, a light client needs to be
 connected to an honest node to tell if a block is in the longest chain. If the client is connected to a single malicious node, it could be given a proof for a
 shorter fork and not see any proofs of chains the fork choice rule would prefer.
-\vspace{-0.03cm}
+
+\vspace{-0.3cm}
 \subsubsection{Commit-and-Prove and Related Approaches}
 \label{sec:commit_prove}
 
 \noindent Our custom SNARKs are an instance of the commit-and-prove (CP) paradigm~\cite{KilianPhD,CLOS02,CP_proposal,HP_paper,CP_paper,lunar,eclipse}
-which is a generalisation for zero-knowledge proofs/arguments in which the prover proves statements about values that are committed. We employ this paradigm by using a commitment to a large dataset as part of the public
-input, in a similar way to \cite{HP_paper,CP_paper}. Other CP SNARK protocols (\cite{CP_paper,interoperability_2,lunar,eclipse} consider having (ZK) SNARKs with portions of their respective witnesses overlapping, a very
-different problem to ours. Hash-and-prove~\cite{HP_paper} considers using hashes of a large input dataset as part of the public input for a SNARK. LegoSNARK ~\cite{CP_paper} considers using commitments which work
-with the SNARK protocols more directly and don't need an opening to be explicitly verified inside the SNARK. \cite{CP_paper} claims a 5000x speedup in proving time using this technique for Groth16 instead of hashing. Our
-custom schemes use a version of this approach, using KZG polynomial commitments~\cite{KZG_10} as partof of the public inputs, and we expect that several orders of magnitude for our proving time improvement over Celo's
-Plumo protocol that uses hashes comes from this. Additionally, we also have a very simple constraint system that would have a considerable increase in size if we hashed the input.
+which is a generalisation for zero-knowledge proofs/arguments in which the prover proves statements about values that are committed. We employ this paradigm by 
+using a commitment to a large dataset as part of the public input, in a similar way to \cite{HP_paper,CP_paper}. Other CP SNARK protocols (\cite{CP_paper,interoperability_2,lunar,eclipse} 
+consider having (ZK) SNARKs with portions of their respective witnesses overlapping, a very different problem to ours. Hash-and-prove~\cite{HP_paper} considers using hashes of a large 
+input dataset as part of the public input for a SNARK. LegoSNARK ~\cite{CP_paper} considers using commitments which work with the SNARK protocols more directly and do not need an 
+opening to be explicitly verified inside the SNARK. \cite{CP_paper} claims a 5000x speedup in proving time using this technique for Groth16 instead of hashing. Our custom schemes use 
+a version of this approach, using KZG polynomial commitments~\cite{KZG_10} as part of of the public inputs, and we expect that several orders of magnitude for our proving time improvement 
+over Celo's Plumo hash-based protocol come from this. Additionally, we also have a very simple constraint system that would have a considerable increase in size if we hashed the input.
 Our formalism, which generalised PLONK~\cite{plonk}'s polynomial protocols and compiler to work with polynomial commitments for the input, is different from prior work on CP SNARKs.
 
-
-\begin{comment}
 In practice, commit-and-prove systems (for short, CP) can be used to compress a large data structure and then prove something about its
 content (e.g., polynomial commitments~\cite{KZG_10}, vector commitments~\cite{vector_commitment_1}, accumulators~\cite{first_accumulator}).
 CP schemes can also be used to decouple the publishing of commitments to some data from the proof generation: each of these actions may be
 performed by different parties or entities~\cite{zkp_reference}. Finally, commitments can be used to make different proof systems
 interoperable~\cite{CP_paper,interoperability_2}. Our SNARKs have properties from the first two categories, however we could not
 have simply re-used an existing argument system: by designing custom circuits and SNARKs, we ensured improved efficiency for our use cases.
-\vspace{-0.1in}
-\end{comment}
-
 
 In this context, ECLIPSE~\cite{eclipse} presents a compiler that starts off with popular SNARKs (e.g., Sonic~\cite{sonic}, PLONK~\cite{plonk},
 Marlin~\cite{marlin}) and via a new general compilation method generates CP-variants for these SNARKs.
@@ -361,7 +357,7 @@ steps so it is more efficient than the one in~\cite{eclipse}.
 
 Finally, Lunar~\cite{lunar} obtains CP-SNARKs with a universal and updatable SRS and presents argument systems for
 linking committed inputs to the polynomial commitments used in AHP-based arguments. Lunar presents efficiency improvements compared
-to LegoSNARK~\cite{CP_paper}, but Lunar and ECLIPSE outperform each other  in different contexts.
+to LegoSNARK~\cite{CP_paper}, but Lunar and ECLIPSE outperform each other in different contexts.
 
 %The paragraph below was a comment/was commented out when shortening the paper.
 \begin{comment}

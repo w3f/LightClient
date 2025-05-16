@@ -39,11 +39,11 @@ outputs a committee key $\mathit{ck}$, where $u \leq v$.
 
 \item $(\pi, \mathit{ck}) \leftarrow \mathit{CKS.Prove}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^u, (\mathit{bit_i})_{i=1}^u)$: a proving algorithm that, 
 given a proving key $\mathit{rs}_{\mathit{pk}}$, a list of public keys and a bitvector $(\mathit{bit_i})_{i=1}^u \in \{0,1\}^u$,  
-outputs a proof $\pi$, where $u \leq v$; moreover, $\mathit{ck}$ is generated using  $\mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^u)$.
+outputs a proof $\pi$, where $u \leq v$; moreover, $\mathit{ck}$ is generated using \\ $\mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^u)$.
  
 \item $0/1 \leftarrow \mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m, \mathit{asig}, \pi, \mathbf{bitvector})$: a verification algorithm that, 
 given public parameters $\mathit{pp}$, a verification key $\mathit{rs}_{\mathit{vk}}$, a committee key $\mathit{ck}$, a message $m$, a 
-signature $\mathit{asig}$, a proof $\pi$ and a vector $\mathbf{bitvector} \in \{0,1\}^*$, 
+signature $\mathit{asig}$, a proof $\pi$ and a vector \\ $\mathbf{bitvector} \in \{0,1\}^*$, 
 outputs $1$ if the verification succeeds and $0$ otherwise. 
 \end{itemize}
 
@@ -51,7 +51,6 @@ outputs $1$ if the verification succeeds and $0$ otherwise.
 is a committee key scheme for aggregatable signatures if it satisfies \emph{perfect completeness} and 
 \emph{soundness} as defined below.
 
-\vspace{-0.1cm}
 \noindent \textbf{Perfect Completeness} A committee key scheme for aggregatable signatures 
 ($\mathit{CKS.Setup}$, $\mathit{CKS.GenCommitteeKey}$, $\mathit{CKS.Prove}$, $\mathit{CKS.Verify}$)
 has perfect completeness if for any message $m \in \{0,1\}^*$, 
@@ -74,18 +73,21 @@ it holds that:
 has soundness if for every efficient adversary $\mathcal{A}$ it holds that: 
 \begin{align*}
 \mathit{Pr}[&\mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m,  \mathit{asig}, \pi, (\mathit{bit}_{i})_{i=1}^u) =1 \
- \implies \ \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1  |  (\mathit{pp}, \mathit{rs}_{\mathit{vk}},\mathit{rs}_{\mathit{pk}}) \leftarrow \mathit{CKS.Setup}(v),\\
-& (\mathit{pk}_{i})_{i=1}^u, (\mathit{bit}_{i})_{i=1}^u, \mathit{asig}, \pi, m  \leftarrow \mathcal{A}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{rs}_{\mathit{pk}}), 
- \mathit{ck} \leftarrow \mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk}_{i})_{i=1}^u), \\
+ \implies \\
+ &\implies \ \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig}) = 1  \  |  \ 
+ (\mathit{pp}, \mathit{rs}_{\mathit{vk}},\mathit{rs}_{\mathit{pk}}) \leftarrow \mathit{CKS.Setup}(v),\\
+& (\mathit{pk}_{i})_{i=1}^u, (\mathit{bit}_{i})_{i=1}^u, \mathit{asig}, \pi, m  \leftarrow \mathcal{A}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{rs}_{\mathit{pk}}), \\
+& \mathit{ck} \leftarrow \mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk}_{i})_{i=1}^u), \\
 & \mathit{apk} \leftarrow \mathit{AS.AggKeys}( \mathit{pp},( \mathit{pk}_{i})_{i:\mathit{bit_i}=1})] = 1 - \negl(\lambda).
 \end{align*}
 \end{definition}
 
-\noindent Next, we define an additional security property, namely \emph{unforgeability}, which intuitively ensures that an adversary 
-cannot forge a verifying aggregatable signature with a corresponding bitmask and a committee key that includes an honestly generated public key.\\
+\noindent Next, we define \emph{unforgeability} which ensures that an adversary 
+cannot forge a verifying aggregatable signature with a corresponding bitmask and a committee key 
+that includes an honestly generated public key.\\
 \vspace{-0.05in}
 
-\noindent \textbf{Unforgeability}  For a committee key scheme for aggregatable signatures 
+\noindent \textbf{Unforgeability}  For a committee key scheme for aggregatable signatures \\
 ($\mathit{CKS.Setup}$, $\mathit{CKS.GenCommitteeKey}$, $\mathit{CKS.Prove}$, 
 $\mathit{CKS.Verify}$) the advantage of an 
 adversary $\mathcal{A}$ against unforgeability is defined by \\
@@ -107,7 +109,7 @@ where
 %& \mathit{pp} \leftarrow \mathit{AS.Setup}(\lambda) \\
 & (\mathit{pp}, \mathit{rs}_{\mathit{vk}},\mathit{rs}_{\mathit{pk}}) \leftarrow \mathit{CKS.Setup}(v), \\
 &((\mathit{pk}^*,\pi^*_{\mathit{PoP}}), \mathit{sk}^*) \leftarrow \mathit{AS.GenKeypair}(\mathit{pp}), Q \leftarrow \emptyset \\
-& ((\mathit{pk_i}, \pi_{\mathit{PoP},i})_{i=1}^{u}, (\mathit{bit_i})_{i=1}^u, \mathit{asig}, \pi, m) \leftarrow \mathcal{A}^{\mathit{OSign}}(\mathit{pp},\mathit{rs}_{\mathit{vk}}, \\ &\mathit{rs}_{\mathit{pk}}, (\mathit{pk^*},\pi^*_{\mathit{PoP}})) \\
+& ((\mathit{pk_i}, \pi_{\mathit{PoP},i})_{i=1}^{u}, (\mathit{bit_i})_{i=1}^u, \mathit{asig}, \pi, m) \leftarrow \mathcal{A}^{\mathit{OSign}}(\mathit{pp},\mathit{rs}_{\mathit{vk}},\mathit{rs}_{\mathit{pk}}, (\mathit{pk^*},\pi^*_{\mathit{PoP}})) \\
 %& \textit{If } (\forall i: \mathit{pk}^* \neq \mathit{pk_i} \wedge \mathit{bit_i}=0) \vee m \in Q, \textit{ then return } 0 \\
 &\textit{If } (\nexists i  \in [u], \mathit{pk}^* = \mathit{pk_i} \wedge \mathit{bit_i}=1) \vee m \in Q, \textit{ then return } 0 \\
 & \textit{For } i \in [u] \\
@@ -122,7 +124,7 @@ and
 & \sigma_j \leftarrow \mathit{AS.Sign}(\mathit{pp}, \mathit{sk}^*, m_j); Q \leftarrow Q \cup \{m_j\}; \textit{Return} \ \sigma_j
 \end{align*}
 
-\noindent A committee key scheme for aggregatable signatures is unforgeable if for all efficient adversaries $\mathcal{A}$ it holds that \\ 
+\noindent A committee key scheme for aggregatable signatures is unforgeable if for all efficient adversaries $\mathcal{A}$ it holds that 
 $\mathit{Adv}_{\mathcal{A}}^{\mathit{forgecomkey}}(\lambda) \leq \negl(\lambda)$.
 %\vspace{-0.05in}
 \begin{corollary} Let $\mathit{AS}$ be an aggregatable signature scheme that fulfils  

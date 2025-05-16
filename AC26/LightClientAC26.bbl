@@ -25,6 +25,11 @@ Over \$1 billion stolen from bridges so far in 2022 as harmony’s horizon
 Simplified active validator cap and rotation proposal (2022),
   \url{https://ethresear.ch/t/simplified-active-validator-cap-and-rotation-proposal/9022}
 
+\bibitem{zkp_reference}
+Z{KP}roof {C}ommunity {R}eference. {V}ersion 0.3. {E}d. by {D}. {B}enarroch,
+  {L}. {B}randao, {M}. {M}aller, and {E}. {T}romer. (2022),
+  \url{https://docs.zkproof.org/reference}
+
 \bibitem{interoperability_2}
 Agrawal, S., Ganesh, C., Mohassel, P.: Non-interactive zero-knowledge proofs
   for composite statements. In: CRYPTO 2018. pp. 643--673 (2018)
@@ -39,6 +44,10 @@ Aranha, D.F., Bennedsen, E.M., Campanelli, M., Ganesh, C., Orlandi, C.,
 \bibitem{small_exponents}
 Bellare, M., Garay, J.A., Rabin, T.: Fast batch verification for modular
   exponentiation and digital signatures. ePrint 1998/007 (1998)
+
+\bibitem{first_accumulator}
+Benaloh, J., de~Mare, M.: One-way accumulators: A decentralized alternative to
+  digital signatures. In: EUROCRYPT '93. pp. 274--285 (1994)
 
 \bibitem{CP_proposal}
 Benarroch, D., Campanelli, M., Fiore, D., Kim, J., Lee, J., Oh, H., Querol, A.:
@@ -116,6 +125,10 @@ Campanelli, M., Fiore, D., Querol, A.: Legosnark: Modular design and
 \bibitem{CLOS02}
 Canetti, R., Lindell, Y., Ostrovsky, R., Sahai, A.: Universally composable
   two-party and multi-party secure computation. In: STOC02 (2002)
+
+\bibitem{vector_commitment_1}
+Catalano, D., Fiore, D.: Vector commitments and their applications. In: Public
+  Key Cryptography 2013. pp. 55--72 (2013)
 
 \bibitem{marlin}
 Chiesa, A., Hu, Y., Maller, M., Mishra, P., Vesely, N., Ward, N.: Marlin:
