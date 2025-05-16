@@ -20,7 +20,7 @@ where $\mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}= n)$ 
 \noindent \textbf{Global constant:} $h \in \einn \setminus \ginn{1}$ \\ 
 
 \noindent \textbf{Trusted Setup:} $\mathit{srs} \leftarrow \mathit{SNARK.Setup}(\mathit{aux_{\mathit{SNARK}}} = (n, 3n-3))$,  
-where $\mathit{srs} =([1]_{\indexoneout}, [\tau]_{\indexoneout}, [\tau^2]_{\indexoneout}, \ldots, [\tau^{3n-3}]_{\indexoneout}, [1]_{\indextwoout}, [\tau]_{\indextwoout})$ \\
+where $$\mathit{srs} =([1]_{\indexoneout}, [\tau]_{\indexoneout}, [\tau^2]_{\indexoneout}, \ldots, [\tau^{3n-3}]_{\indexoneout}, [1]_{\indextwoout}, [\tau]_{\indextwoout})$$\\
 
 \noindent \textbf{Proving and Verifying Key Generation:} $(\mathit{srs}_{\mathit{pk}}, \mathit{srs}_{\mathit{vk}}) \leftarrow \mathit{SNARK.KeyGen}(\mathit{srs}, \Racom)$, \\
 where $(\mathit{srs}_{\mathit{pk}}, \mathit{srs}_{\mathit{vk}}) = 
@@ -28,7 +28,7 @@ where $(\mathit{srs}_{\mathit{pk}}, \mathit{srs}_{\mathit{vk}}) =
 
 \noindent \textbf{Partial Input:} $(x_1, \mathit{state_2}) \leftarrow \mathit{SNARK.PartInput}(\mathit{srs}, \mathit{state_1}, \Racom)$, 
 where $(\mathit{pk_0}, \ldots, \mathit{pk_{n-2}})$ is part of $\mathit{state_1}$; \\ 
-if $(\mathit{pk_0}, \ldots, \mathit{pk_{n-2}}) \notin \ginn{1}^{n-1}$, $\mathit{SNARK.PartInput}(\mathit{srs}, \mathit{state_1}, \Racom)$ outputs the empty string, otherwise 
+if $(\mathit{pk_0}, \ldots, \mathit{pk_{n-2}}) \notin \ginn{1}^{n-1}$, $\mathit{SNARK.PartInput}(\mathit{srs}, \mathit{state_1}, \Racom)$ outputs the empty string, otherwise \\
 $\mathit{SNARK.PartInput}$ outputs $x_1 = ([pkx]_{\indexoneout}$, $[pky]_{\indexoneout})$ and $\mathit{state_2} = \mathit{state_1} \cup \{ x_1\}$, where $\forall i \in \{0, \ldots, n-2\}$, $\mathit{pk_i}$ as an element of the curve $\einn$ 
 has the affine representation $(\mathit{pkx_i}, \mathit{pky_i})$. The polynomials $pkx(X)$ and $pky(X)$ are computed as $pkx(X) = \sum_{i=0}^{n-2} \mathit{pkx_i} \cdot L_i(X)$ 
 and $pky(X) = \sum_{i=0}^{n-2} \mathit{pky_i} \cdot L_i(X)$ and finally, the polynomial commitments are computed as 
@@ -48,7 +48,7 @@ $w = ((\mathit{pk_0}, \ldots, \mathit{pk_{n-2}})$, $(\mathit{bit}_0, \ldots, \ma
 $\forall i \in \{0, \ldots, n-2\}$, $\mathit{pk_i}$ as an element of the curve $\einn$ has the affine representation $(\mathit{pkx_i}, \mathit{pky_i})$. \\
 
 \noindent Let $(kaccx_{0}, kaccy_{0}) = (h_x, h_y)$ and 
-compute $(kaccx_{i+1}, kaccy_{i+1}) =  (kaccx_{i}, kaccy_{i}) \oplus \mathit{bit_i}(pkx_{i}, pky_{i})$, $\forall i < n-1$. \\ 
+compute $$(kaccx_{i+1}, kaccy_{i+1}) =  (kaccx_{i}, kaccy_{i}) \oplus \mathit{bit_i}(pkx_{i}, pky_{i}), \forall i < n-1.$$ \\ 
 
 \noindent Compute polynomials 
 

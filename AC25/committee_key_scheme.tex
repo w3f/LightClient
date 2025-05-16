@@ -39,11 +39,11 @@ outputs a committee key $\mathit{ck}$, where $u \leq v$.
 
 \item $(\pi, \mathit{ck}) \leftarrow \mathit{CKS.Prove}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^u, (\mathit{bit_i})_{i=1}^u)$: a proving algorithm that, 
 given a proving key $\mathit{rs}_{\mathit{pk}}$, a list of public keys and a bitvector $(\mathit{bit_i})_{i=1}^u \in \{0,1\}^u$,  
-outputs a proof $\pi$, where $u \leq v$; moreover, $\mathit{ck}$ is generated using \\ $\mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^u)$.
+outputs a proof $\pi$, where $u \leq v$; moreover, $\mathit{ck}$ is generated using $\mathit{CKS.GenCommitteeKey}(\mathit{rs}_{\mathit{pk}}, (\mathit{pk_i})_{i=1}^u)$.
  
 \item $0/1 \leftarrow \mathit{CKS.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m, \mathit{asig}, \pi, \mathbf{bitvector})$: a verification algorithm that, 
 given public parameters $\mathit{pp}$, a verification key $\mathit{rs}_{\mathit{vk}}$, a committee key $\mathit{ck}$, a message $m$, a 
-signature $\mathit{asig}$, a proof $\pi$ and a vector \\ $\mathbf{bitvector} \in \{0,1\}^*$, 
+signature $\mathit{asig}$, a proof $\pi$ and a vector  $\mathbf{bitvector} \in \{0,1\}^*$, 
 outputs $1$ if the verification succeeds and $0$ otherwise. 
 \end{itemize}
 
@@ -51,7 +51,7 @@ outputs $1$ if the verification succeeds and $0$ otherwise.
 is a committee key scheme for aggregatable signatures if it satisfies \emph{perfect completeness} and 
 \emph{soundness} as defined below.
 
-\noindent \textbf{Perfect Completeness} A committee key scheme for aggregatable signatures 
+\noindent \textbf{Perfect Completeness} A committee key scheme for aggregatable signatures \\
 ($\mathit{CKS.Setup}$, $\mathit{CKS.GenCommitteeKey}$, $\mathit{CKS.Prove}$, $\mathit{CKS.Verify}$)
 has perfect completeness if for any message $m \in \{0,1\}^*$, 
 for any vector of public keys $(\mathit{pk_i})_{i=1}^{u}$ generated using $\mathit{AS.GenKeypair}(\mathit{pp})$, 

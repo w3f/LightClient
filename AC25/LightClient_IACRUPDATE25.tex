@@ -5,6 +5,8 @@
 % so please use T1 fonts in your manuscript whenever possible.
 % Other font encondings may result in incorrect characters.
 %
+\pagestyle{plain}
+\usepackage{geometry}
 \usepackage{graphicx}
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
@@ -40,7 +42,7 @@
 \usepackage{mathrsfs}
 \usepackage[normalem]{ulem}
 \usepackage{soul}
-
+%\usepackage{geometry}
 
 
 %%% headers & footers
@@ -298,7 +300,7 @@ accountable light client system as the main cryptographic core for building brid
 By allowing a large number of participants, our scheme allows decentralisation and interoperability without compromise. 
 Finally, we implement a prototype of our custom SNARKs for which we provide benchmarks.
 
-\keywords{Custom SNARKs \and Accountable light clients \and Bridges}
+\keywords{Custom SNARKs \and Accountable light clients \and Secure bridges}
 \end{abstract}
 
 
@@ -324,7 +326,7 @@ Finally, we implement a prototype of our custom SNARKs for which we provide benc
 \input{poly_proto_poly_comm}
 \input{lagrange_bases}
 
-\vspace{-0.5cm}
+%\vspace{-0.5cm}
 \section{Custom SNARKs for Aggregation } \label{sec_apk_proofs}
 \input{no_witness_relations.tex}
 
@@ -342,18 +344,19 @@ Finally, we implement a prototype of our custom SNARKs for which we provide benc
 
 \onecolumn
 \appendix
+%\newpackage{geometry}
+\newgeometry{margin=0.9in}
 \section*{Appendices}
 \input{multisignatures_def.tex}
 \input{appendix_snarks.tex}
 \input{appendix_ranged_polynomial_protocols.tex}
 \input{alternative_choice_h.tex}
-\input{packed_accountable.tex}
+%\input{packed_accountable.tex}
 \input{missing_proofs_custom_snarks.tex}
 \input{appendix_compiler}
 \input{appendix_full_accountable.tex}
 \input{apk_vs_plonk_comparison.tex}
 \input{appendix_CKS_proof.tex}
-\section{An Accountable Light Client System} \label{sec_light_client_model}
 \input{new_light_client_model_updated}
 \input{light_client_instantiation}
 \input{appendix_soundness_proof.tex}

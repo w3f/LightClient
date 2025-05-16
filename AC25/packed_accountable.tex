@@ -1,5 +1,5 @@
-\section{Packed Accountable Protocol}
-\label{sec_a}
+%\section{Packed Accountable Protocol}
+%\label{sec_a}
 
 Here we describe the packed accountable protocol, which differs from the basic accountable protocol given in Section \ref{sec_la}, in that the verifier performs far fewer field operations. It achieves this by partitioning the bitvector into field elements differently:  instead of interpreting the bitvector is as a sequence of $0/1$ field elements, that is divided into sequences of $\block$ bits which are interpreted as field elements. Unpacking these to bits in the SNARK adds some complexity, but the verifier has to deal with $1/\block$ times fewer field elements and operations.
 
@@ -81,7 +81,7 @@ randomly chosen, and, also the fact that $n$ is negligibly smaller than the size
 over $H$, sum the LHS and the RHS, equate and obtain the desired property of $\mathsf{sum}$. We show the second part of 
 the claim by expressing $\mathsf{sum}$ in two ways as $\sum_{j=0}^{\frac{n}{\block}-1} b'_{j}r^j $ and as $\sum_{i=0}^{n-1} b_i \cdot c_{a,i}$ and re-writing the 
 latter as an inner product of a vector of field elements with the vector $(1, r, \ldots, r^{\frac{n}{\mathsf{block}}-1})$ and using the small exponents test~\cite{small_exponents}. 
-Full proof can be found in Section~\ref{sec:missing_snark_proofs}.
+Full proof can be found in Appendix~\ref{sec:missing_snark_proofs}.
 \end{proof}
 \vspace{-0.1in}
 
@@ -92,6 +92,6 @@ $\Pa$ is an $H$-ranged polynomial protocol $\Ra$.
 
 \begin{proof} 
 The proof follows an analogous logic as used for proving Lemma~\ref{le:ba}. We additionally use 
-Claim~\ref{claim:bitvector_comm} and Corollary~\ref{corollary:keys_affine_comm}. Full proof can be found in Section~\ref{sec:missing_snark_proofs}.
+Claim~\ref{claim:bitvector_comm} and Corollary~\ref{corollary:keys_affine_comm}. Full proof can be found in Appendix~\ref{sec:missing_snark_proofs}.
 \end{proof}
 \vspace{-0.15in}

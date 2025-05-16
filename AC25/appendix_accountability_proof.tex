@@ -35,13 +35,13 @@ $$\mathit{CKS_{\mathcal{R}}.Verify}(\mathit{pp},  \mathit{rs_{\mathit{vk}}}, \ma
 \mathbf{bit_j}) = 1 \ \ \ \ (2).$$
 \noindent In particular, $(2)$ holds for $j = \mathit{index}$. Due to soundness property of the committee key scheme $\mathit{CKS_{\mathcal{R}}}$, 
 since $\mathit{com_{\mathit{index}}} = \mathbf{Com}(\mathbf{pk_{\mathbf{index}}})$ by the definition of $\mathit{index}$ and 
-$\mathit{LC.DetectMisbehaviour}$, since $\mathit{apk_{\mathit{index}}} = \mathit{AS.AggKeys}(\mathit{pp}, 
-(\mathbf{bit_{\mathbf{index}}}(k) \cdot \mathbf{pk_{\mathbf{index}}}(k))_{k=1}^v)$ as computed by $\mathit{LC.DetectMisbehaviour}$, 
+$\mathit{LC.DetectMisbehaviour}$, since $$\mathit{apk_{\mathit{index}}} = \mathit{AS.AggKeys}(\mathit{pp}, 
+(\mathbf{bit_{\mathbf{index}}}(k) \cdot \mathbf{pk_{\mathbf{index}}}(k))_{k=1}^v)$$ as computed by $\mathit{LC.DetectMisbehaviour}$, 
 since also $m'' = m_{\mathit{index}}$ (with $m_j, \forall j \in [i]$ defined in $\mathit{LC.VerifyProof}$ and $\mathit{index}$ defined 
-in \\ $\mathit{LC.DetectMisbehaviour}$) and, finally, since $\mathbf{\Sigma}(\mathit{index}) = \sigma$, as defined in $\mathit{LC.DetectMisbehaviour}$, 
+in $\mathit{LC.DetectMisbehaviour}$) and, finally, since $\mathbf{\Sigma}(\mathit{index}) = \sigma$, as defined in $\mathit{LC.DetectMisbehaviour}$, 
 it follows that $(*)$ holds with overwhelming probability (q.e.d.). \\
  
-\noindent \textit{Accountability Soundness:} Let $\mathcal{A}$ be an efficient adversary who interacts with an honest validator. If $\mathit{LC.VerifyMisbehaviour}(\mathit{pp}, i, S, \mathbf{bit}, \sigma, m'', m', C)$ 
+\noindent \textit{Accountability Soundness:} Let $\mathcal{A}$ be an efficient adversary who interacts with an honest validator. If \\ $\mathit{LC.VerifyMisbehaviour}(\mathit{pp}, i, S, \mathbf{bit}, \sigma, m'', m', C)$ 
 outputs $\mathit{acc}$ $(\ast)$, its checks together with completeness for aggregation imply 
 $$\mathit{AS.Verify}(\mathit{pp}, \sigma', m', \mathit{apk_S}) = 1 \ \ (\ast\ast),$$
 where 

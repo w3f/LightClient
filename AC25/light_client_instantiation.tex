@@ -20,7 +20,7 @@ $\{ \Rlacom, \Racom\}$.% , \Rvtcom\}$.}
 \item Given a valid consensus view $C$ over $i$ epochs, we assume there is a well-defined order on the set $\mathit{PK_j}$  
 of public keys included in $C$, $\forall j \in [i]$; hence, in the following, we rename this set by $\mathbf{pk_j}$, $\forall j \in [i]$ 
 and interpret it as a vector. Moreover, we instantiate honestly generated keys in $\mathbf{pk_j}$ with keys generated using 
-$\mathit{AS.GenerateKeypair}$ as described in instantiation~\ref{insta:bls}.
+$\mathit{AS.GenerateKeypair}$ as described in Instantiation~\ref{insta:bls}.
   
 \item We remind the reader that by $\mathbf{Com}(\mathbf{pk})$ we denote the set of two computationally binding polynomial 
 commitments to the polynomials obtained by interpolating the $x$ components of $\mathbf{pk}$ and, respectively, the $y$ 
@@ -30,7 +30,7 @@ Section~\ref{sec_two_step_compiler}, the general results stated in this section 
 
 \item We assume there is a fixed upper bound $v$ on the number of validators in each epoch and we use $v$ in the description of our algorithms. 
 At the same time, for compatibility with the SNARKs that we build for relations $\Rlacom$ and $\Racom$ as defined 
-in \ref{compiler_step_2}, when specifically using our instantiation~\ref{inst:cks} of $\mathit{CKS_{\mathcal{R}}}$ or when proving our results in this section, we 
+in \ref{compiler_step_2}, when specifically using our Instantiation~\ref{inst:cks} of $\mathit{CKS_{\mathcal{R}}}$ or when proving our results in this section, we 
 let $v$ equal $n-1$, where $n$ was defined in Section~\ref{sec:lagrange}. 
 
 \item $\mathit{Parse}$ and $\mathit{Transform}$ denote functions performing the respective operations on the 
@@ -164,10 +164,11 @@ $\mathit{LC.seed} = \mathbf{Com}(\mathbf{pk_1})$.
 &\ \ \ \ \mathit{Return} \ (\mathbf{\Pi}, \mathbf{\Sigma})  
 \end{align*}
 \end{itemize}
-%\vspace{-0.5cm}
+\vspace{-0.5cm}
 %\noindent The two algorithms that are only part of the accountable light client system are: 
 \begin{itemize}
 \item $\mathit{LC.VerifyProof}(\mathit{pp}, \mathit{rs_{\mathit{vk}}}, \LCseed, \pi, m, \mathcal{R})$
+\vspace{-0.9cm}
 \begin{align*}
 & i = \mathit{epoch_{id}}(m) \\
 & (\mathbf{\Pi}, \mathbf{\Sigma}) = \mathit{Parse}(\pi);  \\
@@ -188,9 +189,10 @@ $\mathit{LC.seed} = \mathbf{Com}(\mathbf{pk_1})$.
 & \mathit{Return} \ \mathit{acc} \\
 \end{align*}
 \end{itemize}
-%\vspace{-0.5cm}
+\vspace{-0.5cm}
 \begin{itemize}
 \item $\mathit{LC.VerifyMisbehaviour}(\mathit{pp}, i, S, \mathbf{bit}, \sigma, m'', m', C)$
+\vspace{-0.25cm}
 \begin{align*}
 %& \mathit{If} \ (\mathit{CheckValidConsensus}(C) =1) \\
 & \ \ \ \ \mathit{apk} = \mathit{AS.AggregateKeys}(\mathit{pp}, (\mathbf{bit}(k) \cdot \mathbf{pk_i}(k))_{k=1}^v) \\
@@ -325,16 +327,16 @@ apply to our specific light client instantiation:
 \begin{itemize}
 \item (I.1.) If $m$ and $m'$ are such that 
 $\mathit{epoch_{id}}(m) =\mathit{epoch_{id}}(m')$ and 
-$\mathit{NextEpochKeys}(m, d_m) \neq \bot$ and 
+$\mathit{NextEpochKeys}(m, d_m) \neq \bot$ and \\
 $\mathit{IsCommitment}(m') = 1$ and 
 $m' \neq (\mathit{epoch_{id}}(m), \mathbf{Com}(\mathit{NextEpochKeys}(m, d_m)))$ 
 then $$\mathit{Incompatible}(m, m', d_m)=1.$$
 \item (I.2.) If $\mathit{epoch_{id}}(m) =i$ and $\mathit{NextEpochKeys}(m, d_m)=\mathbf{pk_{i+1}}$, 
-then $\mathit{ValidateData}(m, d_m)$ must call $\mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk}, \mathit{\pi_{POP}})$ 
+then $\mathit{ValidateData}(m, d_m)$ must call \\ $\mathit{AS.VerifyPoP}(\mathit{pp}, \mathit{pk}, \mathit{\pi_{POP}})$ 
 for each $pk \in \mathbf{pk_{i+1}}$ and some data $\mathit{\pi_{POP}} \in d_m$ and also check that
  $\mathit{pk} \in \mathbb{G}_{1,\mathit{inn}}$; if any of these checks fails, then $\mathit{ValidateData}(m, d_m)$ fails.
 \item (I.3.) An honest validator with a valid consensus view $C$, does not sign a message $m'$ 
-with $\mathit{IsCommitment}(m')=1$ unless there exists a message $m$ decided in $C$ 
+with \\ $\mathit{IsCommitment}(m')=1$ unless there exists a message $m$ decided in $C$ 
 and its required data $d_m$ (i.e., $\mathit{ValidateData}(m, d_m) =1$) such that 
 $$m'=(\mathit{epoch_{id}}(m), \mathbf{Com}(\mathit{NextEpochKeys}(m, d_m))).$$ 
 \item (I.4.) If $\mathit{HistoricVerifyData}$ outputs $1$ and there exist a message $m \in C$ 
@@ -350,8 +352,8 @@ $$\mathbf{pk_{\mathit{epoch_{id}}(m)+1}} = \mathit{NextEpochKeys}(m, d_m).$$
 
 \begin{theorem}
 \label{th:soundness} 
-If $\mathit{AS}$ is the secure aggregatable signature scheme defined in instantiation~\ref{insta:bls} and if 
-$\mathit{CKS_{\mathcal{R}}}$ is the secure committee key scheme defined in instantiation~\ref{inst:cks}, then, together with 
+If $\mathit{AS}$ is the secure aggregatable signature scheme defined in Instantiation~\ref{insta:bls} and if 
+$\mathit{CKS_{\mathcal{R}}}$ is the secure committee key scheme defined in Instantiation~\ref{inst:cks}, then, together with 
 the assumptions stated at the beginning of Section~\ref{sec:assumptions} and for $\mathcal{R} \in \{ \Rlacom, \Racom \}$, the tuple 
 ($\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$, $\mathit{LC.VerifyProof}$) as instantiated in Section~\ref{sec:instantiation} is a light client system.
 \end{theorem}
@@ -363,8 +365,8 @@ We include the full proof in Section~\ref{supplementary_proof_sec_soundness}.
 
 \begin{theorem} 
 \label{th:accountability_results}
-If $\mathit{AS}$ is the secure aggregatable signature scheme defined in instantiation~\ref{insta:bls} and if 
-$\mathit{CKS_{\mathcal{R}}}$ is the secure committee key scheme defined in instantiation~\ref{inst:cks}, then, together 
+If $\mathit{AS}$ is the secure aggregatable signature scheme defined in Instantiation~\ref{insta:bls} and if 
+$\mathit{CKS_{\mathcal{R}}}$ is the secure committee key scheme defined in Instantiation~\ref{inst:cks}, then, together 
 with the assumptions stated at the beginning of Section~\ref{sec:assumptions} and for $\mathcal{R} \in \{ \Rlacom, \Racom \}$, the tuple 
 ($\mathit{LC.Setup}$, $\mathit{LC.GenerateProof}$, $\mathit{LC.VerifyProof}$, $\mathit{LC.DetectMisbehaviour}$, 
 $\mathit{LC.VerifyMisbehaviour}$) as instantiated in Section~\ref{sec:instantiation} is an accountable light client system.
@@ -377,7 +379,7 @@ It is only left to show that both accountability completeness and accountability
 Section~\ref{supplementary_proof_sec_accountability}.   
 \end{proof}
 
-\begin{corollary} In an accountable light client system, the number of misbehaving validators output by 
+\begin{corollary} In an accountable light client system, the number of misbehaving validators output by \\ 
 $\mathit{LC.DetectMisbehaviour}$ is $|S|$ and $|S| > 0$.
 \end{corollary}
 \begin{proof} Due to theorem~\ref{th:accountability_results} and accountability completeness, 

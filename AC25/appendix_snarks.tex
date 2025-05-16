@@ -11,14 +11,14 @@ are the counterpart CP-SNARK subcomponent of a that computes a commitment (to pa
 We do not need such a strong property of linking SNARKs; the commitments are used in our case for the efficiency they bring to the prover/ overall system.\\
 
 \noindent The two SNARKs we design in this work have access to a \emph{structured reference string} (srs) of the form 
-$(\{[\tau^i]_1\}_{i=0}^{d}$ , $\{[\tau^i]_2\}_{i=0}^{1})$ where $\tau$ is a random (and allegedly secret) value in $\mathbb{F}$ and $d$ 
+$$(\{[\tau^i]_1\}_{i=0}^{d}, \{[\tau^i]_2\}_{i=0}^{1})$$ where $\tau$ is a random (and allegedly secret) value in $\mathbb{F}$ and $d$ 
 is bounded by a polynomial in $\lambda$. Such an srs is universal and updatable~\cite{updatable_universal_srs_2018}. 
 We introduce a generalisation of the usual SNARK definition which we call a \emph{hybrid model SNARK} inspired by online-offline SNARKs~\cite{HP_paper}. We further refine it as described below:     
 
 \begin{definition}(Hybrid Model SNARK)
 \label{dfn_snark}
 A hybrid model \emph{succinct non-interactive argument of knowledge for relation $\mathcal{R}$} is a tuple of PPT algorithms 
-$(\mathit{SNARK.Setup}, \mathit{SNARK.KeyGen}, \mathit{SNARK.Prove},  \mathit{SNARK.Verify}, \mathit{SNARK.PartInputs})$ 
+$(\mathit{SNARK.Setup}, \mathit{SNARK.KeyGen}, \mathit{SNARK.Prove},  \mathit{SNARK.Verify},  \\ \mathit{SNARK.PartInputs})$ 
 such that for implicit security parameter $\lambda$: 
 
 \begin{itemize}

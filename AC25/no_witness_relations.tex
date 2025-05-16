@@ -2,8 +2,8 @@
 
 In this section we motivate the construction of two related SNARKS, each of them allowing a prover to convince an 
 efficient verifier that an alleged aggregated public key has indeed been computed correctly as an aggregate 
-of a vector of public keys for which two succinct commitments (to the $x$ and $y$ affine coordinates of points) are publicly known. The differences between the two  
-constructions stem from how a \emph{bitvector} with one bit associated to each public key 
+of a vector of public keys for which two succinct commitments (to the $x$ and $y$ affine coordinates of points) 
+are publicly known. The differences between the two constructions stem from how a \emph{bitvector} with one bit associated to each public key 
 (necessary to signal the inclusion or omission of the respective public key w.r.t. the aggregate key) 
 is used as part of the verifier's public input. We describe a 
 \emph{basic accountable SNARK} (the bitvector is represented as a sequence of $0/1$ field elements) and a \emph{packed accountable SNARK} (the bitvector is 
@@ -13,17 +13,17 @@ partitioned into equal blocks of consecutive binary bits which are represented b
 %``packed accountable" (for short, ``packed'') do not refer to the security of the respective SNARK but they summarise properties 
 %of the underlying sets of constraints that define the SNARKs, and, hence their use case. 
 We finally re-cast our basic and packed accountable SNARKs into SNARKs for specific types of conditional NP relations necessary for modelling and 
-building accountable light client systems. For reasons of space, the packed accountable scheme is described in full in Appendix \ref{sec_a}.
+building accountable light client systems. %For reasons of space, the packed accountable scheme is described in full in Appendix \ref{sec_a}.
 
 \noindent To compile our desired SNARKs we proceed as follows:
 \begin{itemize}
 \item In Sections \ref{sec_la} and \ref{sec_a} we define vector-based conditional NP relations $\Rla$ (i.e., basic accountable) and $\Ra$ (packed accountable) and we design two ranged polynomial protocols for these relations. The ranged polynomial protocol notion originates in~\cite{plonk}; 
-we review it and define a refinement of it in Section~\ref{supplementary_poly_protocols_appendix};  
-\item In Section~\ref{sec_two_step_compiler} we define a two-steps PLONK-inspired compiler which we use to compile the ranged polynomial protocols into 
+we review it and define a refinement of it in Appendix~\ref{supplementary_poly_protocols_appendix};  
+\item In Appendix~\ref{sec_two_step_compiler} we define a two-steps PLONK-inspired compiler which we use to compile the ranged polynomial protocols into 
 SNARKs for two novel mixed vector and trusted polynomial commitments conditional NP relations which we denote by 
 $\Rlacom$ and $\Racom$, respectively. 
 \item In Section~\ref{sec:inst_committee_key} we give an instantiation for committee key scheme for aggregatable signatures which uses our custom SNARKs 
-(obtained using our two-step compiler) and our instantiation for BLS aggregatable signatures from Section~\ref{sec:bls}. 
+(obtained using our two-step compiler) and our instantiation for BLS aggregatable signatures from Appendix~\ref{sec:bls}. 
 %\item We include in Section~\ref{suplementary_plonk_comparison} in the appendices a comparison between PLONK~\cite{plonk} and our custom SNARKs. 
 \end{itemize}
 
@@ -95,21 +95,22 @@ $H$-ranged polynomial protocol $\Pa$ for relation $\Ra$ (Section~\ref{sec_a}). I
 &\mathsf{kaccx(X)}  =  \sum_{i=0}^{n-1} \mathit{kaccx_i} \cdot \mathsf{L_i(X)}; \mathsf{kaccy(X)}  = \sum_{i=0}^{n-1} \mathit{kaccy_i} \cdot \mathsf{L_i(X)}, 
 \end{align*}
 \noindent where $(\mathit{pkx_0}, \ldots, \mathit{pkx_{n-2}})$ 
-and $(\mathit{pky_0}, \ldots, \mathit{pky_{n-2}})$ are computed such that $\forall i \in \{0, \ldots, n-2\}$, $\mathit{pk_i}$ 
+and $(\mathit{pky_0}, \ldots, \mathit{pky_{n-2}})$ are computed such that\\ $\forall i \in \{0, \ldots, n-2\}$, $\mathit{pk_i}$ 
 is interpreted as a pair $(\mathit{pkx_i}, \mathit{pky_i})$ with its components in $\mathbb{F}$; we also have 
-$(\mathit{kaccx_{0}}, \mathit{kaccy_{0}}) = (\mathit{h_x}, \mathit{h_y})$ and 
-$(\mathit{kaccx_{i+1}}, \mathit{kaccy_{i+1}}) = (\mathit{kaccx_{i}}, \mathit{kaccy_{i}}) \oplus \mathit{bit_i}(\mathit{pkx_{i}}, \mathit{pky_{i}})$, 
-$\forall i < n-1$. %Note that in the last relation $\mathit{bit_i}$ is not interpreted as a field element anymore but as a binary bit.
-\vspace{-0.15in}
+$$(\mathit{kaccx_{0}}, \mathit{kaccy_{0}}) = (\mathit{h_x}, \mathit{h_y})$$
+$$(\mathit{kaccx_{i+1}}, \mathit{kaccy_{i+1}}) = (\mathit{kaccx_{i}}, \mathit{kaccy_{i}}) \oplus \mathit{bit_i}(\mathit{pkx_{i}}, \mathit{pky_{i}}), \forall i < n-1.$$ %Note that in the last relation $\mathit{bit_i}$ is not interpreted as a field element anymore but as a binary bit.
+
+\vspace{0.1cm}
 
 \noindent \textsf{Polynomial Identities} 
 \begin{align*}
-id_1(X) = & (X-\omega^{n-1}) \cdot [b(X) \cdot ((kaccx(X)-pkx(X))^2 \cdot (kaccx(X)+ pkx(X) + 
- kaccx(\omega\cdot X)) - (pky(X) - kaccy(X))^2) + \\ 
-  & +(1-b(X)) \cdot (kaccy(\omega\cdot X) - kaccy(X))]. \\
-id_2(X)  =  & (X-\omega^{n-1})\cdot [b(X) \cdot ((kaccx(X) - pkx(X)) \cdot (kaccy(\omega \cdot X) + kaccy(X)) - 
- (pky(X) - kaccy(X)) \cdot (kaccx(\omega \cdot X) - kaccx(X))) + \\
- & + (1-b(X)) \cdot   \cdot(kaccx(\omega \cdot X) - kaccx(X))]. \\
+id_1(X) = & (X-\omega^{n-1}) \cdot \\
+& \cdot [b(X) \cdot ((kaccx(X)-pkx(X))^2 \cdot (kaccx(X)+ pkx(X) + kaccx(\omega\cdot X)) - \\
+&- (pky(X) - kaccy(X))^2) + (1-b(X)) \cdot (kaccy(\omega\cdot X) - kaccy(X))]. \\
+id_2(X)  =  & (X-\omega^{n-1})\cdot \\ 
+& \cdot [b(X) \cdot ((kaccx(X) - pkx(X)) \cdot (kaccy(\omega \cdot X) + kaccy(X)) -  \\
+& - (pky(X) - kaccy(X)) \cdot (kaccx(\omega \cdot X) - kaccx(X))) + \\
+& + (1-b(X)) \cdot (kaccx(\omega \cdot X) - kaccx(X))]. \\
 id_3(X)  =  & (kaccx(X) - h_x)\cdot L_0(X) + (kaccx(X) - (h\oplus apk)_{x})  \cdot L_{n-1}(X).  \\
 id_4(X) =  & (kaccy(X) - h_y)\cdot L_0(X) + (kaccy(X)  - (h\oplus apk)_{y}) \cdot L_{n-1}(X). \\
 id_5(X) =  & b(X)(1-b(X)).
@@ -123,7 +124,7 @@ of results with those related to $\Ra$ described in Section~\ref{sec_a}. \\
 
 \noindent \textsf{$H$-ranged Polynomial Protocol $\Pla$ for Conditional NP Relation $\Rla$} describes the interaction of the prover 
 $\mathcal{P}_{poly}$, the verifier $\mathcal{V}_{poly}$ and the trusted third party $\mathcal{I}$ 
-in accordance to Definition~\ref{def_ranged_poly_protocol} from Section~\ref{supplementary_poly_protocols_appendix}. \\
+in accordance to Definition~\ref{def_ranged_poly_protocol} from Appendix~\ref{supplementary_poly_protocols_appendix}. \\
 \vspace{-0.15in}
 %\noindent \textsf{Protocol $\Pla$} \\
 
@@ -141,9 +142,9 @@ $$id_i(X) = 0, \forall i \in [4].$$
 
 \noindent We show $\Pla$ is an $H$-ranged polynomial protocol for conditional NP relation $\Rla$. For this, we first prove:
 \vspace{-0.05in}
-\begin{test_claim} Assume that $\forall i < n-1$ such that $\mathit{bit}_i = 1$, we have that $pk_i = (pkx_i, pky_i) \in \ginn{1}$. 
-If polynomial identities \\ $id_i(X) = 0, \forall i \in [5],$ hold over range 
-$H$ and the polynomial $b(X)$ has been constructed via interpolation on $H$ such that \\ $b(\omega^i) = \mathit{bit}_i, \forall i <n$ then the following four properties hold:
+\begin{test_claim} Assume that $\forall i < n-1$ such that $\mathit{bit}_i = 1$, we have that $$pk_i = (pkx_i, pky_i) \in \ginn{1}.$$ 
+If polynomial identities $id_i(X) = 0, \forall i \in [5],$ hold over range 
+$H$ and the polynomial $b(X)$ has been constructed via interpolation on $H$ such that $$b(\omega^i) = \mathit{bit}_i, \forall i <n$$ then the following four properties hold:
 $$\mathit{bit}_i \in \mathbb{B} = \{0,1\} \subset \mathbb{F}, \forall i <n$$ 
 $$(kaccx_{0}, kaccy_{0}) = (h_x, h_y)$$ 
 $$(kaccx_{n-1}, kaccy_{n-1}) = (h_x, h_y)\oplus (apk_x, apk_y)$$ 
@@ -151,12 +152,11 @@ $$(kaccx_{i+1}, kaccy_{i+1}) =  (kaccx_{i}, kaccy_{i}) \oplus \mathit{bit}_i(pkx
 %where in the last relation $\mathit{bit_i}$ should not be interpreted as a field element but as a binary bit
 \label{claim:keys_affine_comm}
 \end{test_claim}
-\vspace{-0.08in}
-
+\vspace{-0.7cm}
 \begin{proof} Everything but the last property in the claim is easy to derive from polynomial identities 
 $id_3(X) =0, id_4(X )= 0, id_5(X) = 0$ holding over $H$. To prove the remaining property, we remind 
 the incomplete addition formulae for curve points in affine coordinates, over elliptic curve in short Weierstrasse form and state:\\ 
-\vspace{-0.1in}
+\vspace{-0.3cm}
 
 \begin{observation} \label{obs} Suppose that $\mathit{bit} \in \{0,1\}$, $(x_1,y_1)$ is a point on an elliptic curve in 
 short Weierstrasse form, and, if $\mathit{bit} = 1$, so is $(x_2,y_2)$. We claim that the following equations: 
@@ -217,8 +217,7 @@ $$(kaccx_{i+1}, kaccy_{i+1}) =  (kaccx_{i}, kaccy_{i}) \oplus \mathit{bit_i}(pkx
 %where in the last relation $\mathit{bit_i}$ should not be interpreted as a field element but as a binary bit.
 \label{corollary:keys_affine_comm}
 \end{corollary}
-\vspace{-0.2in}
-
+\vspace{-1cm}
 \begin{proof}The proof follows trivially from the general result stated by Claim~\ref{claim:keys_affine_comm}. 
 \end{proof}
 \vspace{-0.1in}
@@ -232,28 +231,34 @@ protocol for conditional NP relation $\Rla$.
 
 \begin{proof}
 If $(\mathbf{bit},\mathbf{pk}, \mathit{apk}) \in \Rla$ holds, 
-meaning that $\mathbf{bit} \in \mathbb{B}^n$ and $\mathbf{pk} \in \ginn{1}^{n-1}$ and $\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i}$ hold, 
+meaning that $\mathbf{bit} \in \mathbb{B}^n$ and $\mathbf{pk} \in \ginn{1}^{n-1}$ and $$\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i}$$ hold, 
 then it is easy to see that the honest prover $\mathcal{P}_{poly}$ in $\Pla$ will convince the honest verifier $\mathcal{V}_{poly}$ in 
 $\Pla$ to accept with probability $1$ so perfect completeness holds. 
 For knowledge-soundness, if the verifier $\mathcal{V}_{poly}$ in $\Pla$ accepts, 
 then the extractor $\mathcal{E}$ is trivial since $\Rla$ has no witness.  
 We need to show that if $\mathbf{pk} \in \ginn{1}^{n-1}$ and the verifier in $\Pla$ accepts, 
-then $(\mathbf{bit},\mathbf{pk}, \mathit{apk}) \in \Rla$ holds, which given our definition for conditional relation is 
-equivalent to proving that $\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i}$ holds. This is due to 
+then $$(\mathbf{bit},\mathbf{pk}, \mathit{apk}) \in \Rla$$ holds, which given our definition for conditional relation is 
+equivalent to proving that $$\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i}$$ holds. This is due to 
 Corollary~\ref{corollary:keys_affine_comm}. \end{proof}
 \vspace{-0.15in}
 
+\subsection{Packed Accountable Protocol}
+\label{sec_a}
+\input{packed_accountable}
+
 \subsection{Our Custom SNARKs}
 \label{sec_custom_snarks}
-To design our accountable light client systems as introduced in Section~\ref{sec_intro_committee} and fully detailed in Section~\ref{new_light_client}, 
+To design our accountable light client systems as introduced in Section~\ref{sec_intro_committee} and fully detailed in Appendix~\ref{new_light_client}, 
 we need to further refine and then compile relations $\Rla$ and $\Ra$ (introduced in Sections \ref{sec_la} and \ref{sec_a}, respectively) into appropriate 
 SNARKs such that the long public input $\mathbf{pk} \in ({\mathbb{F}^2})^{n-1}$ is replaced by a 
 pair of succinct commitments and, $\mathbf{pk}$ becomes a witness for the resulting refined relations. As far as we are aware, such a compiler does not exist. 
 Thus, we design a two-step compiler to obtain SNARKs for relations with such properties. We are interested in relations $\Rlacom$ and $\Racom$, where 
-$\Rlacom$ defined below and $\Racom$ defined in Section~\ref{compiler_step_2}.
+$\Rlacom$ defined below and $\Racom$ defined in Appendix~\ref{compiler_step_2}.
  
-$${\Rlacom} = \{(\mathbf{C} \in \mathcal{C}, \mathbf{bit} \in \mathbb{B}^n, \mathit{apk} \in \mathbb{F}^2; \mathbf{pk}) : 
-\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \},$$
+\begin{align*}
+{\Rlacom} = \{&(\mathbf{C} \in \mathcal{C}, \mathbf{bit} \in \mathbb{B}^n, \mathit{apk} \in \mathbb{F}^2; \mathbf{pk}) : \\
+&\mathit{apk} = \sum_{i=0}^{n-2} [\mathit{bit_i}] \cdot \mathit{pk_i} \ | \ \mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \},
+\end{align*}
 \noindent where $\mathbf{C}$ is a commitment from a set $\mathcal{C}$ of commitments and $\mathbf{Com}(\mathbf{pk})$ is a commitment to a specific vector, 
 namely $\mathbf{pk}$. 
 
@@ -265,7 +270,7 @@ namely $\mathbf{pk}$.
  %&\mathbf{pk} \in \ginn{1}^{n-1} \ \wedge \ \mathbf{bit} \in \mathbb{B}^n \ \wedge\ \ 
  %b'_{j} = \sum_{i=0}^{\block -1}2^i \cdot \mathit{bit_{\block \cdot j + i}}, \forall j < \frac{n}{\block}  \wedge \  \mathbf{C} = \mathbf{Com}(\mathbf{pk}) \} 
 %\end{align*}
-The two-step compiler is described in Section~\ref{sec_two_step_compiler}, with the first 
+The two-step compiler is described in Appendix~\ref{sec_two_step_compiler}, with the first 
 step being the standard PLONK compiler (Section 4.7 of 
 \cite{plonk}) and the second step being amenable for compiling into SNARKs a specific 
 generalisation of the two NP relations just detailed above. In fact, the second compilation step is simply a re-casting of the already compiled SNARKs in first step 
@@ -290,11 +295,11 @@ maximum number of validators.
 \begin{itemize}
 \item $\mathit{CKS_{\mathcal{R}}.Setup}(v)$ calls algorithms: 
 \begin{enumerate}
-\item $\mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}= v+1)$ with  $\mathit{AS.Setup}$ part of Instantiation~\ref{insta:bls} and 
-$\ginn{1}$ part of $\mathit{pp}$ (see notation in Section~\ref{sec:bls});
-\item $\mathit{srs} \leftarrow \mathit{SNARK.Setup}(\mathit{aux_{\mathit{SNARK}}} = (v, 3v))$ with 
+\item $\mathit{pp} \leftarrow \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}}= v+1)$ with $\mathit{AS.Setup}$ part of Instantiation~\ref{insta:bls} and 
+$\ginn{1}$ part of $\mathit{pp}$ (see notation in Appendix~\ref{sec:bls});
+\item $\mathit{srs} \leftarrow \mathit{SNARK.Setup}(\mathit{aux_{\mathit{SNARK}}} = (v, 3v))$ with \\
 $\mathit{srs}=([1]_{\indexoneout}, [\tau]_{\indexoneout}, \ldots, [\tau^{3v}]_{\indexoneout}, [1]_{\indextwoout}, [\tau]_{\indextwoout})$;
-\item $(\mathit{rs}_{\mathit{pk}}, \mathit{rs}_{\mathit{vk}}) \leftarrow \mathit{SNARK.KeyGen}(\mathit{srs}, \mathcal{R})$ with 
+\item $(\mathit{rs}_{\mathit{pk}}, \mathit{rs}_{\mathit{vk}}) \leftarrow \mathit{SNARK.KeyGen}(\mathit{srs}, \mathcal{R})$ with \\
 $(\mathit{rs}_{\mathit{pk}}, \mathit{rs}_{\mathit{vk}}) =  (([1]_{\indexoneout}, [\tau]_{\indexoneout}, \ldots, [\tau^{3v}]_{\indexoneout}), 
 ([1]_{\indexoneout}, [1]_{\indextwoout}, [\tau]_{\indextwoout}))$ where %$\mathcal{R} \in \{\Rlacom, \Racom \}$ is one of the accountable relations defined in the end of section~\ref{sec_two_step_compiler} and 
 the notation $[\ldots]_{\indexoneout}$ and $[\ldots]_{\indextwoout}$ was defined in Section~\ref{sec:pairings}.
@@ -327,7 +332,7 @@ $(\mathit{bit_i})_{i=1}^{n-1}||0$ and $\mathsf{block}$ is the highest power of 2
 
 \item $0/1 \leftarrow \mathit{CKS_{\mathcal{R}}.Verify}(\mathit{pp}, \mathit{rs}_{\mathit{vk}}, \mathit{ck}, m, \mathit{asig}, \pi, \mathbf{bitvector})$ 
 parses $\pi$ to retrieve $\pi_{\mathit{SNARK}}$ and $\mathit{apk}$ and it calls $\mathit{AS.Verify(\mathit{pp}, \mathit{apk}, m, \mathit{asig})}$ 
-as defined in Instantiation~\ref{insta:bls} and it also calls $\mathit{SNARK.Verify}(\mathit{rs_{vk}}, x, \pi_{\mathit{SNARK}}, \mathcal{R})$ 
+as defined in Instantiation~\ref{insta:bls} and it also calls \\ $\mathit{SNARK.Verify}(\mathit{rs_{vk}}, x, \pi_{\mathit{SNARK}}, \mathcal{R})$ 
 (where $\pi_{\mathit{SNARK}}$, $x$ and $\mathcal{R}$ are as defined in the item above with the only difference that $(\mathit{bit_i})_{i=1}^{n-1}$ 
 represents the first $n-1$ bits of $\mathbf{bitvector}$, padded with $0$s, if not sufficiently many exist in $\mathbf{bitvector}$); 
 overall, the output is $1$ if both algorithms output $1$ and the output is $0$ otherwise.

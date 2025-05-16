@@ -119,7 +119,7 @@ $$\mathit{Adv}^{\mathit{forge}}_{\mathcal{A}}({\lambda}) = \mathit{Pr}[\mathit{G
 \noindent and $\mathcal{A}^{\mathit{OSign}}$ denotes the adversary $\mathcal{A}$ with access to oracle $\mathit{OSign}$. \\
 
 \noindent We say an aggregatable signature scheme is unforgeable if for all efficient adversaries
-$\mathcal{A}$ it holds that $\mathit{Adv}^{\mathit{forge}}_{\mathcal{A}}({\lambda}) \leq \mathit{negl}(\lambda)$. 
+$\mathcal{A}$ it holds that $$\mathit{Adv}^{\mathit{forge}}_{\mathcal{A}}({\lambda}) \leq \mathit{negl}(\lambda).$$ 
 \end{definition}
 
 \subsubsection{An Aggregatable Signature Instantiation}
@@ -134,7 +134,7 @@ instantiation of aggregatable signatures definition. Note that in our implementa
 \begin{itemize}
 \item $(\ginn{1}, \sginn{1}, \ginn{2}, \sginn{2}, \gtinn, \epinn, \Hinn, \HPoP)$ from $\mathit{pp}$ where 
 $\mathit{pp} \leftarrow  \mathit{AS.Setup}(\mathit{aux_{\mathit{AS}}})$, 
-where $\ginn{1}$, $\sginn{1}$, $\ginn{2}$, $\sginn{2}$, $\gtinn$, $\epinn$ were defined in Section~\ref{sec:pairings} and 
+where \\ $\ginn{1}$, $\sginn{1}$, $\ginn{2}$, $\sginn{2}$, $\gtinn$, $\epinn$ were defined in Section~\ref{sec:pairings} and 
 $\Hinn: \{0,1\}^* \rightarrow \ginn{2}$ and $\HPoP: \{0,1\}^* \rightarrow \ginn{2}$ are two hash functions. 
 The auxiliary parameter $\mathit{aux_{\mathit{AS}}}$ is such that there exists $N \in \mathbb{N}$, 
 $N$ is the first component of the vector $\mathit{aux_{\mathit{AS}}}$ and there exists a subgroup of size at least $N$ in the multiplicative group 
@@ -152,13 +152,13 @@ $\mathit{AS.VerifyPoP}$, one checks that $\mathit{pk} \in \ginn{1}$ also holds.
 where $\sigma = \mathit{sk} \cdot \Hinn(m) \in \ginn{2}$.
 
 \item $\mathit{apk} \leftarrow \mathit{AS.AggKeys}(\mathit{pp}, (\mathit{pk_i})_{i=1}^{u})$, where  $\mathit{apk} = \sum_{i=1}^{u} \mathit{pk_i}$. 
-Note that $\mathit{AS.AggKeys}$ checks whether $((\mathit{pk_i})_{i=1}^{u}) \in \ginn{1}^{u} (\ast)$ and, if that is not the case, it outputs $\bot$; 
+Note that $\mathit{AS.AggKeys}$ checks whether $$((\mathit{pk_i})_{i=1}^{u}) \in \ginn{1}^{u} (\ast)$$ and, if that is not the case, it outputs $\bot$; 
 if $(\ast)$ holds, the algorithm $\mathit{AS.AggKeys}$ continues with the computations described above. 
 
 
 \item $\mathit{asig} \leftarrow \mathit{AS.AggSigs}(\mathit{pp}, (\sigma_i)_{i=1}^u)$, where $\mathit{asig}$ = $\sum_{i=1}^{u} \sigma_i$.  
 
 \item $0/1 \leftarrow  \mathit{AS.Verify}(\mathit{pp}, \mathit{apk}, m, \mathit{asig})$, where $\mathit{AS.Verify}$ outputs $1$ if $\mathit{apk} \neq \bot$ and
-$\mathit{apk} \in \ginn{1}$ and $\epinn(\mathit{apk}, \Hinn(m)) = \epinn(\sginn{1}, \mathit{asig})$; otherwise, it outputs $0$.
+$\mathit{apk} \in \ginn{1}$ and  $$\epinn(\mathit{apk}, \Hinn(m)) = \epinn(\sginn{1}, \mathit{asig});$$ otherwise, it outputs $0$.
 \end{itemize}
 \end{construction}

@@ -4,7 +4,7 @@ minimal cost. We are interested in blockchains that use Byzantine agreement type
 like Polkadot~\cite{polkadot}, Ethereum~\cite{ethereum}
 %~\cite{eth2}
 or many other systems~\cite{cosmos,tendermint_paper,celo}. These protocols
-may have a large number of consensus participants, from 1000s to 100000s, and in such PoS protocols, the set of participants often changes regularly. \\
+may have a large number of consensus participants, from 1000s to 100000s, and in such proof-of-stake (PoS) protocols, the set of participants often changes regularly. \\
 
 \vspace{-0.2cm}
 \noindent Following the consensus protocols in the examples above entails proving that a large subset of a designated set of participants,
@@ -54,11 +54,11 @@ protocol of the blockchain. Such light client systems would not be possible for 
 \vspace{-0.25cm}
 \subsection{Relevance to Bridge Security}
 %\vspace{-0.2cm}
-\noindent {\color{red}In this section we review the impact of our scheme on bridge security. Blockchain bridges are protocols that allow value transfer between blockchains. Bridges have frequently been the target of attacks. We note that \$1.2 billion has been stolen in attacks on insecure bridges during first 8 months of 2022 alone ~\cite{elliptic_harmony,elliptic_nomad}. Of the top 10 crypto thefts of all times, \$1.6 billion out of \$3.4 billion come from bridge attacks \cite{elliptic_nomad}. These confirm that bridges have frequently been a weaker point, compared to the security of the blockchains themselves and they carry a lot of economical value.}
+\noindent In this section we review the impact of our scheme on bridge security. Blockchain bridges are protocols that allow value transfer between blockchains. Bridges have frequently been the target of attacks. We note that \$1.2 billion has been stolen in attacks on insecure bridges during first 8 months of 2022 alone ~\cite{elliptic_harmony,elliptic_nomad}. Of the top 10 crypto thefts of all times, \$1.6 billion out of \$3.4 billion come from bridge attacks \cite{elliptic_nomad}. These confirm that bridges have frequently been a weaker point, compared to the security of the blockchains themselves and they carry a lot of economical value.
 
 \noindent An ideal bridge would be as secure as the least secure of the two blockchains. The most secure bridges use on-chain light client systems, e.g., Cosmos IBC protocol~\cite{IBC_paper}, to achieve this. Each bridged chain follow the other chain's consensus on-chain. To simplify, we will consider an on-chain light client of chain B on chain A, although B will also have the same for A. If B's consensus and the on-chain logic of A are secure, then adversary cannot convince the logic of A that B decided some event that B's clients do not agree as decided. This translates to the adversary for example not being able to create value on A without having locked any value on B.
 
-\noindent A main reason why bridges might not use this approach is efficiency. Smart contracts and other on-chain logic is an extremely resource constrained environment compared to browsers or phones that light clients might target. One approach for efficiency is to design B's consensus so that the light clients are cheaper, for example by reducing the validator numbers. Cosmos chains currently have 33-175 validators~\cite{CosmosValNYX},\cite{CosmosValHUB}. Many chains have many more, e.g., Ethereum's hundreds of thousands of validators, for more decentralisation and security. Alternatively, the light client can use threshold signatures however that means not having the same accountability guarantees and also that limits validator numbers in practice {\color{red} both discussed elsewhere}.
+\noindent A main reason why bridges might not use this approach is efficiency. Smart contracts and other on-chain logic is an extremely resource constrained environment compared to browsers or phones that light clients might target. One approach for efficiency is to design B's consensus so that the light clients are cheaper, for example by reducing the validator numbers. Cosmos chains currently have 33-175 validators~\cite{CosmosValNYX},\cite{CosmosValHUB}. Many chains have many more, e.g., Ethereum's hundreds of thousands of validators, for more decentralisation and security. Alternatively, the light client can use threshold signatures however that means not having the same accountability guarantees and also that limits validator numbers in practice both discussed elsewhere.
 
 % Notaries are obviously bad but lots of money has been stolen from such bridges [TODO: Expand this].
 
@@ -82,8 +82,7 @@ implementation.
 In Section~\ref{sec_prelims}, we give cryptographic
 preliminaries necessary for later sections. In Section~\ref{sec_apk_proofs}
 we describe one of our custom SNARKs and our committee key scheme.
- We conclude in Section~\ref{conclusions}. {\color{red}Our paper includes
-an extensive appendix for more details.}% as follows.
+ We conclude in Section~\ref{conclusions}. % as follows.
 %\vspace{-0.01in}
 \vspace{-0.25cm}
 \section{Our Solution}
@@ -329,16 +328,16 @@ input dataset as part of the public input for a SNARK. LegoSNARK ~\cite{CP_paper
 opening to be explicitly verified inside the SNARK. \cite{CP_paper} claims a 5000x speedup in proving time using this technique for Groth16 instead of hashing. Our custom schemes use 
 a version of this approach, using KZG polynomial commitments~\cite{KZG_10} as part of of the public inputs, and we expect that several orders of magnitude for our proving time improvement 
 over Celo's Plumo hash-based protocol come from this. Additionally, we also have a very simple constraint system that would have a considerable increase in size if we hashed the input.
-Our formalism, which generalised PLONK~\cite{plonk}'s polynomial protocols and compiler to work with polynomial commitments for the input, is different from prior work on CP SNARKs.
+Our formalism, which generalised PLONK~\cite{plonk}'s polynomial protocols and compiler to work with polynomial commitments for the input, is different from prior work on CP SNARKs. \\
 
 In practice, commit-and-prove systems (for short, CP) can be used to compress a large data structure and then prove something about its
 content (e.g., polynomial commitments~\cite{KZG_10}, vector commitments~\cite{vector_commitment_1}, accumulators~\cite{first_accumulator}).
 CP schemes can also be used to decouple the publishing of commitments to some data from the proof generation: each of these actions may be
 performed by different parties or entities~\cite{zkp_reference}. Finally, commitments can be used to make different proof systems
 interoperable~\cite{CP_paper,interoperability_2}. Our SNARKs have properties from the first two categories, however we could not
-have simply re-used an existing argument system: by designing custom circuits and SNARKs, we ensured improved efficiency for our use cases.
+have simply re-used an existing argument system: by designing custom circuits and SNARKs, we ensured improved efficiency for our use cases. \\
 
-In this context, ECLIPSE~\cite{eclipse} presents a compiler that starts off with popular SNARKs (e.g., Sonic~\cite{sonic}, PLONK~\cite{plonk},
+In the above context, ECLIPSE~\cite{eclipse} presents a compiler that starts off with popular SNARKs (e.g., Sonic~\cite{sonic}, PLONK~\cite{plonk},
 Marlin~\cite{marlin}) and via a new general compilation method generates CP-variants for these SNARKs.
 Our proposed compiler uses as a first step the standard PLONK compiler.  As a second step we simply
 re-cast the SNARK resulted in the first step as a SNARK for a new relation.
@@ -353,17 +352,17 @@ case of ECLIPSE, the witnesses for the NP relations before compilation remain wi
 after compilation, in our case, some part of the public input before compilation becomes witness after the
 re-casting of the SNARK for a new NP relation. Thus, overall, ECLIPSE and the current work solve different problems.
 Our compilation method requires only the PLONK compiler without additional computational
-steps so it is more efficient than the one in~\cite{eclipse}.
+steps so it is more efficient than the one in~\cite{eclipse}. \\
 
 Finally, Lunar~\cite{lunar} obtains CP-SNARKs with a universal and updatable SRS and presents argument systems for
 linking committed inputs to the polynomial commitments used in AHP-based arguments. Lunar presents efficiency improvements compared
-to LegoSNARK~\cite{CP_paper}, but Lunar and ECLIPSE outperform each other in different contexts.
+to LegoSNARK~\cite{CP_paper}, but Lunar and ECLIPSE outperform each other in different contexts. \\
 
 %The paragraph below was a comment/was commented out when shortening the paper.
-\begin{comment}
-\noindent Another paradigm related to commit-and-prove is called hash-and-prove~\cite{HP_paper}: for large data structures or simply data that is expensive to be
+%\begin{comment}
+ Another paradigm related to commit-and-prove is called hash-and-prove~\cite{HP_paper}: for large data structures or simply data that is expensive to be
 handled directly by a computationally constrained verifier, one can hash that data and then create a (succinct) proof for some verifiable computation that uses
-the original, large, dataset. The committee key scheme notion that we define in this work has both similarities to but also differences with regard to this
+the original, large, dataset. The notion of committee key scheme defined in this work has both similarities to but also differences with regard to this
 paradigm. The similarities are that, both the way we instantiate our committee key (i.e., using a polynomial commitment
 with a trusted universal setup) and the way we instantiate our aggregate public key, can be generalised as some form of (possibly deterministic)
 hash function. One difference is that the setup for the polynomial commitment is the same as that from which the proving and verification key for our committee key scheme are
@@ -373,10 +372,10 @@ prove the security properties of our accountable light client(s). In fact, to ad
 just a hash-and-prove instance, we mention that our committee key scheme inherits an unforgeability property from its aggregatable scheme sub-component.
 This is one property that as far as we are aware no hash-and-prove scheme has. \\
 \vspace{-0.08in}
-\end{comment}
+%\end{comment}
 
-\begin{comment}
-\noindent When proving the security of our arguments, we use an extension of some of the more commonly employed SNARK definitions which we call a ``a hybrid model SNARK''. This resembles the existing notion of SNARKs with online-offline verifiers as described in~\cite{HP_paper}, where the verifier computation is split into
+%\begin{comment}
+When proving the security of our arguments, we use an extension of some of the more commonly employed SNARK definitions which we call a ``a hybrid model SNARK''. This resembles the existing notion of SNARKs with online-offline verifiers as described in~\cite{HP_paper}, where the verifier computation is split into
 two parts: during the offline phase some computation (possibly of commitments) happens; this computation takes some public inputs as parameters and, when not
 performed by the verifier, it may also be performed (in part) by the prover. The online phase is the main computation performed by the verifier. In the case of our hybrid
 model SNARKs, however, the input to the offline counterpart described above (which we call the $\mathit{PartInput}$ algorithm) may even be the witness or
@@ -385,7 +384,7 @@ since for our use case, $\mathit{PartInput}$ does handle a portion of the witnes
 Moreover, in our instantiation, $\mathit{PartInput}$ produces computationally binding commitment schemes that are opened by the prover. Both of these properties
 are not explicitly part of our general definition for hybrid model SNARKs, but they are crucial and explicitly assumed and used
 in proving the security for our compiler's second step (see Appendix~\ref{sec_two_step_compiler}).
-\end{comment}
+%\end{comment}
 \vspace{-0.1in}
 %\begin{comment}
 %\subsection{BLS multisignatures} \label{ssec:BLS}

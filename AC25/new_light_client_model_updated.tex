@@ -1,4 +1,7 @@
+\section{An Accountable Light Client System}
+\label{sec_light_client_model}
 \label{new_light_client}
+
 In this section, we give a model for the consensus systems that our light client system can be applied to and we define security properties for light client systems,
 and, in particular accountable light client systems. Moreover, we present generic pseudocode for light client systems and prove that our implementation 
 fulfils the security properties that we define for this notion.  
@@ -212,7 +215,7 @@ We say \emph{the consensus view $C$ is valid} if:
 \item $\exists \ d_{m_i} \in D \cap C$ such that $\mathit{VerifyData}(m_i, d_{m_i}) = 1$, $\forall 1\leq i \leq n$. 
 \item $\mathit{HistoricVerifyData}(\mathsf{genstate}, m_1, d_{m_1}, \ldots, m_n, d_{m_n}, \mathit{pk_1},\ldots, \mathit{pk_q}) = 1$. 
 \item There exists no pair $(i,j)$, $1 \leq i,j \leq k$, $i \neq j$ such that $\mathit{Incompatible}(m_i, m_j, d_{m_i}) = 1$ 
-or $\mathit{Incompatible}(m_j, m_i, d_{m_j}) = 1$.
+or \\ $\mathit{Incompatible}(m_j, m_i, d_{m_j}) = 1$.
 \item We require that all consensus messages in $C$ are decided according to Definition~\ref{def_decide}.
 \end{itemize}
 \end{definition}
