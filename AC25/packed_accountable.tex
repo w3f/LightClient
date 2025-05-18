@@ -1,7 +1,7 @@
 %\section{Packed Accountable Protocol}
 %\label{sec_a}
 
-Here we describe the packed accountable protocol, which differs from the basic accountable protocol given in Section \ref{sec_la}, in that the verifier performs far fewer field operations. It achieves this by partitioning the bitvector into field elements differently:  instead of interpreting the bitvector is as a sequence of $0/1$ field elements, that is divided into sequences of $\block$ bits which are interpreted as field elements. Unpacking these to bits in the SNARK adds some complexity, but the verifier has to deal with $1/\block$ times fewer field elements and operations.
+Here we describe the packed accountable protocol, which differs from the basic accountable protocol given in Section \ref{sec_la}, in that the verifier performs far fewer field operations. It achieves this by partitioning the bitvector into field elements differently:  instead of interpreting the bitvector as a sequence of $0/1$ field elements, it divides it into sequences of $\block$ bits which are interpreted as field elements. Unpacking these to bits in the SNARK adds some complexity, but the verifier has to deal with $1/\block$ times fewer field elements and operations.
 
 
 Let $\mathbb{F}_{|\block|} = \{0, \ldots, 2^{\block -1} \}$. %, with $\block$ defined in Section~\ref{sec:lagrange}.
@@ -62,16 +62,16 @@ for $\Ra$. First, we prove the following:
 
 \begin{test_claim}
 \label{claim:bitvector_comm}
-If the polynomial identities $id_6(X) = 0, id_7(X) = 0$ hold over range $H$, then, 
-\ewnp, 
-we have $c_{a,i} =  2^{i \mod \block} \cdot r^{i \div \block}$, $\forall i < n$ and $\mathsf{sum} = \sum_{i=0}^{n-1}b_i \cdot c_{a,i}$, 
-where $b_i = b(\omega^i), \forall i <n$. If, additionally, identity $id_5(X) = 0$ holds over $H$, 
-$r$ has been randomly chosen in $\mathbb{F}$, $\mathsf{sum} = \sum_{j=0}^{\frac{n}{\block}-1} b'_{j}r^j$ 
-(as computed by $\mathcal{V}_{poly}$) and $\mathit{bit_{i}} \in \mathbb{B}, \forall i < n$ and 
-$b'_{j} = \sum_{k=0}^{\block -1}2^k \cdot \mathit{bit_{\block \cdot j + k}}, \forall 0 \leq j \leq \frac{n}{\block} -1$ 
-(due to  $(b'_{0}, \ldots, b'^{\frac{n}{\block} -1})$ 
+If polynomial identities $id_6(X) = 0, id_7(X) = 0$ hold over range $H$, then, 
+\ewnp,  we have $$c_{a,i} =  2^{i \mod \block} \cdot r^{i \div \block}, \forall i < n$$ and $$\mathsf{sum} = \sum_{i=0}^{n-1}b_i \cdot c_{a,i},$$  
+where $b_i = b(\omega^i), \forall i <n$. \\
+
+\noindent If, additionally, identity $id_5(X) = 0$ holds over $H$, 
+$r$ has been randomly chosen in $\mathbb{F}$ and \\ $\mathsf{sum} = \sum_{j=0}^{\frac{n}{\block}-1} b'_{j}r^j$ 
+holds (as computed by $\mathcal{V}_{poly}$) and $\mathit{bit_{i}} \in \mathbb{B}, \forall i < n$ and 
+$$b'_{j} = \sum_{k=0}^{\block -1}2^k \cdot \mathit{bit_{\block \cdot j + k}}, \forall 0 \leq j \leq \frac{n}{\block} -1$$  holds (due to $(b'_{0}, \ldots, b'^{\frac{n}{\block} -1})$ 
 being interpreted by $\mathcal{V}_{poly}$ as in $\mathbb{F}_{|\block|}^{\frac{n}{\block}}$), then \ewnp, 
-$b_i = \mathit{bit_{i}}, \forall i <n$.
+$$b_i = \mathit{bit_{i}}, \forall i <n.$$
 \end{test_claim}
 \vspace{-0.15in}
 

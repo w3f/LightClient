@@ -43,11 +43,11 @@ but, as will become clear in the following, they have been included for easier d
 \vspace{-0.009in}
 \noindent We denote by $H$ the multiplicative subgroup of $\mathbb{F}$ generated 
 by $\omega$ as defined in Section~\ref{sec:lagrange}. We denote by $\mathit{incl}(a_0, \ldots, a_{n-2})$ the inclusion 
-predicate that checks if  $(a_0, \ldots, a_{n-2}) \in \ginn{1}^{n-1}$. Moreover let $h = (\mathit{h_x}, \mathit{h_y})$ 
+predicate that checks if $(a_0, \ldots, a_{n-2}) \in \ginn{1}^{n-1}$. Moreover let $h = (\mathit{h_x}, \mathit{h_y})$ 
 be some fixed, publicly known element in $\einn \setminus \ginn{1}$. In case this is not possible, we chose $h$ according to Appendix~\ref{sec:other_choice_h}.  
 Finally, we denote by $(a_x, a_y)$ the affine representation in 
 $x$ and $y$ coordinates of $a \in \einn$ and by $\oplus$ the point addition in affine coordinates on the elliptic curve $\einn$. 
-We denote $\mathbb{B} = \{0,1\} \subset \mathbb{F}$. \\
+We denote $\mathbb{B} = \{0,1\} \subset \mathbb{F}$. We denote by $[s] \cdot \mathit{ecp}$ the multiplication of an elliptic curve point $\mathit{ecp}$ by the scalar $s$. \\
 \vspace{-0.15in}
 
 %\noindent Finally, as mentioned in section~\ref{sec:conditional_relations}, the interpretation of adding explicit domains to public 
@@ -81,7 +81,7 @@ of the iterative partial aggregate sum of the actual signing validators' public 
 ensure the $x$ and, respectively, the $y$ coordinates of the iterative partial aggregate sums of actual signing validators public keys (up to each index $i \leq n-2$) 
 follow formulas $(\ast)$, $(\ast\ast)$ from Observation~\ref{obs} which gives all possible cases of 
 complete curve point addition when the second curve point is multiplied by a bit; $id_3(X)$, $id_4(X)$ 
-ensure first partial aggregate sum is $h$ and the total aggregate sum is $h + \mathit{apk}$; this is necessary in order to ensure the addition of the public keys (i.e., elliptic curve points) 
+ensure first partial aggregate sum is $h$ and the total aggregate sum is $h \oplus \mathit{apk}$; this is necessary in order to ensure the addition of the public keys (i.e., elliptic curve points) 
 never falls into condition (3) defined in Observation~\ref{obs}, which recursively implies the partial aggregate sum at every step is a well defined curve point, hence, it is a suitable input for the next step consisting of an elliptic curve addition; 
 $id_5(X)$ ensures $b(X)$ evaluates to bits over $H$. Together, $id_1(X)$ to $id_4(X)$ define 
 the $H$-ranged polynomial protocol $\Pla$ for relation $\Rla$; $id_5(X)$ will be used to prove a more general result, applicable also for the 
