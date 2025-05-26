@@ -1,4 +1,4 @@
-\section{Compiler for Hybrid Model SNARKs with Mixed Inputs}
+\section{Compiler for Hybrid Model SNARKs}
 \label{sec_two_step_compiler}
 %\vspace{-0.05in} 
 \subsection{Technical Challenges and Contributions Regarding our Custom SNARKs} 
@@ -9,7 +9,7 @@ In order to define and implement our committee key scheme accountable light clie
 we had to tackle some technical challenges and make additional contributions as summarised below.
 
 %\vspace{-0.2cm}
-\paragraph{Extending PLONK Compiler to Mixed Commitment and Vectors NP Relations} Firstly, our custom SNARKs takes inspiration from PLONK \cite{plonk} in terms design of the proof system used, and of the circuits and gates. However, our SNARKs also have differences compared to PLONK. PLONK applies to NP relations  that use  vectors of field elements for 
+\paragraph{Extending PLONK Compiler to Mixed Commitment and Vectors NP Relations} Firstly, our custom SNARKs takes inspiration from PLONK \cite{plonk} in terms of the design of the proof system used, and of the circuits and gates. However, our SNARKs also have differences compared to PLONK. PLONK applies to NP relations  that use  vectors of field elements for 
 public inputs and witnesses.  However we need SNARKs whose defining NP relations also have  polynomial commitments (in our case, the committee key $C$) as part of their public inputs. Hence, the original PLONK compiler does not suffice; we extend it with a second step in which we show that under certain conditions which our protocol fulfils, the SNARKs obtained using the original PLONK compiler are also SNARKs for a mixed type of NP relation containing both vectors and polynomial commitments. The full details and proofs can be found in Section~\ref{sec_two_step_compiler} 
 and we believe this compiler extension to be of independent interest. 
 

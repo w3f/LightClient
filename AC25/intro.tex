@@ -82,8 +82,26 @@ implementation.
 In Section~\ref{sec_prelims}, we give cryptographic
 preliminaries necessary for later sections. In Section~\ref{sec_apk_proofs}
 we describe one of our custom SNARKs and our committee key scheme.
- We conclude in Section~\ref{conclusions}. % as follows.
-%\vspace{-0.01in}
+We conclude in Section~\ref{conclusions}. Our work contains an extensive appendix. 
+In Appendix~\ref{sec:multisig} we remind the definition of aggregatable signatures and provide an 
+instantiation that is a variant of the BLS signature scheme~\cite{BLS_signatures}. 
+In Appendix~\ref{sec:snarks_defs} we extend the definition of a SNARK to the new notion of a hybrid SNARK; 
+we use this notion for proving the security of our custom SNARKs. 
+In Appendix~\ref{supplementary_poly_protocols_appendix} we provide the new notion of ranged polynomial protocols for conditional NP relations. 
+In Appendix~\ref{sec:other_choice_h} we tackle a special case mentioned in Section~\ref{sec:snarks}. 
+In Appendix~\ref{sec:missing_snark_proofs} we give the postponed proofs related to the packed accountable protocol from Section~\ref{sec:missing_snark_proofs}. 
+In Appendix~\ref{sec_two_step_compiler} we extend the standard PLONK compiler into a compiler for hybrid SNARKs. 
+In Appendix~\ref{sec:rolled_out} we provide a rolled out hybrid model SNARK compiled using the steps described in Appendix~\ref{sec_two_step_compiler}.
+In Appendix~\ref{suplementary_plonk_comparison} we compare standard PLONK with the SNARKs derived using our compiler. 
+In Appendix~\ref{supplementary_proof_sec_cks} we provide the postponed security proof for our committee key scheme. 
+In Appendix~\ref{sec_light_client_model} we give a formal model for accountable light clients while in  
+Appendix~\ref{sec:LCinstantiation} we provide a concrete instantiation. 
+In Appendix~\ref{supplementary_proof_sec_soundness} and in appendix~\ref{supplementary_proof_sec_accountability} 
+we prove the soundness and, respectively, the accountability completeness and accountability soundness of our light client instantiation. 
+In Appendix~\ref{sec:ethereum} we explain how a modified version of our accountable light client can be applied also to Ethereum. 
+
+
+ %\vspace{-0.01in}
 \vspace{-0.25cm}
 \section{Our Solution}
 \label{sec:sketch}
@@ -358,7 +376,7 @@ Finally, Lunar~\cite{lunar} obtains CP-SNARKs with a universal and updatable SRS
 linking committed inputs to the polynomial commitments used in AHP-based arguments. Lunar presents efficiency improvements compared
 to LegoSNARK~\cite{CP_paper}, but Lunar and ECLIPSE outperform each other in different contexts. \\
 
-%The paragraph below was a comment/was commented out when shortening the paper.
+%The paragraph below was a comment/was commented out when shortening the paper, but not for AC25 submission.
 %\begin{comment}
  Another paradigm related to commit-and-prove is called hash-and-prove~\cite{HP_paper}: for large data structures or simply data that is expensive to be
 handled directly by a computationally constrained verifier, one can hash that data and then create a (succinct) proof for some verifiable computation that uses
