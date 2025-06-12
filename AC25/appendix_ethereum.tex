@@ -1,6 +1,7 @@
-\section{Is our protocol applicable to Ethereum?}
+\section{Is Our Protocol Applicable to Ethereum?}
  \label{sec:ethereum}
-
+ 
+\begin{comment} 
 We believe that our protocol could not feasibly be directly applied to Ethereum as it is without a hard fork, but it would be easy to apply it with changes that might feasibly be implemented, 
 even with changes not specifically designed with our protocol in mind. Ethereum already uses BLS signatures on the BLS12-381 curve in consensus. To work with BLS12-381, 
 our protocol would use KZG commitments on the BW6-767 curve~\cite{bw6767}. Because the base field of BL12-381 is not highly 2-adic, a prover would need a more complicated FFT algorithm 
@@ -13,5 +14,27 @@ but this is feasible~\cite{bw6767}. We also need an appropriately sized subgroup
  
  Finally, we compare running our scheme on the full validator set to Ethereum's current light client design~\cite{ethlight}.
  That uses a subset of 1024 public keys that changes every epoch (i.e. 64 blocks or 12.8 minutes). It is not accountable because it would take less than 1024 validators misbehaving to deceive a light client. We remark that 1024 384-bit public keys is comparable in size to 1 bit for all of Ethereum's over 500000 validators, and as a result our light client scheme can be used for an accountable light client with a similar overhead to Ethereum's existing unaccountable scheme.
+\end{comment}
 
- With epochless Casper FFG~\cite{Gasper}, 64 aggregated signatures are required to represent a single Casper FFG vote, 2 of which are required for a proof. The form of accountable safety satisfied by Casper FFG~\cite{CasperFFG} suffices for us: if two forks are finalised, then then 2/3 of the validator set voted on two messages such that signing both is punishable.  One complication of a Casper FFG light client is that valid votes include two blockhashes, one of which is required to be the ancestor of the other. There needs to be an efficient "proof of ancestry" such as introducing a more efficient commitment to previous block hashes, e.g., Merkle Mountain Range of blockhashes as suggested in~\cite{flyclient}.
+
+Our light client protocol cannot be applied as is to Ethereum without a hard fork. However, we believe there are certain natural changes which would benefit both Ethereum in general  
+as well as allow a more smooth integration of our light client protocol, as a side efect. First, for its consensus, Ethereum already uses BLS signatures defined on the BLS12-381 curve. In turn, in order to be compatible 
+with the BLS12-381 curve, our light client protocol would require KZG commitments defined on the BW6-767 curve~\cite{bw6767}. Because the base field for the BLS12-381 curve is not highly 2-adic, 
+our underlying SNARK prover would have to rely on a less efficient but still feasible FFT algorithm~\cite{bw6767}. The SNARK prover would also require 
+an appropriately sized subgroup of the multiplicative field to be used for our KZG commitments in the Lagrange basis. An easy calculation gives the small primes $2,3^2,11,23,47,10177$ together with 859267 
+as the factors for the order of the multiplicative group in BLS12-381. Hence, any product which is using only these factors and which is itself larger than the desired number of validators defines a usable subgroup.
+ 
+Next, we look at the entity constructing the KZG commitments to the validators public keys. In order to obtain the shortest light client proofs, the validators themselves should construct and sign these commitments. 
+This, in turn, would require a change to the consensus logic. As an alternative, a smart contract can compute on chain the respective KZG commitments.
+This would require the EVM to have access to the active validator's public keys and would also require a precompile for the BW6-767 operations to be feasible.
+We note that there have been already many suggestions and recommendations for adding elliptic curve operations for different curves to Ethereum (e.g., EIPs 2537, 2538, 3026~\cite{EIPs}). 
+ 
+Finally, we compare running our light client scheme on the full Ethereum validator set to Ethereum's current light client design~\cite{ethlight}.
+The latter uses a subset of 1024 public keys that changes every epoch (i.e. 64 blocks or 12.8 minutes). Moreover, Ethereum's current light client is not accountable because it would take less than 
+1024 validators misbehaving to deceive a light client. We remark that 1024 384-bit public keys is comparable in size to 1 bit for each of Ethereum's over 500000 validators. 
+The latter represents the input overhead of our light client. As a result, our light client scheme has a similar input overhead to Ethereum's existing scheme with the advantage of being accountable.
+
+With epochless Casper FFG~\cite{Gasper}, 64 aggregated signatures are required to represent a single Casper FFG vote, 2 of which are required for a proof. The form of accountable safety 
+satisfied by Casper FFG~\cite{CasperFFG} suffices for us: if two forks are finalised, then 2/3 of the validator set voted on two messages such that signing both is punishable. One complication 
+of a Casper FFG light client is that valid votes include two block hashes, one of which is required to be the ancestor of the other. There needs to be an efficient "proof of ancestry" such as introducing 
+a more efficient commitment to previous block hashes, e.g., Merkle Mountain Range of block hashes as suggested in~\cite{flyclient}.
