@@ -434,36 +434,4 @@ are not explicitly part of our general definition for hybrid model SNARKs, but t
 in proving the security for our compiler's second step (see Appendix~\ref{sec_two_step_compiler}).
 %\end{comment}
 \vspace{-0.1in}
-%\begin{comment}
-%\subsection{BLS multisignatures} \label{ssec:BLS}
 
-%\input{bls_and_rogue_key_related_work.tex}
-
-%TODO: This could be explained somewhere other than the intro if preferred {\color{red}@Alistair from Oana: Can we replace or merge the 4 sentences below on multisignatures with/%into the more detailed description I give above?}
-
-%There are several variants of BLS multisignatures. We will consider the easiest one for which the aggregate public key is simply the sum of the public keys of the signers
-
-%This naive scheme is vulnerable to rogue key attacks, which can be prevented using proofs of possession [cn].  In our case, we can assume that the list of public keys comes from a %trusted source, such as the previous set of validators, who checked the proofs of possession and so the verifier themselves does not need to.
-
-%\subsection{Implementation}
-%\label{sec:intro_implementation}
-
-%\noindent {\color{red} Our implementation leverages a pair of pairing-friendly elliptic curves which we call the inner curve and the outer curve respectively, such that the base field of the %inner curve matches the scalar field of the outer curve.} \\
-
-%\noindent {\color{red}The first pair of pairing friendly elliptic curves where the inner curve's base field and the outer curve's scalar field are identical
-%but the two curves do not form a cycle has been introduced by ZEXE~\cite{zexe}. The authors call such a pair of elliptic curves a two-chain.
-%The ZEXE two-chain curves are BLS12-377 and CP6-782. In this work we build on the two-chain ZEXE instantiation in the following way: we
-%keep BLS12-377 as the inner curve and, for efficiency reasons which will be detailed later in the paper, we replace the CP6-782 outer curve with
-%BW6-761~\cite{BW6}.\\
-
-%\noindent Both BLS12-377 and BW6-761 are pairing friendly curves and we make use of that as follows. Intuitively we use BLS12-377
-%to sign and verify BLS signatures with the public keys being elements of the first source group of the efficient pairing associated with BLS12-377. Hence,
-%our BLS signature public keys are natively represented over the base field of BLS12-377. Then we use BW6-761 to prove using succinct proofs
-%(i.e., snarks) public key aggregation for public keys signing the same message. Because the base field of BLS12-377 matches the scalar field
-%of BW6-761 and since in a snark system the proof is performed in an arithmetic circuit over the scalar field of the curve, so,
-%in our case the scalar field of BW6-761, any efficiency loss due to curves mismatch is avoided. \\
-
-%\noindent Note that even if our implementation is instantiated with a specific pairing-friendly two-chain as described above,
-%our theoretical results (see Section \ref{sec:snarks}) generalise to any pairing-friendly two-chain and, where possible, we state
-%them as such.}
-%\end{comment}
