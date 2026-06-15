@@ -1,0 +1,53 @@
+\section{Choosing $h$ when $\einn = \ginn{1}$}
+\label{sec:other_choice_h}
+
+When the inner elliptic curve $\einn$ is a prime-order group (i.e., $\einn = \ginn{1}$), 
+the set $\einn \setminus \ginn{1}$ is empty. Hence, the elliptic curve point $h$, which is 
+necessary for constructing our custom range polynomial protocols in Section~\ref{sec:snarks}, can no longer be chosen from the set 
+$\einn \setminus \ginn{1}$. To securely generate $h$ in this case, we employ an indifferentiable hash-to-curve based 
+construction relying on the work of Brier et al.~\cite{hash-to-curve} and standardized in IETF RFC 9380~\cite{ietf_rfc_9380}. We require 
+$\mathcal{H}: \{0, 1\}^* \times \{0, 1\}^* \rightarrow \mathbb{F}^2$, a hash-to-field function modeled as a random oracle and 
+$f: \mathbb{F} \rightarrow \einn$, Icart's function~\cite{icart_function}, which is a map-to-curve.{\footnote{A more general, albeit a less efficient, construction is possible (see~\cite{hash-to-curve}) 
+where the restrictions on function $f$ can be reduced such that either Icart's function or the SSWU~\cite{SWU} algorithm can be used.}} 
+
+For each of our custom SNARKs, the construction is defined as follows:
+\begin{enumerate}
+    \item Let $x$ be the public input corresponding to our custom SNARK.    
+    \item Compute two independent field elements by hashing the public input bound to a domain separation tag: 
+    \[ (u_0, u_1) = \mathcal{H}(x, \text{``AccountableLightClient\_Accumulator\_h''}) \]
+    \item Define the initial accumulator point as $h = f(u_0) \oplus f(u_1)$.
+\end{enumerate}
+
+According to~\cite{hash-to-curve} and due to $\einn = \ginn{1}$, if $\mathcal{H}$ is modeled as a random 
+oracle\footnote{Which is implicitly necessary for obtaining non-interactive SNARKs using the Fiat-Shamir transform.}  
+then $h$ is uniformly distributed over the target group $\ginn{1}$. Moreover, $h$ being uniformly 
+distributed over $\ginn{1}$ introduces only a negligible additive knowledge-soundness error to 
+the range polynomial protocols, and, subsequently, to our custom SNARKs. Indeed, we have: 
+ 
+\begin{lemma}
+For at most $n-1$ sequential additions, the probability that the initial accumulator $h$ triggers an incomplete 
+affine addition edge case is strictly bounded by $\frac{2(n-1)}{|\ginn{1}|}$.
+\end{lemma}
+
+\begin{proof}
+Let $(\mathit{pk}_i)_{0 \leq i \leq n-2}$ be the $n-1$ elliptic curve points to be sequentially added on top of the initial accumulator $h$, 
+and let $\Delta_{i-1} = \sum_{j=0}^{i-1} \mathit{pk}_j$ be their preceding partial sum (with $\Delta_{-1} = \mathcal{O}$). 
+
+An affine addition exception at step $i$ requires the current accumulator $h + \Delta_{i-1}$ to equal either $\mathit{pk}_i$ or $-\mathit{pk}_i$. 
+The doubling exception ($h + \Delta_{i-1} = \mathit{pk}_i$) occurs when adding a point to itself because incomplete affine formulae 
+lack the algebraic terms to compute tangent lines. The point-at-infinity exception ($h + \Delta_{i-1} = -\mathit{pk}_i$) occurs when adding a point to 
+its inverse because the resulting group identity lacks a valid affine coordinate representation. 
+
+Consequently, these exceptions restrict $h$ to at most two failure values per step: $h = \pm \mathit{pk}_i - \Delta_{i-1}$. 
+Across all $n-1$ steps, there are at most $2(n-1)$ such failure values. Because the hash-to-curve construction samples 
+$h$ uniformly from $\ginn{1}$ strictly after the public input $x$ is fixed, the union bound dictates that the overall collision probability 
+is $\le \frac{2(n-1)}{|\ginn{1}|}$. 
+\end{proof}
+
+Hence, for a cryptographically large elliptic curve group (i.e., an elliptic curve where the number of points 
+$|\einn| = |\ginn{1}| \in \Omega(2^{\lambda})$ for security parameter $\lambda$) and for values of $n$ which are 
+bounded by $O(\mathit{poly}(\lambda))$, the fraction $\frac{2(n-1)}{|\ginn{1}|}$ is overwhelmingly small. 
+We can thus infer that the additional additive knowledge-soundness error—introduced to both the custom 
+range polynomial protocols and their corresponding custom SNARKs by dynamically sampling $h$ as 
+described above—is strictly negligible in $\lambda$.
+

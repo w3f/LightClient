@@ -1,0 +1,33 @@
+\section{Comparison between PLONK and our SNARKs}
+\label{suplementary_plonk_comparison}
+
+\noindent In the following, we briefly look at the differences between PLONK universal SNARK and the SNARKs designed in this work. We observe 
+that while the NP relation that defines PLONK is more general, the relations that define our SNARKs are bespoke as we are only interested in efficiently proving 
+public key aggregation. Because our relations are so bespoke, it turns out we do not require the full functionality that PLONK has to offer, and, in particular, our SNARKs  
+do not require any permutation argument. \\
+
+\noindent A second difference is that while PLONK's circuit is defined by a number of selector 
+polynomials (which are a type of pre-processed polynomials) and a PLONK verifier needs to perform 
+a one-time expensive computation of the polynomial commitments to those selector polynomials, our SNARK verifiers 
+are able to avoid such a pre-processing phase. Indeed, in the case of $\mathscr{P}^h_{\mathsf{a}}$ (which is the only one of 
+our two SNARKs that has a polynomial, namely $\mathit{aux}(X)$, that defines its circuit), our respective SNARK verifier does not need to compute a 
+commitment to its only ``selector polynomial'' as, due to its structure, $\mathit{aux}(X)$ can be directly and efficiently evaluated by our SNARK verifier itself. \\ 
+
+\noindent A third difference is that using our two-steps compiler, our SNARKs verifiers are able to efficiently handle input vectors of length $O(n)$, 
+where the degree of the polynomials committed to by our SNARK provers is also $O(n)$. Our SNARKs verifiers achieve efficiency by offloading the 
+expensive polynomial commitment computation involving the public inputs to a trusted third party. \\
+
+\noindent Moreover, while PLONK does not incorporate trusted inputs, one can easily apply the Step 2 of our compiler to PLONK. In particular, one could imagine a situation 
+where a PLONK verifier is relying on a trusted party to compute some or all of the polynomial commitments to the circuit's selector polynomials. This is equivalent to our hybrid 
+model SNARK definition applied to PLONK. The benefit is that by delegating such a computation, the PLONK verifier becomes more efficient. \\ %at the expense of relying on some trust assumptions. \\
+
+\begin{comment}
+The next paragraph should be commented out if we do not include in the submission the light client model instantiation section, i.e., section 5.3 on eprint.
+\end{comment}
+
+\noindent Finally, looking at our light client system instantiation in Appendix~\ref{sec:LCinstantiation} due to the inductive structure of the soundness proof (Theorem~\ref{th:soundness}), 
+the efficiency of using a hybrid model SNARK has an even greater impact for the light client system verifier than that compared to verifying multiple instances of PLONK for the same circuit:
+while for the latter the PLONK verifier has to compute commitments to selector polynomial only once anyway, in the case of the former, the commitments to public inputs may differ 
+at every step; hence, a trusted third party relives a higher computation burden from the light client verifier overall. 
+
+

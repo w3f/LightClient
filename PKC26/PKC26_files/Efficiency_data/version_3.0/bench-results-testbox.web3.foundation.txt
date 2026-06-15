@@ -1,0 +1,289 @@
+Running test for the 'basic' scheme for N = 2^10
+Start:   setup
+··Start:   Computing 3070 scalars powers
+··End:     Computing 3070 scalars powers ...........................................362.535µs
+··Start:   3070-scalar mul in G1
+··End:     3070-scalar mul in G1 ...................................................30.264ms
+··Start:   2-scalar mul in G1
+··End:     2-scalar mul in G1 ......................................................3.250ms
+End:     setup .....................................................................38.256ms
+Start:   signer set commitment
+End:     signer set commitment .....................................................19.942ms
+Start:   prover precomputation
+End:     prover precomputation .....................................................6.946ms
+Start:   BW6 prove
+End:     BW6 prove .................................................................112.975ms
+Start:   BW6 verify
+··Start:   linear accountability check
+··End:     linear accountability check .............................................235.885µs
+··Start:   KZG check
+····Start:   linearization polynomial commitment
+····End:     linearization polynomial commitment ...................................2.472ms
+····Start:   aggregate evaluation claims in zeta
+····End:     aggregate evaluation claims in zeta ...................................731.502µs
+····Start:   batched KZG openning
+····End:     batched KZG openning ..................................................7.481ms
+····Start:   lazy subgroup check
+····End:     lazy subgroup check ...................................................558.946µs
+··End:     KZG check ...............................................................11.268ms
+End:     BW6 verify ................................................................11.600ms
+>>>>> Performing: cargo test --release --features parallel print-trace --test basic 16
+    Finished release [optimized] target(s) in 0.04s
+     Running tests/basic.rs (target/release/deps/basic-1b737ca55d942b6f)
+Running test for the 'basic' scheme for N = 2^16
+Start:   setup
+··Start:   Computing 196606 scalars powers
+··End:     Computing 196606 scalars powers .........................................15.758ms
+··Start:   196606-scalar mul in G1
+··End:     196606-scalar mul in G1 .................................................782.243ms
+··Start:   2-scalar mul in G1
+··End:     2-scalar mul in G1 ......................................................3.629ms
+End:     setup .....................................................................806.368ms
+Start:   signer set commitment
+End:     signer set commitment .....................................................575.302ms
+Start:   prover precomputation
+End:     prover precomputation .....................................................132.869ms
+Start:   BW6 prove
+End:     BW6 prove .................................................................2.964s
+Start:   BW6 verify
+··Start:   linear accountability check
+··End:     linear accountability check .............................................4.461ms
+··Start:   KZG check
+····Start:   linearization polynomial commitment
+····End:     linearization polynomial commitment ...................................1.620ms
+····Start:   aggregate evaluation claims in zeta
+····End:     aggregate evaluation claims in zeta ...................................771.477µs
+····Start:   batched KZG openning
+····End:     batched KZG openning ..................................................7.708ms
+····Start:   lazy subgroup check
+····End:     lazy subgroup check ...................................................565.608µs
+··End:     KZG check ...............................................................10.686ms
+End:     BW6 verify ................................................................15.288ms
+>>>>> Performing: cargo test --release --features parallel print-trace --test basic 20
+    Finished release [optimized] target(s) in 0.04s
+     Running tests/basic.rs (target/release/deps/basic-1b737ca55d942b6f)
+Running test for the 'basic' scheme for N = 2^20
+Start:   setup
+··Start:   Computing 3145726 scalars powers
+··End:     Computing 3145726 scalars powers ........................................170.211ms
+··Start:   3145726-scalar mul in G1
+··End:     3145726-scalar mul in G1 ................................................9.825s
+··Start:   2-scalar mul in G1
+··End:     2-scalar mul in G1 ......................................................3.552ms
+End:     setup .....................................................................10.009s
+Start:   signer set commitment
+End:     signer set commitment .....................................................7.634s
+Start:   prover precomputation
+End:     prover precomputation .....................................................2.608s
+Start:   BW6 prove
+End:     BW6 prove .................................................................42.079s
+Start:   BW6 verify
+··Start:   linear accountability check
+··End:     linear accountability check .............................................77.900ms
+··Start:   KZG check
+····Start:   linearization polynomial commitment
+····End:     linearization polynomial commitment ...................................1.604ms
+····Start:   aggregate evaluation claims in zeta
+····End:     aggregate evaluation claims in zeta ...................................751.399µs
+····Start:   batched KZG openning
+····End:     batched KZG openning ..................................................7.786ms
+····Start:   lazy subgroup check
+····End:     lazy subgroup check ...................................................566.069µs
+··End:     KZG check ...............................................................10.728ms
+End:     BW6 verify ................................................................89.687ms
+#### Packed Accountable Scheme
+>>>>> Performing:  cargo test --release --features parallel print-trace --test packed 10
+   Compiling apk-proofs v0.1.0 (/home/skalman/code/apk-proofs/bw6)
+    Finished release [optimized] target(s) in 0.26s
+     Running tests/packed.rs (target/release/deps/packed-9714c7d005fb76cd)
+Running test for the 'packed' scheme for N = 2^10
+Start:   setup
+··Start:   Computing 3070 scalars powers
+··End:     Computing 3070 scalars powers ...........................................362.455µs
+··Start:   3070-scalar mul in G1
+··End:     3070-scalar mul in G1 ...................................................30.850ms
+··Start:   2-scalar mul in G1
+··End:     2-scalar mul in G1 ......................................................3.277ms
+End:     setup .....................................................................38.882ms
+Start:   signer set commitment
+End:     signer set commitment .....................................................20.120ms
+Start:   prover precomputation
+End:     prover precomputation .....................................................6.606ms
+Start:   BW6 prove
+End:     BW6 prove .................................................................156.610ms
+Start:   BW6 verify
+··Start:   KZG check
+····Start:   linearization polynomial commitment
+····End:     linearization polynomial commitment ...................................3.115ms
+····Start:   aggregate evaluation claims in zeta
+····End:     aggregate evaluation claims in zeta ...................................1.102ms
+····Start:   batched KZG openning
+····End:     batched KZG openning ..................................................7.512ms
+····Start:   lazy subgroup check
+····End:     lazy subgroup check ...................................................562.042µs
+··End:     KZG check ...............................................................12.333ms
+··Start:   A(zw) as fraction
+··End:     A(zw) as fraction .......................................................10.450µs
+··Start:   A(zw) as polynomial
+··End:     A(zw) as polynomial .....................................................13.937µs
+End:     BW6 verify ................................................................12.455ms
+>>>>> Performing:  cargo test --release --features parallel print-trace --test packed 16
+    Finished release [optimized] target(s) in 0.04s
+     Running tests/packed.rs (target/release/deps/packed-9714c7d005fb76cd)
+Running test for the 'packed' scheme for N = 2^16
+Start:   setup
+··Start:   Computing 196606 scalars powers
+··End:     Computing 196606 scalars powers .........................................14.584ms
+··Start:   196606-scalar mul in G1
+··End:     196606-scalar mul in G1 .................................................796.856ms
+··Start:   2-scalar mul in G1
+··End:     2-scalar mul in G1 ......................................................3.707ms
+End:     setup .....................................................................819.768ms
+Start:   signer set commitment
+End:     signer set commitment .....................................................583.695ms
+Start:   prover precomputation
+End:     prover precomputation .....................................................130.874ms
+Start:   BW6 prove
+End:     BW6 prove .................................................................4.051s
+Start:   BW6 verify
+··Start:   KZG check
+····Start:   linearization polynomial commitment
+····End:     linearization polynomial commitment ...................................3.141ms
+····Start:   aggregate evaluation claims in zeta
+····End:     aggregate evaluation claims in zeta ...................................1.045ms
+····Start:   batched KZG openning
+····End:     batched KZG openning ..................................................7.565ms
+····Start:   lazy subgroup check
+····End:     lazy subgroup check ...................................................564.406µs
+··End:     KZG check ...............................................................12.337ms
+··Start:   A(zw) as fraction
+··End:     A(zw) as fraction .......................................................10.379µs
+··Start:   A(zw) as polynomial
+··End:     A(zw) as polynomial .....................................................13.786µs
+End:     BW6 verify ................................................................12.561ms
+>>>>> Performing:  cargo test --release --features parallel print-trace --test packed 20
+    Finished release [optimized] target(s) in 0.04s
+     Running tests/packed.rs (target/release/deps/packed-9714c7d005fb76cd)
+Running test for the 'packed' scheme for N = 2^20
+Start:   setup
+··Start:   Computing 3145726 scalars powers
+··End:     Computing 3145726 scalars powers ........................................172.392ms
+··Start:   3145726-scalar mul in G1
+··End:     3145726-scalar mul in G1 ................................................9.932s
+··Start:   2-scalar mul in G1
+··End:     2-scalar mul in G1 ......................................................3.523ms
+End:     setup .....................................................................10.117s
+Start:   signer set commitment
+End:     signer set commitment .....................................................7.531s
+Start:   prover precomputation
+End:     prover precomputation .....................................................2.612s
+Start:   BW6 prove
+End:     BW6 prove .................................................................57.970s
+Start:   BW6 verify
+··Start:   KZG check
+····Start:   linearization polynomial commitment
+····End:     linearization polynomial commitment ...................................3.213ms
+····Start:   aggregate evaluation claims in zeta
+····End:     aggregate evaluation claims in zeta ...................................1.114ms
+····Start:   batched KZG openning
+····End:     batched KZG openning ..................................................7.593ms
+····Start:   lazy subgroup check
+····End:     lazy subgroup check ...................................................574.294µs
+··End:     KZG check ...............................................................12.517ms
+··Start:   A(zw) as fraction
+··End:     A(zw) as fraction .......................................................11.772µs
+··Start:   A(zw) as polynomial
+··End:     A(zw) as polynomial .....................................................14.387µs
+End:     BW6 verify ................................................................14.207ms
+#### Counting Scheme
+>>>>> Performing:  cargo test --release --features parallel print-trace --test counting 10
+   Compiling apk-proofs v0.1.0 (/home/skalman/code/apk-proofs/bw6)
+    Finished release [optimized] target(s) in 0.26s
+     Running tests/counting.rs (target/release/deps/counting-e8116fa8577d755d)
+Running test for the 'counting' scheme for N = 2^10
+Start:   setup
+··Start:   Computing 3070 scalars powers
+··End:     Computing 3070 scalars powers ...........................................350.532µs
+··Start:   3070-scalar mul in G1
+··End:     3070-scalar mul in G1 ...................................................32.058ms
+··Start:   2-scalar mul in G1
+··End:     2-scalar mul in G1 ......................................................3.274ms
+End:     setup .....................................................................39.991ms
+Start:   signer set commitment
+End:     signer set commitment .....................................................19.932ms
+Start:   prover precomputation
+End:     prover precomputation .....................................................6.477ms
+Start:   BW6 prove
+End:     BW6 prove .................................................................141.089ms
+Start:   BW6 verify
+··Start:   KZG check
+····Start:   linearization polynomial commitment
+····End:     linearization polynomial commitment ...................................3.774ms
+····Start:   aggregate evaluation claims in zeta
+····End:     aggregate evaluation claims in zeta ...................................1.577ms
+····Start:   batched KZG openning
+····End:     batched KZG openning ..................................................8.876ms
+····Start:   lazy subgroup check
+····End:     lazy subgroup check ...................................................560.118µs
+··End:     KZG check ...............................................................14.816ms
+End:     BW6 verify ................................................................14.911ms
+>>>>> Performing:  cargo test --release --features parallel print-trace --test counting 16
+    Finished release [optimized] target(s) in 0.04s
+     Running tests/counting.rs (target/release/deps/counting-e8116fa8577d755d)
+Running test for the 'counting' scheme for N = 2^16
+Start:   setup
+··Start:   Computing 196606 scalars powers
+··End:     Computing 196606 scalars powers .........................................14.400ms
+··Start:   196606-scalar mul in G1
+··End:     196606-scalar mul in G1 .................................................793.868ms
+··Start:   2-scalar mul in G1
+··End:     2-scalar mul in G1 ......................................................3.641ms
+End:     setup .....................................................................815.249ms
+Start:   signer set commitment
+End:     signer set commitment .....................................................593.351ms
+Start:   prover precomputation
+End:     prover precomputation .....................................................133.348ms
+Start:   BW6 prove
+End:     BW6 prove .................................................................3.604s
+Start:   BW6 verify
+··Start:   KZG check
+····Start:   linearization polynomial commitment
+····End:     linearization polynomial commitment ...................................2.421ms
+····Start:   aggregate evaluation claims in zeta
+····End:     aggregate evaluation claims in zeta ...................................985.632µs
+····Start:   batched KZG openning
+····End:     batched KZG openning ..................................................7.779ms
+····Start:   lazy subgroup check
+····End:     lazy subgroup check ...................................................575.477µs
+··End:     KZG check ...............................................................11.784ms
+End:     BW6 verify ................................................................11.861ms
+>>>>> Performing:  cargo test --release --features parallel print-trace --test counting 20
+    Finished release [optimized] target(s) in 0.04s
+     Running tests/counting.rs (target/release/deps/counting-e8116fa8577d755d)
+Running test for the 'counting' scheme for N = 2^20
+Start:   setup
+··Start:   Computing 3145726 scalars powers
+··End:     Computing 3145726 scalars powers ........................................171.426ms
+··Start:   3145726-scalar mul in G1
+··End:     3145726-scalar mul in G1 ................................................9.933s
+··Start:   2-scalar mul in G1
+··End:     2-scalar mul in G1 ......................................................3.498ms
+End:     setup .....................................................................10.116s
+Start:   signer set commitment
+End:     signer set commitment .....................................................7.488s
+Start:   prover precomputation
+End:     prover precomputation .....................................................2.606s
+Start:   BW6 prove
+End:     BW6 prove .................................................................51.605s
+Start:   BW6 verify
+··Start:   KZG check
+····Start:   linearization polynomial commitment
+····End:     linearization polynomial commitment ...................................2.434ms
+····Start:   aggregate evaluation claims in zeta
+····End:     aggregate evaluation claims in zeta ...................................1.046ms
+····Start:   batched KZG openning
+····End:     batched KZG openning ..................................................7.661ms
+····Start:   lazy subgroup check
+····End:     lazy subgroup check ...................................................568.944µs
+··End:     KZG check ...............................................................11.734ms
+End:     BW6 verify ................................................................11.820ms
