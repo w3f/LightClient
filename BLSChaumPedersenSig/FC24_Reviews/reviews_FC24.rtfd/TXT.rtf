@@ -1,0 +1,189 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 ArialMT;\f1\fnil\fcharset0 AppleSymbols;\f2\fswiss\fcharset0 Helvetica;
+}
+{\colortbl;\red255\green255\blue255;\red26\green26\blue26;\red255\green255\blue255;\red24\green25\blue27;
+}
+{\*\expandedcolortbl;;\cssrgb\c13333\c13333\c13333;\cssrgb\c100000\c100000\c100000;\cssrgb\c12549\c12941\c14118;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww34000\viewh20240\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs46 \cf2 \cb3 \expnd0\expndtw0\kerning0
+Review #129A\cb1 \
+\cb3 ===========================================================================\cb1 \
+\
+\cb3 Overall merit\cb1 \
+\cb3 -------------\cb1 \
+\cb3 2. Weak reject\cb1 \
+\
+\cb3 Reviewer expertise\cb1 \
+\cb3 ------------------\cb1 \
+\cb3 3. Knowledgeable\cb1 \
+\
+\cb3 Reviewer confidence\cb1 \
+\cb3 -------------------\cb1 \
+\cb3 3. High\cb1 \
+\
+\cb3 Paper summary\cb1 \
+\cb3 -------------\cb1 \
+\cb3 The paper attempts to formalise the more or less folklore techniques known for making aggregate BLS signatures more efficient by adding extra public key components which make verification possible in G_1 and provide proofs of correctness for signatures that can be verified more efficiently. The authors propose a definition, prove the security of their scheme, and provide an implementation and benchmarks. Although I appreciate the effort is formalisation and implementation, there are a few issues with the formalisation and comparisons that make me believe the paper needs some work before it is publishable at a conference like FC.\cb1 \
+\
+\cb3 Strengths and weaknesses\cb1 \
+\cb3 ------------------------\cb1 \
+\cb3 Strengths:\cb1 \
+\cb3 - diagnosing and explaining the problem clearly\cb1 \
+\cb3 - taking the right approach in formalising a set of folklore techniques\cb1 \
+\cb3 - interesting techniques inc. extra public key components and DLEQ proofs\cb1 \
+\cb3 - implementation in Rust and making it available\cb1 \
+\cb3 - benchmarking\cb1 \
+\
+\cb3 Improvement needed:\cb1 \
+\cb3 - not clear who does which verification (i.e. how is the proposed scheme used in practice by parties)\cb1 \
+\cb3 - inconsistencies in the definitions (see below)\cb1 \
+\cb3 - unfairness of the comparison (see below)\cb1 \
+\
+\cb3 Constructive feedback for authors\cb1 \
+\cb3 ---------------------------------\cb1 \
+\cb3 On Definition Inconsistencies\cb1 \
+\
+\cb3 The definition of Completeness for Aggregation uses the Verify algorithm with a single pk and a single signature (**), but the algorithm is defined earlier to take aggregated pks and signatures, so unless you define or require that AggregateKeys and AggregateSignatures return their input if n=1, the definition is not technically correct. This also allows you to state the previous paragraph unconditionally (where you say Perfect Completeness implies completeness of the underlying signature). This also defines an actual \'93underlying signature\'94 since with current definitions, the verification algorithm for a non-aggregated signature is unclear.\cb1 \
+\
+\cb3 Considering three levels of adversary restrictions for the unforgeability security game:\cb1 \
+\cb3 1. adversary needs to give all public keys and all signatures, challenger aggregates both and checks\cb1 \
+\cb3 2. adversary needs to give all public keys and aggregated signature, challenger aggregates public keys and checks\cb1 \
+\cb3 3. adversary needs to give aggregated public key and signature, challenger checks\cb1 \
+\
+\cb3 1 seems equivalent to individual unforgeability. 2 is your definition. 3 is the ideal intuitive case.\cb1 \
+\
+\cb3 The unforgeability definition assumes that aggregation is carried out honestly, but this is not necessarily the case in practice. In reality, an adversary that comes up with an apk and asig that verifies without knowledge of all the secret keys is a successful one. The current definition covers this attack only if AggregateKeys returns the list of keys (i.e. trivial aggregation). Besides, the given definition only covers static corruption, as opposed to the adversary seeing signatures first and then deciding to get access to secret keys, but I am not too worried about this latter issue as I think it would be possible to show that the two definitions are equivalent (although one would expect proper formal treatment to address this as well, at least intuitively).\cb1 \
+\
+\cb3 On the Scheme: why is the format of asig different when n=1 or n>1? Does this mean that for one signature DLEQ proof is checked, but for an aggregated signature they are not?\cb1 \
+\
+\cb3 On the Comparison\cb1 \
+\
+\cb3 To appropriately verify aggregate signatures, in a way that is comparable to aggregate BLS signatures, one needs to run AS.Verify (which verifies an asig against a pk_2 set) AND run AS.VerifyPoP which verifies pk_2 against pk_1, so I am not sure the comparison given in Table 1 is fair (what if some pk_2 is not valid?) as it seems to only cover the AS.Verify time for AS.\cb1 \
+\
+\cb3 Could you also comment on whether comparison with [7] needs to be considered or not, and why?\cb1 \
+\
+\cb3 Typos and other minor issues:\cb1 \
+\cb3 - p2: groupslike\cb1 \
+\cb3 - p3: define PoP\cb1 \
+\cb3 - p3: if you define AS=(tuple of algorithms) then you don\'92t need to repeat the whole tuple every single time\cb1 \
+\
+\
+\cb3 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\cb1 \
+\
+\
+\cb3 Review #129B\cb1 \
+\cb3 ===========================================================================\cb1 \
+\
+\cb3 Overall merit\cb1 \
+\cb3 -------------\cb1 \
+\cb3 3. Weak accept\cb1 \
+\
+\cb3 Reviewer expertise\cb1 \
+\cb3 ------------------\cb1 \
+\cb3 4. Expert\cb1 \
+\
+\cb3 Reviewer confidence\cb1 \
+\cb3 -------------------\cb1 \
+\cb3 3. High\cb1 \
+\
+\cb3 Paper summary\cb1 \
+\cb3 -------------\cb1 \
+\cb3 This paper presents several optimizations to improve the pairing-based multisignature schemes. First, the paper illustrates that verifying partial signatures using the Chaum-Pedersen Sigma-protocol for proving the discrete-logarithm equality (DLEQ) relation is more efficient than using bilinear pairings. Then, the paper presents optimization, which lets the signers compute the signature in G1 while ensuring that the verifier only needs to perform n group operations in G1.\cb1 \
+\
+\cb3 Strengths and weaknesses\cb1 \
+\cb3 ------------------------\cb1 \
+\cb3 Strengths:\cb1 \
+\cb3 - The paper is timely and tries to ground some of the folklore optimizations regarding BLS signatures formally.\cb1 \
+\
+\cb3 Weakness:\cb1 \
+\cb3 - With this scheme, the aggregated signatures are larger. The paper should make it more explicit.\cb1 \
+\cb3 - Requires additional evaluations.\cb1 \
+\
+\cb3 Constructive feedback for authors\cb1 \
+\cb3 ---------------------------------\cb1 \
+\cb3 1. A drawback of the proposed scheme is that the aggregated signature is now larger, as the signature now consists of one group element from both G1 and G2. I recommend making this limitation explicit and mentioning it upfront.\cb1 \
+\
+\cb3 2. Currently, authors compare their optimized signature scheme with the BLS multisignature scheme, where the public keys are in G2 and signatures are in G1 (also known as the minSig variant). I recommend authors compare their optimizations with the BLS multisignature variant with public keys in G1 and signatures in G2 (also known as the minPk variant). Moreover, authors should compare with minPk variant + Chaum-Pedersen DLEQ instead of pairing (say Variant-3).\cb1 \
+\
+\cb3 I believe comparing the proposed scheme with the minPk variant, and Variant-3 is essential for the complete picture, as each of these variants has its advantages and disadvantages.\cb1 \
+\
+\
+\cb3 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\cb1 \
+\
+\
+\cb3 Review #129C\cb1 \
+\cb3 ===========================================================================\cb1 \
+\
+\cb3 Overall merit\cb1 \
+\cb3 -------------\cb1 \
+\cb3 2. Weak reject\cb1 \
+\
+\cb3 Reviewer expertise\cb1 \
+\cb3 ------------------\cb1 \
+\cb3 2. Some familiarity\cb1 \
+\
+\cb3 Reviewer confidence\cb1 \
+\cb3 -------------------\cb1 \
+\cb3 2. Medium\cb1 \
+\
+\cb3 Paper summary\cb1 \
+\cb3 -------------\cb1 \
+\cb3 The authors observe that nowadays mostly type 3 pairing curves are used with slower arithmetic and hash-to-curve operations in the second source group as they are defined over an extension field. They then present optimisations for the usage of BLS signatures in large distributed systems. The authors propose: (1) to give the public key in both source groups ; (2) that aggregated signatures should have the aggregated public key in the second source group, so that checks are done mainly in the first source group; (3) that non-aggregated signatures should carry Chaum-Pedersen style proofs of discrete log equality in the first source group, so that they can be verified without using pairings. They use a proof-of-possession to check the correctness of the key.\cb1 \
+\
+\cb3 Strengths and weaknesses\cb1 \
+\cb3 ------------------------\cb1 \
+\cb3 Strengths:\cb1 \
+\cb3 - BLS signatures are important in practice\cb1 \
+\
+\cb3 Weaknesses:\cb1 \
+\cb3 - notations such as 
+\f1 \uc0\u8727 
+\f0  
+\f1 \uc0\u8727 
+\f0  
+\f1 \uc0\u8727 \u8727 
+\f0 , 
+\f1 \uc0\u8727 
+\f0  
+\f1 \uc0\u8727 
+\f0  
+\f1 \uc0\u8727 
+\f0 , (100) etc are quite unclear.\cb1 \
+\cb3 - in the benchmarks the authors have applied pairings to each of the 1000 signatures rather than aggregating those signatures and applying pairings to the aggregated signature, however it is unclear how realistic this scenario is.\cb1 \
+\
+\cb3 Constructive feedback for authors\cb1 \
+\cb3 ---------------------------------\cb1 \
+\cb3 Please try to improve editorial quality and explore further optimisations.\cb1 \
+\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs50 \cf2 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\fs47 \cf2 \
+\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clmgf \clvertalt \clshdrawnil \clwWidth879\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl320 \clpadr320 \gaph\cellx4320
+\clmrg \clvertalt \clshdrawnil \clwWidth879\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl320 \clpadr320 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\fs50 \cf2 \cell 
+\pard\intbl\itap1\cell \lastrow\row
+\pard\pardeftab720\qc\partightenfactor0
+\cf4 \
+\pard\pardeftab720\partightenfactor0
+\cf4 \
+\
+\
+\
+\
+\
+\
+}
