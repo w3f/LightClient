@@ -165,7 +165,10 @@ the full node needs to convince the light client verifier that a threshold numbe
 signed $H_n$, where $t$ depends on the type of consensus. Byzantine fault tolerant based consensus often uses $t$ to be 
 over 2/3 of the total number of validators.
 
-\noindent\paragraph{Keeping Track of the Validator Set:} A light client verifier on A must be initialised with a committee key $\mathit{ck}_1$ corresponding to the genesis validator set on B with key vector $\bf{pk}_1$. At the end of each epoch on B, i.e., the time a validator set needs to be updated, the validators set of epoch $i$, with key vector $\bf{pk}_i$ sign a message $(i,\mathit{ck}_{i+1})$ where $\mathit{ck}_{i+1}$ as a committee key is also a commitment to the next epock's validator set $\bf{pk}_{i+1}$. The light client verifier on A 
+\noindent\paragraph{Keeping Track of the Validator Set:} A light client verifier on A must be initialised with a committee key $\mathit{ck}_1$ 
+corresponding to the genesis validator set on B with key vector $\bf{pk}_1$. At the end of each epoch on B, i.e., the time a validator set needs 
+to be updated, the validators set of epoch $i$, with key vector $\bf{pk}_i$ sign a message $(i,\mathit{ck}_{i+1})$ where $\mathit{ck}_{i+1}$ as 
+a committee key is also a commitment to the next epock's validator set $\bf{pk}_{i+1}$. The light client verifier on A 
 keeps track of $\mathit{ck}_i$ for each epoch on B. A light client proof for an epoch must include a committee key scheme proof 
 that a bitvector of validators, with a threshold number of 1s, with keys committed to in $\mathit{ck}_i$ signed $(i,\mathit{ck}_{i+1})$. 
 To convince a light client verifier on A knowing only $\mathit{ck}_1$ of a message $\mathit{info}_n$ in block $n$ on B, 
@@ -202,7 +205,14 @@ via the consensus in blockchain B, then, on some previous epoch, the light clien
 validator set signed the wrong committee key/commitment for the next set which is a message incompatible with the 
 correct committee key/commitment signed on the actuall blockchain B. However, such a misbehaviour can be caught and 
 reported by the full node on B since, as mentioned before, the full node has access both to the consensus outcome for 
-every epoch on B, as well as, to every epoch's light client proof. \\
+every epoch on B, as well as, to every epoch's light client proof. Figure~\ref{figure_LC} illustrates the core accountability mechanism of our light client system. \\
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{LCFigure.pdf}
+    \caption{Accountability mechanism: An honest full node identifies equivocating validators by combining $\mathit{proof}'_n$ for message $\mathit{info}'_n$ on B with $\mathit{proof}_n$ for a contradictory message $\mathit{info}_n$ accepted by the light client verifier on A.}
+            \label{figure_LC}
+\end{figure}
 
 For short, accountability solves the following issue. Standard light client security is brittle: it is sound if and only if the home chain's honest supermajority (e.g., $>2/3$ stake) 
 assumption holds. If this assumption fails, a malicious coalition can finalize a false block, which a standard light client will accept as true. 
@@ -211,7 +221,7 @@ when this consensus assumption fails.The light client we construct is not respon
 Accountability ensures that if a light client verifier (LCV) accepts a false proof (due to a consensus failure), that proof becomes non-repudiable evidence. 
 An honest full node, observing both the true state and this false proof, can use our protocol to provably identify the exact set of malicious validators who signed both. 
 This mechanism enables guaranteed, targeted slashing, establishing a powerful economic deterrent: the cost of the attack (losing the slashed stake) is engineered to be 
-far greater than any potential profit. \\
+far greater than any potential profit.  \\
 
 Note that the accountability of our light client system instantiation relies, in turn, on the accountability of the underlying consensus 
 protocol. Indeed, our light client is accountable only if signatures on incompatible messages are enough for consensus 
