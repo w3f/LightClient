@@ -1,0 +1,21 @@
+Figure~\ref{figure_LC} illustrates the core accountability mechanism of our light client system when bridging two blockchains. 
+A light client prover supplies cryptographic evidence (proof $i$) to a verifier on blockchain A, claiming that a message $m_1$ was decided on blockchain B in epoch $i$.
+Meanwhile, an honest full node supporting blockchain B maintains the true consensus state, which includes a valid proof (proof' $i$) for a contradictory message $m_2$ in the same epoch. 
+The honest full node can combine both proofs to cryptographically detect the exact set of malicious validators who signed $m_1$ and $m_2$. This ensures that if a light client verifier accepts 
+a false proof due to a consensus failure, that proof becomes non-repudiable evidence for targeted slashing, establishing robust cryptoeconomic security.
+
+
+INCLUSION 
+
+Figure~\ref{figure_LC} illustrates our core accountability mechanism for bridging blockchains. A light client prover supplies cryptographic evidence (proof $n$) to a verifier on blockchain A, 
+claiming message $\mathit{info}_n$ was decided on blockchain B in epoch $n$. Meanwhile, an honest full node on blockchain B maintains the true state, possessing a valid proof (proof' $n$) 
+for a contradictory message $\mathit{info'}_n$ in the same epoch. By combining both proofs, the honest node cryptographically identifies the exact malicious validators who signed 
+both $\mathit{info}_n$ and $\mathit{info}'_n$. Consequently, if a verifier accepts a false proof due to consensus failure, this proof becomes non-repudiable evidence for targeted 
+slashing, establishing robust cryptoeconomic security.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{LCFigure.pdf}
+    \caption{Accountability mechanism: An honest full node on blockchain B uses a false proof for message $\mathit{info}_n$ accepted on blockchain A and the true state proof for message $\mathit{info}'_n$ to identify equivocating validators.}
+    \label{figure_LC}
+\end{figure}

@@ -1,0 +1,16 @@
+Some additional things that can be done:
+  -    Update/change the name of the anonimous github page (CCS23-anonymous) on which the light client is currently open sourced (https://github.com/CCS23-anonymous/light-client) to something which is conference independent and can be reused. 
+	•	Standardize the Hardware Environment: Define a specific, reproducible environment (e.g., an AWS c7g.2xlarge instance or a specific CPU model) so reviewers can replicate results. 
+	•	Enforce Statistical Rigor: Perform at least 10–20 iterations per benchmark, reporting the mean execution time and the standard deviation to demonstrate stability.
+	•	Include Peak Memory Usage: For SNARK implementations, proving time is only half the story. Report memory related metrics, as memory constraints cand be bottleneck for large-scale proof generation. 
+	•	Adopt Reproducible Artifacts: Ensure your GitHub repository includes a Dockerfile and a Makefile or justfile. The artifact should allow a reviewer to trigger all benchmarks with a single command (make bench) to output the exact tables presented in the paper.
+	•	Standardize Build Configurations: Explicitly document the build environment. Specify the Rust edition (e.g., 2024 or 2027), the exact arkworks version, and the compiler flags used (e.g., -C target-cpu=native -O3 to ensure full optimization).
+	•	Incorporate State-of-the-Art (SOTA) Baselines: Do not benchmark in a vacuum. Compare implementation against a recognized baseline or a competing library using the same hardware to justify your performance claims. 
+	•	Visual Representation: Replace raw tables charts to better visualize the scaling behavior of your SNARKs.
+	•	On-Chain Verification Cost: Report the total gas consumption required to verify a single SNARK proof on-chain. This is the most critical metric for any bridge or light client verifier smart contract.
+	•	Gas Impact of Precompiles: Since the protocol on Ethereum would likely require precompiled contracts for specific curves (e.g., BW6-761), perform a comparative gas analysis:
+	•	Estimate the gas cost if the operation is implemented in pure Solidity/Yul.
+	•	Estimate the gas cost if the operation is supported by a dedicated precompile. This clearly justifies the technical necessity of the proposed protocol changes.
+	•	Scaling Benchmarks (Gas vs. $v$): Provide a clear gas usage analysis as a function of the validator set size ($v$) such that reviewers see how the cost of verification scales on-chain as the number of participants increases.
+	•	Cost-Benefit Comparative Analysis: Benchmark the gas cost of the accountable protocol against existing, non-accountable light client implementations (e.g., Ethereum's current sync committee protocol). This highlights the "gas-to-security" ratio of the system compared to the current industry standard.
+
